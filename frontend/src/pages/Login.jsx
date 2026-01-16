@@ -84,7 +84,7 @@ const Login = () => {
                             className="w-full bg-gray-200/90 text-gray-800 rounded-full py-3 px-6 focus:outline-none focus:ring-2 focus:ring-blue-300"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            placeholder="student@library.com"
+                            placeholder={role === 'admin' ? "admin@gmail.com" : "student@gmail.com"}
                         />
                     </div>
 

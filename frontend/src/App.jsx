@@ -6,15 +6,11 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import EventDetails from './pages/EventDetails';
 import NewsDetails from './pages/NewsDetails';
-import EBooks from './pages/EBooks';
-
 import StudentLayout from './layouts/StudentLayout';
 import Profile from './pages/student/Profile';
 import AllBooks from './pages/student/AllBooks';
 import MyBooks from './pages/student/MyBooks';
-
 import Payment from './pages/student/Payment';
-
 import AdminLayout from './layouts/AdminLayout';
 import AdminDashboard from './pages/admin/Dashboard';
 import AddBookObj from './pages/admin/AddBook';
@@ -30,7 +26,6 @@ function App() {
                     <Route path="register" element={<Register />} />
                     <Route path="events/:id" element={<EventDetails />} />
                     <Route path="news/:id" element={<NewsDetails />} />
-                    <Route path="ebooks" element={<EBooks />} />
                 </Route>
 
                 <Route path="/student" element={<StudentLayout />}>

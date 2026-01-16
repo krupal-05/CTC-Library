@@ -9,7 +9,7 @@ dotenv.config();
 const verify = async () => {
     try {
         await connectDB();
-        const user = await User.findOne({ email: 'student@library.com' });
+        const user = await User.findOne({ email: 'student@gmail.com' });
         if (!user) {
             console.log('User not found!');
             process.exit(1);

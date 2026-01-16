@@ -15,14 +15,14 @@ const importData = async () => {
         const users = [
             {
                 name: 'Student User',
-                email: 'student@library.com',
+                email: 'student@gmail.com',
                 password: 'password123',
                 role: 'student',
                 enrollmentNo: '230240116014'
             },
             {
                 name: 'Admin User',
-                email: 'admin@library.com',
+                email: 'admin@gmail.com',
                 password: 'password123',
                 role: 'admin'
             }
