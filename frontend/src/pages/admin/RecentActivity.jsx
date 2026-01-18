@@ -70,7 +70,7 @@ const RecentActivity = () => {
                         <p>No recent activity recorded.</p>
                     </div>
                 ) : (
-                    <div className="divide-y divide-gray-100">
+                    <div className="divide-y divide-gray-100 max-h-[500px] overflow-y-auto custom-scrollbar">
                         {activities.map((activity) => (
                             <div key={activity._id} className="p-5 hover:bg-gray-50 transition-colors flex items-start gap-4">
                                 <div className="p-2 bg-gray-50 rounded-full shrink-0">

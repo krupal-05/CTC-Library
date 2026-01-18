@@ -44,11 +44,13 @@ const ManageBooks = () => {
 
     const actions = [
         { title: 'Add New Book', desc: 'Add a New Book to the Library catalog', label: 'Add books', icon: <Plus size={32} />, path: '/admin/add-book' },
+        { title: 'Manage Students', desc: 'View and manage registered students', label: 'Students', icon: <UserPlus size={32} />, path: '/admin/students' },
         { title: 'Remove Book', desc: 'Remove a book from the catalog', label: 'Remove', icon: <Trash2 size={32} />, path: '/admin/remove-book' },
         { title: 'Issue Book', desc: 'Issue a book to a member', label: 'Issue', icon: <Book size={32} />, path: '/admin/issue-book' },
         { title: 'Return Book', desc: 'Process a book return', label: 'Return', icon: <RotateCcw size={32} />, path: '/admin/return-book' },
         { title: 'Register Admin', desc: 'Register a new library member', label: 'Register', icon: <UserPlus size={32} />, path: '/register' },
-        { title: 'Generate Report', desc: 'Create library activity reports', label: 'Generate', icon: <FileText size={32} />, path: '/admin/reports' },
+        { title: 'Borrow Requests', desc: 'Approve or reject book requests', label: 'Requests', icon: <BookOpen size={32} />, path: '/admin/requests' },
+        { title: 'Using Reports', desc: 'Create library activity reports', label: 'Generate', icon: <FileText size={32} />, path: '/admin/reports' },
     ];
 
     const handleActionClick = (path) => {
@@ -63,7 +65,7 @@ const ManageBooks = () => {
         <div className="max-w-6xl mx-auto">
             {/* Header */}
             <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-800">Manage Books & Library</h1>
+                <h1 className="text-3xl font-bold text-gray-800">Library Manager</h1>
                 <p className="text-gray-500">Overview of library status and quick actions</p>
                 {error && (
                     <div className="mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">

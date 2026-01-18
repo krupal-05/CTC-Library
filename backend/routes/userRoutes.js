@@ -2,13 +2,56 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const Book = require('../models/Book');
+const Activity = require('../models/Activity'); // Import Activity Model
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 // Generate JWT
+// Generate JWT
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
+
+const { protect, admin } = require('../middleware/authMiddleware');
+
+// @desc    Get all students (Searchable)
+// @route   GET /api/users
+// @access  Private/Admin
+router.get('/', protect, admin, async (req, res) => {
+    try {
+        const keyword = req.query.keyword
+            ? {
+                $or: [
+                    { name: { $regex: req.query.keyword, $options: 'i' } },
+                    { enrollmentNo: { $regex: req.query.keyword, $options: 'i' } },
+                ],
+            }
+            : {};
+
+        const users = await User.find({ ...keyword, role: 'student' }).select('-password');
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to fetch users' });
+    }
+});
+
+// @desc    Delete user
+// @route   DELETE /api/users/:id
+// @access  Private/Admin
+router.delete('/:id', protect, admin, async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+
+        if (user) {
+            await user.deleteOne();
+            res.json({ message: 'User removed' });
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
 
 // @desc    Register new user
 // @route   POST /api/users
@@ -35,6 +78,13 @@ router.post('/', async (req, res) => {
         });
 
         if (user) {
+            // Log Activity
+            await Activity.create({
+                action: 'REGISTER',
+                user: user.name,
+                details: `New ${user.role} registered`
+            });
+
             res.status(201).json({
                 _id: user.id,
                 name: user.name,
@@ -79,7 +129,7 @@ router.post('/login', async (req, res) => {
     }
 });
 
-const { protect } = require('../middleware/authMiddleware');
+
 
 // @desc    Get user profile
 // @route   GET /api/users/profile
@@ -157,16 +207,18 @@ router.post('/borrow', protect, async (req, res) => {
             return res.status(400).json({ message: 'Book not available' });
         }
 
-        // Check if user already has an active copy of this book
+        // Check if user already has an active or pending copy of this book
         const alreadyBorrowed = user.borrowedBooks.find(
-            (b) => b.book.toString() === bookId && b.status === 'Active'
+            (b) => b.book.toString() === bookId && (b.status === 'Active' || b.status === 'Pending')
         );
 
         if (alreadyBorrowed) {
-            return res.status(400).json({ message: 'You have already borrowed this book' });
+            return res.status(400).json({ message: 'You have already requested or borrowed this book' });
         }
 
-        // 15 days return period
+        // 15 days return period (Calculated upon approval, but setting initial placeholder)
+        // For now, we can set it, but it should ideally be updated when Admin approves.
+        // We'll keep it here for simplicity or update it in adminRoutes.
         const returnDate = new Date();
         returnDate.setDate(returnDate.getDate() + 15);
 
@@ -174,7 +226,7 @@ router.post('/borrow', protect, async (req, res) => {
             book: bookId,
             borrowDate: new Date(),
             returnDate: returnDate,
-            status: 'Active'
+            status: 'Pending' // Initial status
         };
 
         console.log('Pushing to borrowedBooks:', borrowedBook);
@@ -187,7 +239,14 @@ router.post('/borrow', protect, async (req, res) => {
         book.availableQuantity -= 1;
         await book.save();
 
-        res.json({ message: 'Book borrowed successfully', borrowedBook });
+        // Log Activity
+        await Activity.create({
+            action: 'BORROW',
+            user: user.name,
+            details: `Borrowed '${book.title}'`
+        });
+
+        res.json({ message: 'Book requested successfully. Waiting for admin approval.', borrowedBook });
 
     } catch (error) {
         console.error('FULL ERROR:', error);
@@ -223,6 +282,13 @@ router.post('/return', protect, async (req, res) => {
             book.availableQuantity += 1;
             await book.save();
         }
+
+        // Log Activity
+        await Activity.create({
+            action: 'RETURN',
+            user: user.name,
+            details: `Returned '${book ? book.title : 'Deleted Book'}'`
+        });
 
         res.json({ message: 'Book returned successfully' });
 

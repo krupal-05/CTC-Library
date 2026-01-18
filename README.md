@@ -6,13 +6,16 @@ A comprehensive Library Management System built with the MERN stack (MongoDB, Ex
 
 ### User Features
 - **Browse Books**: View available library books and e-books.
+- **Borrow Requests**: Request books directly from the catalog. The system prevents duplicate requests (one active copy per book).
 - **Library News & Events**: Stay updated with the latest library news and upcoming events.
-- **User Dashboard**: Manage profile and view borrowed history.
+- **User Dashboard**: Manage profile, view current borrowed books, and track request status (Pending/Active/Rejected).
 
 ### Admin Features
-- **Admin Dashboard**: Comprehensive overview of library statistics.
-- **Book Management**: Add, update, and delete books from the catalog.
-- **User Management**: Manage library members and their permissions.
+- **Library Manager**: A centralized dashboard to manage both Books and Students.
+- **Borrow Request Management**: Approve or reject book borrow requests from students.
+- **Issue & Return**: Streamlined workflow to issue books (auto-approves pending requests) and process returns.
+- **Activity & History**: Track recent admin activities and view detailed transaction history (Borrows/Returns).
+- **Reports & Stats**: Generate reports and view real-time library statistics.
 
 ## 🛠️ Tech Stack
 

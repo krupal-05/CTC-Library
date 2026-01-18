@@ -23,12 +23,6 @@ const AdminSidebar = () => {
                     >
                         Profile
                     </NavLink>
-                    <NavLink to="/admin/students"
-                        className={({ isActive }) => `px-6 py-4 text-center font-bold border-b border-white/20 hover:bg-white/10 ${isActive ? 'bg-white/20 text-white' : 'text-white/80'}`}
-                    >
-                        Students
-                    </NavLink>
-
                     <NavLink to="/admin/books"
                         className={({ isActive }) => `px-6 py-4 text-center font-bold border-b border-white/20 hover:bg-white/10 ${isActive ? 'bg-white/20 text-white' : 'text-white/80'}`}
                     >
@@ -37,7 +31,7 @@ const AdminSidebar = () => {
                     <NavLink to="/admin/manage-books"
                         className={({ isActive }) => `px-6 py-4 text-center font-bold border-b border-white/20 hover:bg-white/10 ${isActive ? 'bg-white/20 text-white' : 'text-white/80'}`}
                     >
-                        Manage Books
+                        Manager
                     </NavLink>
                     <NavLink to="/admin/activity"
                         className={({ isActive }) => `px-6 py-4 text-center font-bold border-b border-white/20 hover:bg-white/10 ${isActive ? 'bg-white/20 text-white' : 'text-white/80'}`}

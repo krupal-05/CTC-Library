@@ -15,7 +15,7 @@ const userSchema = mongoose.Schema({
         borrowDate: { type: Date, default: Date.now },
         returnDate: { type: Date }, // Expected return date
         actualReturnDate: { type: Date },
-        status: { type: String, enum: ['Active', 'Returned'], default: 'Active' }
+        status: { type: String, enum: ['Active', 'Returned', 'Pending', 'Rejected'], default: 'Active' }
     }]
 }, {
     timestamps: true

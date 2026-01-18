@@ -23,7 +23,9 @@ import TransactionHistory from './pages/admin/TransactionHistory';
 import Feedback from './pages/Feedback';
 import AdminFeedback from './pages/admin/AdminFeedback';
 import ManageStudents from './pages/admin/ManageStudents';
+
 import RemoveBook from './pages/admin/RemoveBook';
+import AdminRequests from './pages/AdminRequests';
 
 function App() {
     return (
@@ -62,6 +64,7 @@ function App() {
                     <Route path="activity" element={<RecentActivity />} />
                     <Route path="reports" element={<Reports />} />
                     <Route path="history" element={<TransactionHistory />} />
+                    <Route path="requests" element={<AdminRequests />} />
                     <Route path="feedback" element={<AdminFeedback />} />
                 </Route>
             </Routes>

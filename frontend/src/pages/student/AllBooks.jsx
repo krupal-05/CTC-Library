@@ -10,18 +10,29 @@ const AllBooks = () => {
     const [borrowing, setBorrowing] = useState(null);
     const [filterStatus, setFilterStatus] = useState('All');
 
+    const [myBooks, setMyBooks] = useState([]);
+
     useEffect(() => {
-        const fetchBooks = async () => {
+        const fetchData = async () => {
             try {
-                const { data } = await axios.get('http://localhost:5000/api/books');
-                setBooks(data);
+                const booksRes = await axios.get('http://localhost:5000/api/books');
+                setBooks(booksRes.data);
+
+                const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+                if (userInfo) {
+                    const config = {
+                        headers: { Authorization: `Bearer ${userInfo.token}` }
+                    };
+                    const myBooksRes = await axios.get('http://localhost:5000/api/users/mybooks', config);
+                    setMyBooks(myBooksRes.data);
+                }
                 setLoading(false);
             } catch (err) {
-                setError('Failed to fetch books');
+                setError('Failed to fetch data');
                 setLoading(false);
             }
         };
-        fetchBooks();
+        fetchData();
     }, []);
 
     const handleBorrow = async (bookId) => {
@@ -41,16 +52,25 @@ const AllBooks = () => {
 
             await axios.post('http://localhost:5000/api/users/borrow', { bookId }, config);
 
-            // Refresh books to update quantity
-            const { data } = await axios.get('http://localhost:5000/api/books');
-            setBooks(data);
+            // Refresh data
+            const booksRes = await axios.get('http://localhost:5000/api/books');
+            setBooks(booksRes.data);
 
-            alert('Book Borrowed Successfully!');
+            const myBooksRes = await axios.get('http://localhost:5000/api/users/mybooks', config);
+            setMyBooks(myBooksRes.data);
+
+            alert('Book Requested Successfully! Waiting for Admin Approval.');
         } catch (err) {
             alert(err.response?.data?.message || 'Failed to borrow book');
         } finally {
             setBorrowing(null);
         }
+    };
+
+    const getBookStatus = (bookId) => {
+        const entry = myBooks.find(b => b.book && b.book._id === bookId && (b.status === 'Active' || b.status === 'Pending'));
+        if (entry) return entry.status;
+        return null;
     };
 
     const filteredBooks = books.filter(book => {
@@ -93,8 +113,8 @@ const AllBooks = () => {
                                 key={status}
                                 onClick={() => setFilterStatus(status)}
                                 className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors border ${filterStatus === status
-                                        ? 'bg-[#4c7c9b] text-white border-[#4c7c9b]'
-                                        : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+                                    ? 'bg-[#4c7c9b] text-white border-[#4c7c9b]'
+                                    : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
                                     }`}
                             >
                                 {status === 'Borrowed' ? 'Out of Stock' : status}
@@ -107,46 +127,56 @@ const AllBooks = () => {
             {/* Compact Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
                 {filteredBooks.length > 0 ? (
-                    filteredBooks.map(book => (
-                        <div key={book._id} className="bg-white rounded-lg border border-gray-100 p-3 flex flex-col hover:shadow-md transition-all group">
-                            <div className="w-full aspect-[2/3] bg-gray-100 rounded-md mb-3 overflow-hidden relative">
-                                {/* Badge */}
-                                <div className={`absolute top-1 right-1 px-1.5 py-0.5 rounded text-[10px] font-bold text-white shadow-sm z-10 ${book.availableQuantity > 0 ? 'bg-green-500' : 'bg-red-500'}`}>
-                                    {book.availableQuantity > 0 ? `${book.availableQuantity}` : '0'}
+                    filteredBooks.map(book => {
+                        const status = getBookStatus(book._id);
+                        const isBorrowedOrPending = status === 'Active' || status === 'Pending';
+
+                        return (
+                            <div key={book._id} className="bg-white rounded-lg border border-gray-100 p-3 flex flex-col hover:shadow-md transition-all group">
+                                <div className="w-full aspect-[2/3] bg-gray-100 rounded-md mb-3 overflow-hidden relative">
+                                    {/* Badge */}
+                                    <div className={`absolute top-1 right-1 px-1.5 py-0.5 rounded text-[10px] font-bold text-white shadow-sm z-10 ${book.availableQuantity > 0 ? 'bg-green-500' : 'bg-red-500'}`}>
+                                        {book.availableQuantity > 0 ? `${book.availableQuantity}` : '0'}
+                                    </div>
+
+                                    {book.imageUrl ? (
+                                        <img
+                                            src={book.imageUrl}
+                                            alt={book.title}
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center text-gray-300">
+                                            <div className="text-center">No Cover</div>
+                                        </div>
+                                    )}
                                 </div>
 
-                                {book.imageUrl ? (
-                                    <img
-                                        src={book.imageUrl}
-                                        alt={book.title}
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                    />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-gray-300">
-                                        <div className="text-center">No Cover</div>
-                                    </div>
-                                )}
-                            </div>
+                                <div className="flex-grow min-h-0 mb-2">
+                                    <h3 className="font-bold text-gray-800 text-sm truncate leading-tight mb-0.5" title={book.title}>
+                                        {book.title}
+                                    </h3>
+                                    <p className="text-xs text-gray-500 truncate">{book.author}</p>
+                                </div>
 
-                            <div className="flex-grow min-h-0 mb-2">
-                                <h3 className="font-bold text-gray-800 text-sm truncate leading-tight mb-0.5" title={book.title}>
-                                    {book.title}
-                                </h3>
-                                <p className="text-xs text-gray-500 truncate">{book.author}</p>
+                                <button
+                                    onClick={() => handleBorrow(book._id)}
+                                    disabled={borrowing === book._id || book.availableQuantity <= 0 || isBorrowedOrPending}
+                                    className={`w-full py-1.5 rounded text-xs font-bold transition-all ${isBorrowedOrPending
+                                        ? 'bg-amber-100 text-amber-600 cursor-default'
+                                        : book.availableQuantity <= 0
+                                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                            : 'bg-[#4c7c9b] text-white hover:bg-[#3b6683] shadow-sm hover:shadow'
+                                        }`}
+                                >
+                                    {borrowing === book._id ? '...' :
+                                        status === 'Pending' ? 'Requested' :
+                                            status === 'Active' ? 'Issued' :
+                                                book.availableQuantity <= 0 ? 'Out' : 'Request'}
+                                </button>
                             </div>
-
-                            <button
-                                onClick={() => handleBorrow(book._id)}
-                                disabled={borrowing === book._id || book.availableQuantity <= 0}
-                                className={`w-full py-1.5 rounded text-xs font-bold transition-all ${book.availableQuantity <= 0
-                                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                    : 'bg-[#4c7c9b] text-white hover:bg-[#3b6683] shadow-sm hover:shadow'
-                                    }`}
-                            >
-                                {borrowing === book._id ? '...' : (book.availableQuantity <= 0 ? 'Out' : 'Borrow')}
-                            </button>
-                        </div>
-                    ))
+                        )
+                    })
                 ) : (
                     <div className="col-span-full text-center py-12 text-gray-400">
                         No books found matching your criteria.
