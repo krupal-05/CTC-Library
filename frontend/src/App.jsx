@@ -12,8 +12,18 @@ import AllBooks from './pages/student/AllBooks';
 import MyBooks from './pages/student/MyBooks';
 import Payment from './pages/student/Payment';
 import AdminLayout from './layouts/AdminLayout';
-import AdminDashboard from './pages/admin/Dashboard';
+import AdminProfile from './pages/admin/Profile';
+import ManageBooks from './pages/admin/ManageBooks';
 import AddBookObj from './pages/admin/AddBook';
+import IssueBook from './pages/admin/IssueBook';
+import ReturnBook from './pages/admin/ReturnBook';
+import RecentActivity from './pages/admin/RecentActivity';
+import Reports from './pages/admin/Reports';
+import TransactionHistory from './pages/admin/TransactionHistory';
+import Feedback from './pages/Feedback';
+import AdminFeedback from './pages/admin/AdminFeedback';
+import ManageStudents from './pages/admin/ManageStudents';
+import RemoveBook from './pages/admin/RemoveBook';
 
 function App() {
     return (
@@ -26,6 +36,7 @@ function App() {
                     <Route path="register" element={<Register />} />
                     <Route path="events/:id" element={<EventDetails />} />
                     <Route path="news/:id" element={<NewsDetails />} />
+                    <Route path="feedback" element={<Feedback />} />
                 </Route>
 
                 <Route path="/student" element={<StudentLayout />}>
@@ -37,12 +48,21 @@ function App() {
                 </Route>
 
                 <Route path="/admin" element={<AdminLayout />}>
-                    <Route index element={<AdminDashboard />} />
-                    <Route path="dashboard" element={<AdminDashboard />} />
+                    <Route index element={<AdminProfile />} />
+                    <Route path="dashboard" element={<AdminProfile />} /> {/* Redirect Dashboard to Profile or keep legacy */}
+                    <Route path="profile" element={<AdminProfile />} />
                     <Route path="books" element={<AllBooks />} /> {/* Reusing for now */}
                     <Route path="add-book" element={<AddBookObj />} />
-                    <Route path="manage-books" element={<div>Manage Books Page (Coming Soon)</div>} />
-                    <Route path="activity" element={<div>Recent Activity Page (Coming Soon)</div>} />
+                    <Route path="manage-books" element={<ManageBooks />} />
+                    <Route path="students" element={<ManageStudents />} />
+                    <Route path="remove-book" element={<RemoveBook />} />
+                    <Route path="issue-book" element={<IssueBook />} />
+                    <Route path="return-book" element={<ReturnBook />} />
+                    <Route path="return-book" element={<ReturnBook />} />
+                    <Route path="activity" element={<RecentActivity />} />
+                    <Route path="reports" element={<Reports />} />
+                    <Route path="history" element={<TransactionHistory />} />
+                    <Route path="feedback" element={<AdminFeedback />} />
                 </Route>
             </Routes>
         </Router>

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { BookOpen, Book, AlertCircle, Plus, Upload, UserPlus, FileText } from 'lucide-react';
+import { BookOpen, Book, AlertCircle, Plus, Upload, UserPlus, FileText, RotateCcw, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const AdminDashboard = () => {
+
+const ManageBooks = () => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo')) || {};
     const navigate = useNavigate();
     const [statsData, setStatsData] = useState({
@@ -12,6 +13,7 @@ const AdminDashboard = () => {
         overdueBooks: 0
     });
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -26,6 +28,7 @@ const AdminDashboard = () => {
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching admin stats", error);
+                setError(error.response?.data?.message || 'Failed to fetch statistics. Are you logged in as Admin?');
                 setLoading(false);
             }
         };
@@ -41,14 +44,15 @@ const AdminDashboard = () => {
 
     const actions = [
         { title: 'Add New Book', desc: 'Add a New Book to the Library catalog', label: 'Add books', icon: <Plus size={32} />, path: '/admin/add-book' },
-        { title: 'Issue Book', desc: 'Issue a book to a member', label: 'Issue', icon: <Book size={32} />, path: '/admin/issue-book' }, // Future: implement issue book page
+        { title: 'Remove Book', desc: 'Remove a book from the catalog', label: 'Remove', icon: <Trash2 size={32} />, path: '/admin/remove-book' },
+        { title: 'Issue Book', desc: 'Issue a book to a member', label: 'Issue', icon: <Book size={32} />, path: '/admin/issue-book' },
+        { title: 'Return Book', desc: 'Process a book return', label: 'Return', icon: <RotateCcw size={32} />, path: '/admin/return-book' },
         { title: 'Register Admin', desc: 'Register a new library member', label: 'Register', icon: <UserPlus size={32} />, path: '/register' },
         { title: 'Generate Report', desc: 'Create library activity reports', label: 'Generate', icon: <FileText size={32} />, path: '/admin/reports' },
     ];
 
     const handleActionClick = (path) => {
         if (path === '/register') {
-            // Special handling for register to pass admin props perhaps, or just navigate
             navigate(path);
             return;
         }
@@ -59,8 +63,14 @@ const AdminDashboard = () => {
         <div className="max-w-6xl mx-auto">
             {/* Header */}
             <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-800">Welcome back, {userInfo.name || 'Admin'}</h1>
-                <p className="text-gray-500">Here's what's happening in your library today</p>
+                <h1 className="text-3xl font-bold text-gray-800">Manage Books & Library</h1>
+                <p className="text-gray-500">Overview of library status and quick actions</p>
+                {error && (
+                    <div className="mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        <strong className="font-bold">Error: </strong>
+                        <span className="block sm:inline">{error}</span>
+                    </div>
+                )}
             </div>
 
             {/* Stats Cards */}
@@ -106,4 +116,4 @@ const AdminDashboard = () => {
     );
 };
 
-export default AdminDashboard;
+export default ManageBooks;

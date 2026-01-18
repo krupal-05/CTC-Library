@@ -18,11 +18,17 @@ const AdminSidebar = () => {
 
             <nav className="flex-1">
                 <div className="flex flex-col text-white">
-                    <NavLink to="/admin/dashboard"
+                    <NavLink to="/admin/profile"
                         className={({ isActive }) => `px-6 py-4 text-center font-bold border-b border-white/20 hover:bg-white/10 ${isActive ? 'bg-white/20 text-white' : 'text-white/80'}`}
                     >
                         Profile
                     </NavLink>
+                    <NavLink to="/admin/students"
+                        className={({ isActive }) => `px-6 py-4 text-center font-bold border-b border-white/20 hover:bg-white/10 ${isActive ? 'bg-white/20 text-white' : 'text-white/80'}`}
+                    >
+                        Students
+                    </NavLink>
+
                     <NavLink to="/admin/books"
                         className={({ isActive }) => `px-6 py-4 text-center font-bold border-b border-white/20 hover:bg-white/10 ${isActive ? 'bg-white/20 text-white' : 'text-white/80'}`}
                     >
@@ -37,6 +43,16 @@ const AdminSidebar = () => {
                         className={({ isActive }) => `px-6 py-4 text-center font-bold border-b border-white/20 hover:bg-white/10 ${isActive ? 'bg-white/20 text-white' : 'text-white/80'}`}
                     >
                         Recent Activity
+                    </NavLink>
+                    <NavLink to="/admin/history"
+                        className={({ isActive }) => `px-6 py-4 text-center font-bold border-b border-white/20 hover:bg-white/10 ${isActive ? 'bg-white/20 text-white' : 'text-white/80'}`}
+                    >
+                        History
+                    </NavLink>
+                    <NavLink to="/admin/feedback"
+                        className={({ isActive }) => `px-6 py-4 text-center font-bold border-b border-white/20 hover:bg-white/10 ${isActive ? 'bg-white/20 text-white' : 'text-white/80'}`}
+                    >
+                        Feedback
                     </NavLink>
                 </div>
 

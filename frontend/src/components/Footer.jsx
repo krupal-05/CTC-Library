@@ -1,4 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+
+// ... (top of file needs check but I can't modify imports easily with replace if not contiguous with this block. 
+// Wait, I need to add import Link.
+// I'll do multi_replace for Footer as well.
+
 import { MapPin, Phone, Mail } from 'lucide-react';
 import logo from '../assets/logo.png';
 import collegeLogo from '../assets/ldce_logo.png';
@@ -40,8 +46,8 @@ const Footer = () => {
                     <ul className="space-y-2 text-sm text-gray-300">
                         <li><a href="https://www.ldce.ac.in" target="_blank" rel="noreferrer" className="hover:text-white">www.ldce.ac.in</a></li>
                         <li><a href="https://www.gtu.ac.in" target="_blank" rel="noreferrer" className="hover:text-white">www.student.gtu.ac.in</a></li>
-                        <li><span className="cursor-pointer hover:text-white">Feedback</span></li>
-                        <li><span className="cursor-pointer hover:text-white">Home</span></li>
+                        <li><Link to="/feedback" className="cursor-pointer hover:text-white">Feedback</Link></li>
+                        <li><Link to="/" className="cursor-pointer hover:text-white">Home</Link></li>
                     </ul>
                 </div>
             </div>

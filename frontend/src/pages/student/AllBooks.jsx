@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search } from 'lucide-react';
+import { Search, Filter } from 'lucide-react';
 import axios from 'axios';
 
 const AllBooks = () => {
@@ -7,7 +7,8 @@ const AllBooks = () => {
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const [borrowing, setBorrowing] = useState(null); // Track which book is being borrowed to show loading state on specific button
+    const [borrowing, setBorrowing] = useState(null);
+    const [filterStatus, setFilterStatus] = useState('All');
 
     useEffect(() => {
         const fetchBooks = async () => {
@@ -52,57 +53,105 @@ const AllBooks = () => {
         }
     };
 
-    const filteredBooks = books.filter(book =>
-        book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        book.author.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredBooks = books.filter(book => {
+        const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            book.author.toLowerCase().includes(searchTerm.toLowerCase());
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div className="text-red-500">{error}</div>;
+        let matchesFilter = true;
+        if (filterStatus === 'Available') {
+            matchesFilter = book.availableQuantity > 0;
+        } else if (filterStatus === 'Borrowed') { // "Borrowed" here implies Out of Stock / All copies borrowed
+            matchesFilter = book.availableQuantity <= 0;
+        }
+
+        return matchesSearch && matchesFilter;
+    });
+
+    if (loading) return <div className="text-center py-10">Loading books...</div>;
+    if (error) return <div className="text-center py-10 text-red-500">{error}</div>;
 
     return (
         <div>
-            {/* Search Bar */}
-            <div className="relative mb-8">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-6 h-6" />
-                <input
-                    type="text"
-                    placeholder="Search Book......."
-                    className="w-full bg-gray-200 rounded-full py-4 pl-14 pr-6 text-xl focus:outline-none focus:ring-2 focus:ring-gray-300"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
+            {/* Search and Filter Section */}
+            <div className="bg-white rounded-xl shadow-sm p-4 mb-6 flex flex-col md:flex-row gap-4 items-center justify-between border border-gray-100">
+                <div className="relative flex-grow w-full md:w-auto md:max-w-md">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <input
+                        type="text"
+                        placeholder="Search by title or author..."
+                        className="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#4c7c9b]/20 focus:border-[#4c7c9b] transition-all"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
+
+                <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
+                    <Filter size={16} className="text-gray-400 shrink-0" />
+                    <div className="flex gap-2">
+                        {['All', 'Available', 'Borrowed'].map(status => (
+                            <button
+                                key={status}
+                                onClick={() => setFilterStatus(status)}
+                                className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors border ${filterStatus === status
+                                        ? 'bg-[#4c7c9b] text-white border-[#4c7c9b]'
+                                        : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+                                    }`}
+                            >
+                                {status === 'Borrowed' ? 'Out of Stock' : status}
+                            </button>
+                        ))}
+                    </div>
+                </div>
             </div>
 
-            {/* Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                {filteredBooks.map(book => (
-                    <div key={book._id} className="bg-gray-200 rounded-xl p-4 flex flex-col items-center shadow-sm">
-                        <div className="w-full aspect-[3/4] bg-white rounded-lg mb-4 overflow-hidden shadow-inner relative">
-                            {/* Badge for Availability */}
-                            <div className={`absolute top-2 right-2 px-2 py-1 rounded text-xs font-bold text-white ${book.availableQuantity > 0 ? 'bg-green-500' : 'bg-red-500'}`}>
-                                {book.availableQuantity > 0 ? `${book.availableQuantity} left` : 'Out of Stock'}
+            {/* Compact Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                {filteredBooks.length > 0 ? (
+                    filteredBooks.map(book => (
+                        <div key={book._id} className="bg-white rounded-lg border border-gray-100 p-3 flex flex-col hover:shadow-md transition-all group">
+                            <div className="w-full aspect-[2/3] bg-gray-100 rounded-md mb-3 overflow-hidden relative">
+                                {/* Badge */}
+                                <div className={`absolute top-1 right-1 px-1.5 py-0.5 rounded text-[10px] font-bold text-white shadow-sm z-10 ${book.availableQuantity > 0 ? 'bg-green-500' : 'bg-red-500'}`}>
+                                    {book.availableQuantity > 0 ? `${book.availableQuantity}` : '0'}
+                                </div>
+
+                                {book.imageUrl ? (
+                                    <img
+                                        src={book.imageUrl}
+                                        alt={book.title}
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center text-gray-300">
+                                        <div className="text-center">No Cover</div>
+                                    </div>
+                                )}
                             </div>
-                            <img src={book.imageUrl || 'https://via.placeholder.com/150'} alt={book.title} className="w-full h-full object-cover" />
-                        </div>
 
-                        <div className="w-full text-left mb-4">
-                            <h3 className="font-bold text-gray-900 truncate" title={book.title}>{book.title}</h3>
-                            <p className="text-xs font-bold text-gray-600">By {book.author}</p>
-                        </div>
+                            <div className="flex-grow min-h-0 mb-2">
+                                <h3 className="font-bold text-gray-800 text-sm truncate leading-tight mb-0.5" title={book.title}>
+                                    {book.title}
+                                </h3>
+                                <p className="text-xs text-gray-500 truncate">{book.author}</p>
+                            </div>
 
-                        <button
-                            onClick={() => handleBorrow(book._id)}
-                            disabled={borrowing === book._id || book.availableQuantity <= 0}
-                            className={`w-full py-2 rounded-md transition-colors text-sm font-medium shadow-md ${book.availableQuantity <= 0
-                                    ? 'bg-gray-400 cursor-not-allowed text-gray-200'
-                                    : 'bg-[#4c7c9b] text-white hover:bg-opacity-90'
-                                }`}
-                        >
-                            {borrowing === book._id ? 'Borrowing...' : (book.availableQuantity <= 0 ? 'Unavailable' : 'Borrow')}
-                        </button>
+                            <button
+                                onClick={() => handleBorrow(book._id)}
+                                disabled={borrowing === book._id || book.availableQuantity <= 0}
+                                className={`w-full py-1.5 rounded text-xs font-bold transition-all ${book.availableQuantity <= 0
+                                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                    : 'bg-[#4c7c9b] text-white hover:bg-[#3b6683] shadow-sm hover:shadow'
+                                    }`}
+                            >
+                                {borrowing === book._id ? '...' : (book.availableQuantity <= 0 ? 'Out' : 'Borrow')}
+                            </button>
+                        </div>
+                    ))
+                ) : (
+                    <div className="col-span-full text-center py-12 text-gray-400">
+                        No books found matching your criteria.
                     </div>
-                ))}
+                )}
             </div>
         </div>
     );
