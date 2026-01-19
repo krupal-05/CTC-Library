@@ -24,6 +24,22 @@ router.get('/', async (req, res) => {
     }
 });
 
+// @desc    Get single book
+// @route   GET /api/books/:id
+// @access  Public
+router.get('/:id', async (req, res) => {
+    try {
+        const book = await Book.findById(req.params.id);
+        if (book) {
+            res.json(book);
+        } else {
+            res.status(404).json({ message: 'Book not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
 // @desc    Add a book
 // @route   POST /api/books
 // @access  Public (Should be Admin only, keeping simple for now)
@@ -44,7 +60,7 @@ router.post('/', async (req, res) => {
 
         res.status(201).json(createdBook);
     } catch (error) {
-        res.status(500).json({ message: 'Failed to add book' });
+        res.status(500).json({ message: error.message || 'Failed to add book' });
     }
 });
 

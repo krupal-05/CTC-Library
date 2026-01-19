@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useToast } from '../../context/ToastContext';
 
 const MyBooks = () => {
     const [borrowedBooks, setBorrowedBooks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [returning, setReturning] = useState(null);
+    const { success, error: toastError } = useToast();
 
     const fetchMyBooks = async () => {
         try {
@@ -47,9 +49,9 @@ const MyBooks = () => {
 
             // Refresh list
             fetchMyBooks();
-            alert('Book Returned Successfully!');
+            success('Book Returned Successfully!');
         } catch (err) {
-            alert(err.response?.data?.message || 'Failed to return book');
+            toastError(err.response?.data?.message || 'Failed to return book');
         } finally {
             setReturning(null);
         }

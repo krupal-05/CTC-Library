@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Search, Trash2, Book, AlertCircle } from 'lucide-react';
+import { useToast } from '../../context/ToastContext';
 
 const RemoveBook = () => {
+    const { error: toastError, success } = useToast();
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -40,8 +42,9 @@ const RemoveBook = () => {
                 };
                 await axios.delete(`http://localhost:5000/api/books/${id}`, config);
                 fetchBooks(); // Refresh list
+                success('Book deleted successfully');
             } catch (err) {
-                alert('Failed to delete book');
+                toastError('Failed to delete book');
             }
         }
     };

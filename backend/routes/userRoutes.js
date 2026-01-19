@@ -193,11 +193,15 @@ router.put('/profile', protect, async (req, res) => {
 // @route   POST /api/users/borrow
 // @access  Private
 router.post('/borrow', protect, async (req, res) => {
-    const { bookId } = req.body;
+    const { bookId, days } = req.body;
 
     try {
         const book = await Book.findById(bookId);
         const user = await User.findById(req.user._id);
+
+        if (req.user.role === 'admin') {
+            return res.status(403).json({ message: 'Admins cannot borrow books.' });
+        }
 
         if (!book) {
             return res.status(404).json({ message: 'Book not found' });
@@ -216,17 +220,17 @@ router.post('/borrow', protect, async (req, res) => {
             return res.status(400).json({ message: 'You have already requested or borrowed this book' });
         }
 
-        // 15 days return period (Calculated upon approval, but setting initial placeholder)
-        // For now, we can set it, but it should ideally be updated when Admin approves.
-        // We'll keep it here for simplicity or update it in adminRoutes.
+        // Calculate return date based on requested days (default 15)
+        const duration = days ? parseInt(days) : 15;
         const returnDate = new Date();
-        returnDate.setDate(returnDate.getDate() + 15);
+        returnDate.setDate(returnDate.getDate() + duration);
 
         const borrowedBook = {
             book: bookId,
             borrowDate: new Date(),
             returnDate: returnDate,
-            status: 'Pending' // Initial status
+            status: 'Pending', // Initial status
+            requestedDays: duration
         };
 
         console.log('Pushing to borrowedBooks:', borrowedBook);

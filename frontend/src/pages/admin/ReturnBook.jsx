@@ -46,7 +46,8 @@ const ReturnBook = () => {
                 config
             );
 
-            setMessage(`Success: ${data.message} (${data.book})`);
+            const penaltyMsg = data.penalty > 0 ? ` Penalty Fee: Rs ${data.penalty}` : '';
+            setMessage(`Success: ${data.message} (${data.book}).${penaltyMsg}`);
             // Refresh list
             fetchActiveIssues();
 

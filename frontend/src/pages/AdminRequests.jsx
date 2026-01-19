@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useToast } from '../context/ToastContext';
 
 const AdminRequests = () => {
+    const { error: toastError, success } = useToast();
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -12,7 +14,8 @@ const AdminRequests = () => {
 
     const fetchRequests = async () => {
         try {
-            const token = localStorage.getItem('token');
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            const token = userInfo?.token;
             const config = {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -30,7 +33,8 @@ const AdminRequests = () => {
 
     const handleApprove = async (userId, requestId) => {
         try {
-            const token = localStorage.getItem('token');
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            const token = userInfo?.token;
             const config = {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -40,8 +44,9 @@ const AdminRequests = () => {
             await axios.put('http://localhost:5000/api/admin/approve', { userId, requestId }, config);
             // Refresh requests
             fetchRequests();
+            success("Request approved successfully");
         } catch (err) {
-            alert(err.response?.data?.message || err.message);
+            toastError(err.response?.data?.message || err.message);
         }
     };
 
@@ -49,7 +54,8 @@ const AdminRequests = () => {
         if (!window.confirm('Are you sure you want to reject this request?')) return;
 
         try {
-            const token = localStorage.getItem('token');
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            const token = userInfo?.token;
             const config = {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -59,8 +65,9 @@ const AdminRequests = () => {
             await axios.put('http://localhost:5000/api/admin/reject', { userId, requestId }, config);
             // Refresh requests
             fetchRequests();
+            success("Request rejected");
         } catch (err) {
-            alert(err.response?.data?.message || err.message);
+            toastError(err.response?.data?.message || err.message);
         }
     };
 
@@ -95,6 +102,9 @@ const AdminRequests = () => {
                                             Requested Date
                                         </th>
                                         <th className="px-5 py-3 border-b-2 border-gray-200 bg-indigo-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                            Duration
+                                        </th>
+                                        <th className="px-5 py-3 border-b-2 border-gray-200 bg-indigo-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                                             Actions
                                         </th>
                                     </tr>
@@ -121,6 +131,11 @@ const AdminRequests = () => {
                                             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                                 <p className="text-gray-900 whitespace-no-wrap">
                                                     {new Date(request.borrowDate).toLocaleDateString()}
+                                                </p>
+                                            </td>
+                                            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                                <p className="text-gray-900 whitespace-no-wrap">
+                                                    {request.requestedDays ? `${request.requestedDays} days` : '15 days'}
                                                 </p>
                                             </td>
                                             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">

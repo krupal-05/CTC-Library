@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Search, Trash2, User, AlertCircle } from 'lucide-react';
+import { useToast } from '../../context/ToastContext';
 
 const ManageStudents = () => {
+    const { error: toastError, success } = useToast();
     const [students, setStudents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -47,8 +49,9 @@ const ManageStudents = () => {
                 };
                 await axios.delete(`http://localhost:5000/api/users/${id}`, config);
                 fetchStudents(); // Refresh list
+                success('Student deleted successfully');
             } catch (err) {
-                alert('Failed to delete student');
+                toastError('Failed to delete student');
             }
         }
     };

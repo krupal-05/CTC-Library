@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Upload, X } from 'lucide-react';
+import { useToast } from '../../context/ToastContext';
 
 const AddBookObj = () => {
     const navigate = useNavigate();
+    const { success, error: toastError } = useToast();
     const [formData, setFormData] = useState({
         title: '',
         author: '',
@@ -53,10 +55,11 @@ const AddBookObj = () => {
             };
 
             await axios.post('http://localhost:5000/api/books', bookData, config);
-            alert('Book Added Successfully!');
+            success('Book Added Successfully!');
             navigate('/admin/books'); // Redirect to all books
         } catch (err) {
             console.error(err);
+            toastError(err.response?.data?.message || 'Failed to add book');
             setError(err.response?.data?.message || 'Failed to add book');
             setLoading(false);
         }

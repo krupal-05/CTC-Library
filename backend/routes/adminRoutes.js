@@ -107,7 +107,7 @@ router.get('/transactions', protect, admin, async (req, res) => {
 // @route   POST /api/admin/issue-book
 // @access  Private/Admin
 router.post('/issue-book', protect, admin, async (req, res) => {
-    const { enrollmentNo, isbn } = req.body;
+    const { enrollmentNo, isbn, days } = req.body;
 
     try {
         // 1. Find User
@@ -139,14 +139,16 @@ router.post('/issue-book', protect, admin, async (req, res) => {
             (b) => b.book.toString() === book._id.toString() && b.status === "Pending"
         );
 
+        const duration = days ? parseInt(days) : 15;
         const returnDate = new Date();
-        returnDate.setDate(returnDate.getDate() + 15); // Default 15 days
+        returnDate.setDate(returnDate.getDate() + duration); // Default 15 days or custom
 
         if (pendingCopy) {
             // Case B: Approve Pending
             pendingCopy.status = 'Active';
             pendingCopy.borrowDate = new Date(); // Reset borrow date to Issue date
             pendingCopy.returnDate = returnDate;
+            pendingCopy.requestedDays = duration;
 
             await user.save();
 
@@ -168,7 +170,8 @@ router.post('/issue-book', protect, admin, async (req, res) => {
                 book: book._id,
                 borrowDate: new Date(),
                 returnDate: returnDate,
-                status: 'Active'
+                status: 'Active',
+                requestedDays: duration
             };
 
             user.borrowedBooks.push(borrowedEntry);
@@ -231,7 +234,18 @@ router.post('/return-book', protect, admin, async (req, res) => {
 
         // 4. Update User Record
         borrowedEntry.status = 'Returned';
-        borrowedEntry.actualReturnDate = new Date();
+        const now = new Date();
+        borrowedEntry.actualReturnDate = now;
+
+        // Calculate Penalty
+        let penalty = 0;
+        if (borrowedEntry.returnDate && now > borrowedEntry.returnDate) {
+            const diffTime = Math.abs(now - borrowedEntry.returnDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            penalty = diffDays * 2;
+        }
+        borrowedEntry.penalty = penalty;
+
         await user.save();
 
         // 5. Update Book Quantity
@@ -242,13 +256,14 @@ router.post('/return-book', protect, admin, async (req, res) => {
         await Activity.create({
             action: 'RETURN_BOOK',
             user: req.user.name,
-            details: `Returned '${book.title}' from ${user.name} (${user.enrollmentNo})`
+            details: `Returned '${book.title}' from ${user.name} (${user.enrollmentNo}). Penalty: Rs ${penalty}`
         });
 
         res.status(200).json({
             message: 'Book returned successfully',
             user: user.name,
-            book: book.title
+            book: book.title,
+            penalty: penalty
         });
 
     } catch (error) {
@@ -311,7 +326,8 @@ router.get('/requests', protect, admin, async (req, res) => {
                             enrollmentNo: user.enrollmentNo
                         },
                         book: bookEntry.book,
-                        borrowDate: bookEntry.borrowDate
+                        borrowDate: bookEntry.borrowDate,
+                        requestedDays: bookEntry.requestedDays
                     });
                 }
             });
@@ -348,9 +364,10 @@ router.put('/approve', protect, admin, async (req, res) => {
 
         borrowedEntry.status = 'Active';
 
-        // Update return date to be 15 days from NOW (approval time)
+        // Update return date based on requested days (calculated from NOW)
+        const duration = borrowedEntry.requestedDays || 15; // fallback to 15
         const returnDate = new Date();
-        returnDate.setDate(returnDate.getDate() + 15);
+        returnDate.setDate(returnDate.getDate() + duration);
         borrowedEntry.returnDate = returnDate;
 
         await user.save();
@@ -359,7 +376,7 @@ router.put('/approve', protect, admin, async (req, res) => {
         await Activity.create({
             action: 'APPROVE_BORROW',
             user: 'Admin',
-            details: `Approved borrow request for user ${user.name}`
+            details: `Approved borrow request for user ${user.name}. Due in ${duration} days.`
         });
 
         res.json({ message: 'Request approved' });

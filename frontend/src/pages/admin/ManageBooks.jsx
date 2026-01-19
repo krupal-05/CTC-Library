@@ -44,12 +44,12 @@ const ManageBooks = () => {
 
     const actions = [
         { title: 'Add New Book', desc: 'Add a New Book to the Library catalog', label: 'Add books', icon: <Plus size={32} />, path: '/admin/add-book' },
-        { title: 'Manage Students', desc: 'View and manage registered students', label: 'Students', icon: <UserPlus size={32} />, path: '/admin/students' },
-        { title: 'Remove Book', desc: 'Remove a book from the catalog', label: 'Remove', icon: <Trash2 size={32} />, path: '/admin/remove-book' },
-        { title: 'Issue Book', desc: 'Issue a book to a member', label: 'Issue', icon: <Book size={32} />, path: '/admin/issue-book' },
-        { title: 'Return Book', desc: 'Process a book return', label: 'Return', icon: <RotateCcw size={32} />, path: '/admin/return-book' },
-        { title: 'Register Admin', desc: 'Register a new library member', label: 'Register', icon: <UserPlus size={32} />, path: '/register' },
         { title: 'Borrow Requests', desc: 'Approve or reject book requests', label: 'Requests', icon: <BookOpen size={32} />, path: '/admin/requests' },
+        { title: 'Return Book', desc: 'Process a book return', label: 'Return', icon: <RotateCcw size={32} />, path: '/admin/return-book' },
+        { title: 'Issue Book', desc: 'Issue a book to a member', label: 'Issue', icon: <Book size={32} />, path: '/admin/issue-book' },
+        { title: 'Remove Book', desc: 'Remove a book from the catalog', label: 'Remove', icon: <Trash2 size={32} />, path: '/admin/remove-book' },
+        { title: 'Register Admin', desc: 'Register a new library member', label: 'Register', icon: <UserPlus size={32} />, path: '/register' },
+        { title: 'Manage Students', desc: 'View and manage registered students', label: 'Students', icon: <UserPlus size={32} />, path: '/admin/students' },
         { title: 'Using Reports', desc: 'Create library activity reports', label: 'Generate', icon: <FileText size={32} />, path: '/admin/reports' },
     ];
 

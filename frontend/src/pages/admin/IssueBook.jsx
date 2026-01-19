@@ -6,6 +6,7 @@ const IssueBook = () => {
     // Selection States
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [selectedBook, setSelectedBook] = useState(null);
+    const [days, setDays] = useState(15);
 
     // Search States
     const [studentSearch, setStudentSearch] = useState('');
@@ -67,7 +68,7 @@ const IssueBook = () => {
 
             const { data } = await axios.post(
                 'http://localhost:5000/api/admin/issue-book',
-                { enrollmentNo: selectedStudent.enrollmentNo, isbn: selectedBook.isbn },
+                { enrollmentNo: selectedStudent.enrollmentNo, isbn: selectedBook.isbn, days: days },
                 config
             );
 
@@ -223,14 +224,26 @@ const IssueBook = () => {
                             )}
                         </div>
 
+                        {/* Days Input */}
+                        <div className="w-full mb-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Issue Duration (Days)</label>
+                            <input
+                                type="number"
+                                min="1"
+                                value={days}
+                                onChange={(e) => setDays(e.target.value)}
+                                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            />
+                        </div>
+
                         {/* Action Button */}
                         <div className="mt-auto pt-4 w-full">
                             <button
                                 onClick={handleIssue}
                                 disabled={loadingIssue || !selectedStudent || !selectedBook}
                                 className={`w-full py-4 rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-2 ${selectedStudent && selectedBook
-                                        ? 'bg-[#4c7c9b] text-white hover:bg-[#3a6580] shadow-lg shadow-blue-900/20 transform hover:-translate-y-1'
-                                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                    ? 'bg-[#4c7c9b] text-white hover:bg-[#3a6580] shadow-lg shadow-blue-900/20 transform hover:-translate-y-1'
+                                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                                     }`}
                             >
                                 {loadingIssue ? 'Processing...' : (
