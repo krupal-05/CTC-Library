@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Search, Trash2, Book, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Search, Trash2, Book, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useToast } from '../../context/ToastContext';
 
 const RemoveBook = () => {
+    const navigate = useNavigate();
     const { error: toastError, success } = useToast();
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -53,9 +55,17 @@ const RemoveBook = () => {
 
     return (
         <div className="p-6 max-w-7xl mx-auto">
-            <h1 className="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
-                <Book className="text-red-600" /> Remove Book
-            </h1>
+            <div className="flex items-center gap-4 mb-6">
+                <button
+                    onClick={() => navigate('/admin/manage-books')}
+                    className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-500"
+                >
+                    <ArrowLeft size={24} />
+                </button>
+                <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                    <Book className="text-red-600" /> Remove Book
+                </h1>
+            </div>
 
             {/* Search Bar */}
             <div className="mb-6 relative max-w-md">

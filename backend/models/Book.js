@@ -9,6 +9,11 @@ const bookSchema = mongoose.Schema({
     imageUrl: { type: String },
     totalQuantity: { type: Number, default: 1 },
     availableQuantity: { type: Number, default: 1 },
+    udc: { type: String },
+    queue: [{
+        user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        requestedAt: { type: Date, default: Date.now }
+    }]
 }, {
     timestamps: true
 });

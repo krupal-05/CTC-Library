@@ -16,7 +16,9 @@ const BookDetails = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [borrowDays, setBorrowDays] = useState(15);
     const [borrowing, setBorrowing] = useState(false);
+    const [joiningWaitlist, setJoiningWaitlist] = useState(false); // Add state
     const [userRole, setUserRole] = useState('student');
+    const [waitlistPosition, setWaitlistPosition] = useState(null); // Add state
     const { success, error: toastError } = useToast();
 
     // Check User Role & Fetch Book
@@ -43,6 +45,32 @@ const BookDetails = () => {
     const handleBorrowClick = () => {
         setBorrowDays(15);
         setIsModalOpen(true);
+    };
+
+    const handleJoinWaitlist = async () => {
+        setJoiningWaitlist(true);
+        try {
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            if (!userInfo) {
+                toastError('Please login to join waitlist');
+                return;
+            }
+
+            const config = {
+                headers: { Authorization: `Bearer ${userInfo.token}` },
+            };
+
+            const { data } = await axios.post(`http://localhost:5000/api/books/${id}/reserve`, {}, config);
+
+            success(data.message);
+            if (data.position) setWaitlistPosition(data.position);
+
+            // Refresh book to update local state if needed (though queue is backend)
+        } catch (err) {
+            toastError(err.response?.data?.message || 'Failed to join waitlist');
+        } finally {
+            setJoiningWaitlist(false);
+        }
     };
 
     const confirmBorrow = async () => {
@@ -155,16 +183,25 @@ const BookDetails = () => {
 
                     <div className="border-t pt-6">
                         {userRole !== 'admin' && (
-                            <button
-                                onClick={handleBorrowClick}
-                                disabled={!isAvailable || borrowing}
-                                className={`w-full py-4 rounded-xl font-bold text-lg shadow-lg transition-all transform active:scale-[0.98] ${isAvailable
-                                    ? 'bg-[#4c7c9b] text-white hover:bg-[#3b6683] hover:shadow-xl'
-                                    : 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none'
-                                    }`}
-                            >
-                                {borrowing ? 'Processing...' : isAvailable ? 'Request Book' : 'Out of Stock'}
-                            </button>
+                            <>
+                                {isAvailable ? (
+                                    <button
+                                        onClick={handleBorrowClick}
+                                        disabled={borrowing}
+                                        className="w-full py-4 rounded-xl font-bold text-lg shadow-lg transition-all transform active:scale-[0.98] bg-[#4c7c9b] text-white hover:bg-[#3b6683] hover:shadow-xl"
+                                    >
+                                        {borrowing ? 'Processing...' : 'Request Book'}
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={handleJoinWaitlist}
+                                        disabled={joiningWaitlist}
+                                        className="w-full py-4 rounded-xl font-bold text-lg shadow-lg transition-all transform active:scale-[0.98] bg-orange-500 text-white hover:bg-orange-600 hover:shadow-xl"
+                                    >
+                                        {joiningWaitlist ? 'Joining...' : 'Join Waitlist'}
+                                    </button>
+                                )}
+                            </>
                         )}
 
                     </div>

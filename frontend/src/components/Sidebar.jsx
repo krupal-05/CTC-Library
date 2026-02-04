@@ -29,7 +29,8 @@ const Sidebar = () => {
                     >
                         Profile
                     </NavLink>
-                    <NavLink to="/student/books"
+
+                    <NavLink to="/student/browse-udc"
                         className={({ isActive }) => `px-6 py-4 text-center font-bold border-b border-white/20 hover:bg-white/10 ${isActive ? 'bg-white/20 text-white' : 'text-white/80'}`}
                     >
                         All Books

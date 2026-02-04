@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require('../models/User');
 const Book = require('../models/Book');
 const Activity = require('../models/Activity'); // Import Activity Model
+const Notification = require('../models/Notification'); // Import Notification Model
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
@@ -284,6 +285,22 @@ router.post('/return', protect, async (req, res) => {
 
         if (book) {
             book.availableQuantity += 1;
+
+            // Check Queue for Reservations
+            if (book.queue && book.queue.length > 0) {
+                const nextUser = book.queue.shift(); // Get and remove first user
+
+                // Create Notification for this user
+                await Notification.create({
+                    user: nextUser.user,
+                    message: `Good news! The book "${book.title}" you were waiting for is now available.`,
+                    type: 'AVAILABILITY',
+                    relatedBook: book._id
+                });
+
+                console.log(`Notification sent to user ${nextUser.user} for book ${book.title}`);
+            }
+
             await book.save();
         }
 

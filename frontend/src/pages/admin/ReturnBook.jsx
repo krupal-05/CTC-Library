@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Search, RotateCcw, Check, RefreshCw, Calendar, Book, User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Search, RotateCcw, Check, RefreshCw, Calendar, Book, User, ArrowLeft } from 'lucide-react';
 
 const ReturnBook = () => {
+    const navigate = useNavigate();
     // Stats for manual entry
     const [enrollmentNo, setEnrollmentNo] = useState('');
     const [isbn, setIsbn] = useState('');
@@ -67,9 +69,17 @@ const ReturnBook = () => {
 
     return (
         <div className="max-w-6xl mx-auto p-4 md:p-8">
-            <h1 className="text-3xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                <RotateCcw className="text-blue-600" /> Return Book
-            </h1>
+            <div className="flex items-center gap-4 mb-6">
+                <button
+                    onClick={() => navigate('/admin/manage-books')}
+                    className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-500"
+                >
+                    <ArrowLeft size={24} />
+                </button>
+                <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
+                    <RotateCcw className="text-blue-600" /> Return Book
+                </h1>
+            </div>
 
             {/* Status Messages */}
             {message && <div className="bg-green-50 text-green-700 p-4 rounded-xl border border-green-200 mb-6 flex items-center gap-2"><Check size={20} /> {message}</div>}

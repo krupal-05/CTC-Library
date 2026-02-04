@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { BarChart, PieChart, Activity, TrendingUp, Users, BookOpen } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { BarChart, PieChart, Activity, TrendingUp, Users, BookOpen, ArrowLeft } from 'lucide-react';
 
 const Reports = () => {
+    const navigate = useNavigate();
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -78,7 +80,15 @@ const Reports = () => {
 
     return (
         <div className="max-w-6xl mx-auto p-4 md:p-8">
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">Library Analytics</h1>
+            <div className="flex items-center gap-4 mb-2">
+                <button
+                    onClick={() => navigate('/admin/manage-books')}
+                    className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-500"
+                >
+                    <ArrowLeft size={24} />
+                </button>
+                <h1 className="text-3xl font-bold text-gray-800">Library Analytics</h1>
+            </div>
             <p className="text-gray-500 mb-8">Performance reports and inventory insights</p>
 
             {/* KPI Cards */}

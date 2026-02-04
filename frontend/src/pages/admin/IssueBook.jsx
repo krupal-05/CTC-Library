@@ -1,259 +1,180 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import axios from 'axios';
-import { Search, BookOpen, User, Check, ArrowRight } from 'lucide-react';
+import { User, BookOpen, Search, X, Check, Printer, Save, RefreshCw } from 'lucide-react';
+import { useToast } from '../../context/ToastContext';
+
+// Import Tabs
+import TabLoan from './tabs/TabLoan';
+import TabReturn from './tabs/TabReturn';
+import TabBooking from './tabs/TabBooking';
+import TabReserve from './tabs/TabReserve';
+import TabFine from './tabs/TabFine';
 
 const IssueBook = () => {
-    // Selection States
-    const [selectedStudent, setSelectedStudent] = useState(null);
-    const [selectedBook, setSelectedBook] = useState(null);
-    const [days, setDays] = useState(15);
+    const { success, error: toastError } = useToast();
 
-    // Search States
-    const [studentSearch, setStudentSearch] = useState('');
-    const [bookSearch, setBookSearch] = useState('');
+    // Inputs
+    const [studentBarcode, setStudentBarcode] = useState('');
+    const [showDropdown, setShowDropdown] = useState(null);
 
-    // Data Lists
-    const [students, setStudents] = useState([]);
-    const [books, setBooks] = useState([]);
+    // Data
+    const [student, setStudent] = useState(null);
 
-    // Status
-    const [message, setMessage] = useState('');
-    const [error, setError] = useState('');
-    const [loadingIssue, setLoadingIssue] = useState(false);
+    // UI State
+    const [loading, setLoading] = useState(false);
+    const [activeTab, setActiveTab] = useState('Issue');
 
-    // Fetch Students on Search
-    useEffect(() => {
-        const fetchStudents = async () => {
-            if (!studentSearch) { setStudents([]); return; }
+    const bookInputRef = useRef(null);
+
+    // 1. Fetch Student
+    const handleStudentSearch = async (e) => {
+        if (e.key === 'Enter') {
+            if (!studentBarcode) return;
+            setLoading(true);
             try {
                 const userInfo = JSON.parse(localStorage.getItem('userInfo'));
                 const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
-                const { data } = await axios.get(`http://localhost:5000/api/users?keyword=${studentSearch}`, config);
-                setStudents(data);
-            } catch (err) { console.error(err); }
-        };
-        const timeout = setTimeout(fetchStudents, 500); // Debounce
-        return () => clearTimeout(timeout);
-    }, [studentSearch]);
 
-    // Fetch Books on Search
-    useEffect(() => {
-        const fetchBooks = async () => {
-            if (!bookSearch) { setBooks([]); return; }
-            try {
-                const { data } = await axios.get(`http://localhost:5000/api/books?keyword=${bookSearch}`);
-                setBooks(data);
-            } catch (err) { console.error(err); }
-        };
-        const timeout = setTimeout(fetchBooks, 500); // Debounce
-        return () => clearTimeout(timeout);
-    }, [bookSearch]);
+                // Search users API
+                const { data } = await axios.get(`http://localhost:5000/api/users?keyword=${studentBarcode}`, config);
 
-    // Scroll to bottom on mobile when both selected
-    useEffect(() => {
-        if (selectedStudent && selectedBook && window.innerWidth < 1024) {
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                if (data && data.length > 0) {
+                    // Exact match or first result
+                    const found = data.find(u => u.enrollmentNo === studentBarcode) || data[0];
+                    setStudent(found);
+                } else {
+                    toastError('Student not found');
+                    setStudent(null);
+                }
+            } catch (err) {
+                toastError('Error fetching student');
+            } finally {
+                setLoading(false);
+            }
         }
-    }, [selectedStudent, selectedBook]);
+    };
 
-    const handleIssue = async () => {
-        if (!selectedStudent || !selectedBook) return;
-        setLoadingIssue(true);
-        setError('');
-        setMessage('');
-
-        try {
-            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-            const config = { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${userInfo.token}` } };
-
-            const { data } = await axios.post(
-                'http://localhost:5000/api/admin/issue-book',
-                { enrollmentNo: selectedStudent.enrollmentNo, isbn: selectedBook.isbn, days: days },
-                config
-            );
-
-            setMessage(`Success: Issued '${data.book}' to ${data.user}`);
-            setSelectedStudent(null);
-            setSelectedBook(null);
-            setStudentSearch('');
-            setBookSearch('');
-        } catch (err) {
-            setError(err.response?.data?.message || 'Issue Failed');
-        } finally {
-            setLoadingIssue(false);
+    const renderActiveTab = () => {
+        switch (activeTab) {
+            case 'Issue':
+                return <TabLoan student={student} loading={loading} setLoading={setLoading} />;
+            case 'Return':
+                return <TabReturn student={student} loading={loading} setLoading={setLoading} />;
+            case 'Booking':
+                return <TabBooking />;
+            case 'Reserve':
+                return <TabReserve />;
+            case 'Fine':
+                return <TabFine />;
+            default:
+                return <TabLoan student={student} loading={loading} setLoading={setLoading} />;
         }
     };
 
     return (
-        <div className="max-w-7xl mx-auto p-4 md:p-8 lg:h-[calc(100vh-100px)] h-auto flex flex-col">
-            <h1 className="text-3xl font-bold text-gray-800 mb-6 flex items-center gap-2 flex-shrink-0">
-                <BookOpen className="text-blue-600" /> Issue Book
-            </h1>
+        <div className="h-[calc(100vh-80px)] bg-gray-100 p-2 flex flex-col font-sans text-sm">
 
-            {/* Notifications */}
-            {message && <div className="bg-green-50 text-green-700 p-4 rounded-xl border border-green-200 mb-4 flex-shrink-0">{message}</div>}
-            {error && <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-200 mb-4 flex-shrink-0">{error}</div>}
+            {/* TOP BAR: STUDENT INFO */}
+            <div className="bg-white border border-gray-300 shadow-sm p-2 mb-2 grid grid-cols-[1fr_200px] gap-4">
 
-            <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-6 min-h-0">
-
-                {/* 1. SELECT STUDENT */}
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col overflow-hidden">
-                    <div className="p-4 border-b border-gray-100 bg-gray-50">
-                        <h2 className="font-bold text-gray-700 flex items-center gap-2">
-                            <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">1</span>
-                            Select Student
-                        </h2>
-                    </div>
-                    <div className="p-4 border-b border-gray-100">
-                        <div className="relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                {/* Left: Inputs & Info */}
+                <div className="flex flex-col gap-2">
+                    {/* Barcode Search Row */}
+                    <div className="flex items-center gap-2">
+                        <label className="w-24 text-gray-600 font-bold text-right">Enrollment No:</label>
+                        <div className="flex-1 flex gap-2 relative">
                             <input
-                                type="text" placeholder="Search Name or Enroll No..."
-                                className="w-full pl-10 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                                value={studentSearch} onChange={e => setStudentSearch(e.target.value)}
+                                autoFocus
+                                placeholder="Scan or Type Name..."
+                                value={studentBarcode}
+                                onChange={e => {
+                                    setStudentBarcode(e.target.value);
+                                    if (e.target.value.length > 2) {
+                                        // Simple debounce could be added, but for now direct call or wait for Enter
+                                        // Let's rely on Enter for "Scan" and a separate effect/button for "Search"
+                                        // actually user wants "manually", so let's trigger search on typing
+                                        const timer = setTimeout(() => {
+                                            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+                                            const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
+                                            axios.get(`http://localhost:5000/api/users?keyword=${e.target.value}`, config)
+                                                .then(({ data }) => setShowDropdown(data.length > 0 ? data : null))
+                                                .catch(() => setShowDropdown(null));
+                                        }, 300);
+                                        return () => clearTimeout(timer);
+                                    } else {
+                                        setShowDropdown(null);
+                                    }
+                                }}
+                                onKeyDown={handleStudentSearch}
+                                className="border border-gray-400 px-2 py-1 w-64 bg-white focus:bg-yellow-50 outline-none"
                             />
-                        </div>
-                    </div>
-                    <div className="flex-1 overflow-y-auto p-2 space-y-2">
-                        {students.map(student => (
-                            <div key={student._id}
-                                onClick={() => setSelectedStudent(student)}
-                                className={`p-3 rounded-xl cursor-pointer transition-all border ${selectedStudent?._id === student._id ? 'bg-blue-50 border-blue-500 ring-1 ring-blue-500' : 'hover:bg-gray-50 border-transparent'} text-left`}
-                            >
-                                <div className="font-bold text-gray-800">{student.name}</div>
-                                <div className="text-xs text-gray-500 flex items-center gap-2">
-                                    <span className="bg-gray-200 px-1.5 rounded text-gray-600">{student.enrollmentNo}</span>
-                                    <span>{student.department}</span>
-                                </div>
-                            </div>
-                        ))}
-                        {studentSearch && students.length === 0 && <div className="text-center text-gray-400 p-4">No students found</div>}
-                    </div>
-                </div>
+                            <button className="bg-gray-100 border border-gray-300 p-1 hover:bg-gray-200"><Search size={16} /></button>
 
-                {/* 2. SELECT BOOK */}
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col overflow-hidden">
-                    <div className="p-4 border-b border-gray-100 bg-gray-50">
-                        <h2 className="font-bold text-gray-700 flex items-center gap-2">
-                            <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">2</span>
-                            Select Book
-                        </h2>
-                    </div>
-                    <div className="p-4 border-b border-gray-100">
-                        <div className="relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-                            <input
-                                type="text" placeholder="Search Title, Author, or ISBN..."
-                                className="w-full pl-10 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                                value={bookSearch} onChange={e => setBookSearch(e.target.value)}
-                            />
-                        </div>
-                    </div>
-                    <div className="flex-1 overflow-y-auto p-2 space-y-2">
-                        {books.map(book => (
-                            <div key={book._id}
-                                onClick={() => setSelectedBook(book)}
-                                className={`p-3 rounded-xl cursor-pointer transition-all border ${selectedBook?._id === book._id ? 'bg-blue-50 border-blue-500 ring-1 ring-blue-500' : 'hover:bg-gray-50 border-transparent'} ${book.availableQuantity === 0 ? 'opacity-50 grayscale cursor-not-allowed pointer-events-none' : ''} text-left`}
-                            >
-                                <div className="font-bold text-gray-800 line-clamp-1">{book.title}</div>
-                                <div className="flex justify-between items-center mt-1">
-                                    <span className="text-xs text-gray-500">{book.author}</span>
-                                    <span className={`text-xs px-2 py-0.5 rounded-full ${book.availableQuantity > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                                        Qty: {book.availableQuantity}
-                                    </span>
-                                </div>
-                            </div>
-                        ))}
-                        {bookSearch && books.length === 0 && <div className="text-center text-gray-400 p-4">No books found</div>}
-                    </div>
-                </div>
-
-                {/* 3. CONFIRM */}
-                {/* 3. CONFIRM */}
-                <div className="bg-gray-50 rounded-2xl border border-dashed border-gray-300 flex flex-col p-6 items-center justify-center text-center relative">
-                    <div className="w-full space-y-6 flex flex-col h-full justify-center">
-
-                        {/* Summary Section */}
-                        <div className="flex-1 flex flex-col justify-center space-y-4">
-                            {selectedStudent ? (
-                                <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 w-full animate-fade-in">
-                                    <h3 className="text-gray-500 uppercase text-xs font-bold tracking-wider mb-2">Student</h3>
-                                    <div className="flex items-center gap-3 text-left">
-                                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 shrink-0">
-                                            <User size={20} />
+                            {/* Dropdown Results */}
+                            {showDropdown && (
+                                <div className="absolute top-full left-0 w-64 bg-white border border-gray-300 shadow-lg z-50 max-h-60 overflow-auto">
+                                    {showDropdown.map(u => (
+                                        <div
+                                            key={u._id}
+                                            className="p-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100"
+                                            onClick={() => {
+                                                setStudent(u);
+                                                setStudentBarcode(u.enrollmentNo);
+                                                setShowDropdown(null);
+                                            }}
+                                        >
+                                            <div className="font-bold text-xs">{u.name}</div>
+                                            <div className="text-[10px] text-gray-500">{u.enrollmentNo} - {u.department}</div>
                                         </div>
-                                        <div className="min-w-0">
-                                            <p className="font-bold text-gray-800 truncate">{selectedStudent.name}</p>
-                                            <p className="text-xs text-gray-500 truncate">{selectedStudent.enrollmentNo}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 text-gray-400 flex flex-col items-center">
-                                    <User size={32} className="mb-2 opacity-50" />
-                                    <p className="text-sm">Select Student</p>
-                                </div>
-                            )}
-
-                            {selectedStudent && selectedBook && (
-                                <ArrowRight className="mx-auto text-gray-300 rotate-90 lg:rotate-0" />
-                            )}
-
-                            {selectedBook ? (
-                                <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 w-full animate-fade-in">
-                                    <h3 className="text-gray-500 uppercase text-xs font-bold tracking-wider mb-2">Book</h3>
-                                    <div className="flex items-center gap-3 text-left">
-                                        {selectedBook.imageUrl ? (
-                                            <img src={selectedBook.imageUrl} className="h-10 w-10 object-cover rounded bg-gray-100 shrink-0" alt="" />
-                                        ) : (
-                                            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600 shrink-0">
-                                                <BookOpen size={20} />
-                                            </div>
-                                        )}
-                                        <div className="min-w-0">
-                                            <p className="font-bold text-gray-800 truncate">{selectedBook.title}</p>
-                                            <p className="text-xs text-gray-500 truncate">{selectedBook.isbn}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 text-gray-400 flex flex-col items-center">
-                                    <BookOpen size={32} className="mb-2 opacity-50" />
-                                    <p className="text-sm">Select Book</p>
+                                    ))}
                                 </div>
                             )}
                         </div>
+                    </div>
 
-                        {/* Days Input */}
-                        <div className="w-full mb-4">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Issue Duration (Days)</label>
-                            <input
-                                type="number"
-                                min="1"
-                                value={days}
-                                onChange={(e) => setDays(e.target.value)}
-                                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            />
-                        </div>
+                    <div className="border-t border-gray-200 my-1"></div>
 
-                        {/* Action Button */}
-                        <div className="mt-auto pt-4 w-full">
-                            <button
-                                onClick={handleIssue}
-                                disabled={loadingIssue || !selectedStudent || !selectedBook}
-                                className={`w-full py-4 rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-2 ${selectedStudent && selectedBook
-                                    ? 'bg-[#4c7c9b] text-white hover:bg-[#3a6580] shadow-lg shadow-blue-900/20 transform hover:-translate-y-1'
-                                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                                    }`}
-                            >
-                                {loadingIssue ? 'Processing...' : (
-                                    selectedStudent && selectedBook ? <><Check /> Confirm Issue</> : 'Select Both to Issue'
-                                )}
-                            </button>
+                    {/* Student Details Grid */}
+                    <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 items-center">
+                        <label className="text-gray-500 text-right">Student:</label>
+                        <input className="border border-gray-300 bg-gray-100 px-2 py-1 w-full" readOnly value={student ? student.name : ''} />
+
+                        <label className="text-gray-500 text-right">Enrollment:</label>
+                        <input className="border border-gray-300 bg-gray-100 px-2 py-1 w-full" readOnly value={student ? student.enrollmentNo : ''} />
+
+                        <label className="text-gray-500 text-right">Dept/Loc:</label>
+                        <div className="flex gap-2">
+                            <input className="border border-gray-300 bg-gray-100 px-2 py-1 flex-1" readOnly value={student ? student.department : ''} />
+                            <input className="border border-gray-300 bg-gray-100 px-2 py-1 flex-1" readOnly value={student ? student.year : ''} />
                         </div>
                     </div>
                 </div>
 
+                {/* Right: Photo Placeholder */}
+                <div className="bg-gray-200 border border-gray-400 flex items-center justify-center text-gray-400">
+                    <User size={80} />
+                </div>
+            </div>
+
+            {/* MIDDLE: TABS */}
+            <div className="flex gap-1 mb-2 border-b border-gray-300">
+                {['Issue', 'Booking', 'Reserve', 'Fine', 'Return'].map(tab => (
+                    <button
+                        key={tab}
+                        onClick={() => setActiveTab(tab)}
+                        className={`px-6 py-1 border-t border-l border-r rounded-t-lg font-bold text-sm 
+                            ${activeTab === tab
+                                ? 'bg-green-500 text-white border-green-600'
+                                : 'bg-gray-100 text-gray-600 border-gray-300 hover:bg-gray-200'}`}
+                    >
+                        {tab}
+                    </button>
+                ))}
+            </div>
+
+            {/* MAIN CONTENT AREA */}
+            <div className="flex-1 bg-white border border-gray-300 shadow-sm flex flex-col relative">
+                {renderActiveTab()}
             </div>
         </div>
     );

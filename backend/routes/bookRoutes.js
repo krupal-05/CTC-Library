@@ -8,6 +8,10 @@ const { protect, admin } = require('../middleware/authMiddleware');
 // ... (GET route remains same)
 router.get('/', async (req, res) => {
     try {
+        const pageSize = Number(req.query.limit) || 20;
+        const page = Number(req.query.page) || 1;
+
+        // Build Filter Query
         const keyword = req.query.keyword
             ? {
                 $or: [
@@ -17,8 +21,53 @@ router.get('/', async (req, res) => {
             }
             : {};
 
-        const books = await Book.find({ ...keyword });
-        res.json(books);
+        if (req.query.udc) {
+            keyword.udc = req.query.udc;
+        }
+
+        if (req.query.available === 'true') {
+            keyword.availableQuantity = { $gt: 0 };
+        } else if (req.query.available === 'borrowed') {
+            keyword.availableQuantity = { $lte: 0 };
+        }
+
+        // Build Sort Option
+        let sortOption = { createdAt: -1 }; // Default: Newest first
+        if (req.query.sort === 'oldest') {
+            sortOption = { createdAt: 1 };
+        } else if (req.query.sort === 'alpha_asc') {
+            sortOption = { title: 1 };
+        } else if (req.query.sort === 'alpha_desc') {
+            sortOption = { title: -1 };
+        }
+
+        const count = await Book.countDocuments({ ...keyword });
+        const books = await Book.find({ ...keyword })
+            .sort(sortOption)
+            .limit(pageSize)
+            .skip(pageSize * (page - 1));
+
+        res.json({ books, page, pages: Math.ceil(count / pageSize), totalBooks: count });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
+// @desc    Get book counts by UDC
+// @route   GET /api/books/udc-counts
+// @access  Public
+router.get('/udc-counts', async (req, res) => {
+    try {
+        const counts = await Book.aggregate([
+            {
+                $group: {
+                    _id: "$udc",
+                    count: { $sum: 1 }
+                }
+            }
+        ]);
+        res.json(counts);
     } catch (error) {
         res.status(500).json({ message: 'Server Error' });
     }
@@ -83,3 +132,38 @@ router.delete('/:id', protect, admin, async (req, res) => {
 });
 
 module.exports = router;
+
+// @desc    Reserve a book (Join Waitlist)
+// @route   POST /api/books/:id/reserve
+// @access  Private
+router.post('/:id/reserve', protect, async (req, res) => {
+    try {
+        const book = await Book.findById(req.params.id);
+
+        if (!book) {
+            return res.status(404).json({ message: 'Book not found' });
+        }
+
+        if (book.availableQuantity > 0) {
+            return res.status(400).json({ message: 'Book is available, you can borrow it directly.' });
+        }
+
+        // Check if user is already in queue
+        const alreadyInQueue = book.queue.find(item => item.user.toString() === req.user._id.toString());
+        if (alreadyInQueue) {
+            return res.status(400).json({ message: 'You are already in the waitlist for this book.' });
+        }
+
+        // Add to queue
+        book.queue.push({
+            user: req.user._id
+        });
+
+        await book.save();
+
+        res.json({ message: 'Successfully joined the waitlist.', position: book.queue.length });
+
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error: ' + error.message });
+    }
+});
