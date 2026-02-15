@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Search, ArrowUpRight, ArrowDownLeft, Filter, History } from 'lucide-react';
+import { Search, ArrowUpRight, ArrowDownLeft, Filter, History, Plus, Trash2 } from 'lucide-react';
 
 const TransactionHistory = () => {
     const [transactions, setTransactions] = useState([]);
@@ -34,7 +34,9 @@ const TransactionHistory = () => {
             ? true
             : filter === 'BORROW'
                 ? (txn.action === 'BORROW' || txn.action === 'ISSUE_BOOK')
-                : (txn.action === 'RETURN' || txn.action === 'RETURN_BOOK');
+                : filter === 'RETURN'
+                    ? (txn.action === 'RETURN' || txn.action === 'RETURN_BOOK')
+                    : (txn.action === 'ADD_BOOK' || txn.action === 'REMOVE_BOOK');
 
         return matchesSearch && matchesType;
     });
@@ -43,12 +45,24 @@ const TransactionHistory = () => {
         if (action === 'BORROW' || action === 'ISSUE_BOOK') {
             return 'bg-orange-100 text-orange-700 border-orange-200';
         }
+        if (action === 'ADD_BOOK') {
+            return 'bg-blue-100 text-blue-700 border-blue-200';
+        }
+        if (action === 'REMOVE_BOOK') {
+            return 'bg-red-100 text-red-700 border-red-200';
+        }
         return 'bg-green-100 text-green-700 border-green-200';
     };
 
     const getIcon = (action) => {
         if (action === 'BORROW' || action === 'ISSUE_BOOK') {
             return <ArrowUpRight size={14} className="mr-1" />;
+        }
+        if (action === 'ADD_BOOK') {
+            return <Plus size={14} className="mr-1" />;
+        }
+        if (action === 'REMOVE_BOOK') {
+            return <Trash2 size={14} className="mr-1" />;
         }
         return <ArrowDownLeft size={14} className="mr-1" />;
     };
@@ -83,6 +97,7 @@ const TransactionHistory = () => {
                         <option value="ALL">All Actions</option>
                         <option value="BORROW">Issued/Borrowed</option>
                         <option value="RETURN">Returned</option>
+                        <option value="CATALOG">Catalog Updates</option>
                     </select>
                 </div>
             </div>

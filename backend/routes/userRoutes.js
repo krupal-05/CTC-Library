@@ -54,6 +54,23 @@ router.delete('/:id', protect, admin, async (req, res) => {
     }
 });
 
+// @desc    Get user full profile (Admin)
+// @route   GET /api/users/:id/full-profile
+// @access  Private/Admin
+router.get('/:id/full-profile', protect, admin, async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id).populate('borrowedBooks.book');
+        if (user) {
+            res.json(user);
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        console.error("Error fetching full profile:", error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
 // @desc    Register new user
 // @route   POST /api/users
 // @access  Public
@@ -328,6 +345,35 @@ router.get('/mybooks', protect, async (req, res) => {
         res.json(user.borrowedBooks);
     } catch (error) {
         console.error('Error in /mybooks:', error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
+// @desc    Get user's reservations (Waitlist)
+// @route   GET /api/users/reservations
+// @access  Private
+router.get('/reservations', protect, async (req, res) => {
+    try {
+        // Find books where the queue array contains an object with the user's ID
+        const books = await Book.find({ 'queue.user': req.user._id });
+
+        const reservations = books.map(book => {
+            const queueItem = book.queue.find(item => item.user.toString() === req.user._id.toString());
+            const position = book.queue.findIndex(item => item.user.toString() === req.user._id.toString()) + 1;
+
+            return {
+                _id: book._id, // Book ID (for key)
+                title: book.title,
+                author: book.author,
+                requestedAt: queueItem ? queueItem.requestedAt : null,
+                position: position,
+                queueLength: book.queue.length
+            };
+        });
+
+        res.json(reservations);
+    } catch (error) {
+        console.error('Error fetching reservations:', error);
         res.status(500).json({ message: 'Server Error' });
     }
 });

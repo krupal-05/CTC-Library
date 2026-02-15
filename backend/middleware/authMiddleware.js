@@ -28,9 +28,11 @@ const protect = async (req, res, next) => {
 };
 
 const admin = (req, res, next) => {
+    console.log(`[AUTH CHECK] Checking admin role for user: ${req.user ? req.user.name : 'Unknown'}, Role: ${req.user ? req.user.role : 'None'}`);
     if (req.user && req.user.role === 'admin') {
         next();
     } else {
+        console.log(`[AUTH CHECK] Failed: User is not admin`);
         res.status(401).json({ message: 'Not authorized as an admin' });
     }
 };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { Search, Filter, Calendar } from 'lucide-react';
+import { Search, Filter, Calendar, List } from 'lucide-react';
 import { useToast } from '../../context/ToastContext';
 import Modal from '../../components/Modal';
 import UDCGrid from '../../components/UDCGrid';
@@ -21,6 +21,7 @@ const AllBooks = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [sortOption, setSortOption] = useState('newest');
     const [debouncedSearch, setDebouncedSearch] = useState('');
+    const [showPageMenu, setShowPageMenu] = useState(false);
 
     const [myBooks, setMyBooks] = useState([]);
 
@@ -51,7 +52,7 @@ const AllBooks = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                let url = `http://localhost:5000/api/books?page=${page}&limit=20&sort=${sortOption}`;
+                let url = `http://localhost:5000/api/books?page=${page}&limit=15&sort=${sortOption}`;
 
                 if (udcParam) url += `&udc=${udcParam}`;
                 if (debouncedSearch) url += `&keyword=${debouncedSearch}`;
@@ -182,63 +183,81 @@ const AllBooks = () => {
             {isBrowsingAll ? (
                 <UDCGrid />
             ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                <div className="grid grid-cols-1 gap-4 max-w-5xl mx-auto">
                     {filteredBooks.length > 0 ? (
-                        filteredBooks.map(book => {
+                        filteredBooks.map((book, index) => {
                             const status = getBookStatus(book._id);
                             const isBorrowedOrPending = status === 'Active' || status === 'Pending';
 
                             return (
-                                <div key={book._id} className="bg-white rounded-lg border border-gray-100 p-3 flex flex-col hover:shadow-md transition-all group">
-                                    {/* Clickable Content Container */}
+                                <div key={book._id} className="relative group">
+                                    {/* Clickable Card Container */}
                                     <div
-                                        className="cursor-pointer"
-                                        onClick={() => navigate(userRole === 'admin' ? `/admin/books/${book._id}` : `/student/books/${book._id}`)}
+                                        className={`cursor-pointer rounded-2xl p-4 flex items-center justify-between transition-all duration-300 hover:shadow-lg border border-transparent hover:border-gray-200 gap-4
+                                            ${[
+                                                'bg-blue-50 text-blue-900',
+                                                'bg-green-50 text-green-900',
+                                                'bg-purple-50 text-purple-900',
+                                                'bg-orange-50 text-orange-900',
+                                                'bg-pink-50 text-pink-900',
+                                                'bg-teal-50 text-teal-900',
+                                                'bg-indigo-50 text-indigo-900',
+                                                'bg-cyan-50 text-cyan-900'
+                                            ][index % 8]}`}
                                     >
-                                        <div className="w-full aspect-[2/3] bg-gray-100 rounded-md mb-3 overflow-hidden relative">
-                                            {/* Badge */}
-                                            <div className={`absolute top-1 right-1 px-1.5 py-0.5 rounded text-[10px] font-bold text-white shadow-sm z-10 ${book.availableQuantity > 0 ? 'bg-green-500' : 'bg-red-500'}`}>
-                                                {book.availableQuantity > 0 ? `${book.availableQuantity}` : '0'}
+                                        {/* Left Side: Info & Badge */}
+                                        <div
+                                            className="flex-grow flex flex-col md:flex-row md:items-center gap-4"
+                                            onClick={() => navigate(userRole === 'admin' ? `/admin/books/${book._id}` : `/student/books/${book._id}`)}
+                                        >
+                                            {/* Badge - Now inline or next to title? Let's keep it clean on top or left. 
+                                                For a list, maybe left side dot or small badge. 
+                                            */}
+                                            <div className="shrink-0">
+                                                <div className={`inline-flex px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider ${book.availableQuantity > 0
+                                                    ? 'bg-white/60 text-emerald-700'
+                                                    : 'bg-white/60 text-red-600'
+                                                    }`}>
+                                                    {book.availableQuantity > 0 ? 'Available' : 'Out'}
+                                                </div>
                                             </div>
 
-                                            {book.imageUrl ? (
-                                                <img
-                                                    src={book.imageUrl}
-                                                    alt={book.title}
-                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                                />
-                                            ) : (
-                                                <div className="w-full h-full flex items-center justify-center text-gray-300">
-                                                    <div className="text-center">No Cover</div>
-                                                </div>
-                                            )}
+                                            {/* Title & Author */}
+                                            <div className="flex-grow">
+                                                <h3 className="text-lg font-bold leading-tight mb-1">
+                                                    {book.title}
+                                                </h3>
+                                                <p className="text-sm opacity-80 font-medium">
+                                                    {book.author}
+                                                </p>
+                                            </div>
                                         </div>
 
-                                        <div className="flex-grow min-h-0 mb-2">
-                                            <h3 className="font-bold text-gray-800 text-sm truncate leading-tight mb-0.5 group-hover:text-[#4c7c9b] transition-colors" title={book.title}>
-                                                {book.title}
-                                            </h3>
-                                            <p className="text-xs text-gray-500 truncate">{book.author}</p>
-                                        </div>
+                                        {/* Right Side: Request Button */}
+                                        {userRole !== 'admin' && (
+                                            <div className="shrink-0 ml-4">
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation(); // Prevent card click
+                                                        handleBorrowClick(book._id);
+                                                    }}
+                                                    disabled={borrowing === book._id || book.availableQuantity <= 0 || isBorrowedOrPending}
+                                                    className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all shadow-sm whitespace-nowrap
+                                                        ${isBorrowedOrPending
+                                                            ? 'bg-gray-100/50 text-gray-500 cursor-default'
+                                                            : book.availableQuantity <= 0
+                                                                ? 'bg-gray-100/50 text-gray-400 cursor-not-allowed'
+                                                                : 'bg-white text-gray-800 hover:bg-black hover:text-white shadow-sm'
+                                                        }`}
+                                                >
+                                                    {borrowing === book._id ? '...' :
+                                                        status === 'Pending' ? 'Pending' :
+                                                            status === 'Active' ? 'Issued' :
+                                                                book.availableQuantity <= 0 ? 'Notify' : 'Request'}
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
-
-                                    {userRole !== 'admin' && (
-                                        <button
-                                            onClick={() => handleBorrowClick(book._id)}
-                                            disabled={borrowing === book._id || book.availableQuantity <= 0 || isBorrowedOrPending}
-                                            className={`w-full py-1.5 rounded text-xs font-bold transition-all ${isBorrowedOrPending
-                                                ? 'bg-amber-100 text-amber-600 cursor-default'
-                                                : book.availableQuantity <= 0
-                                                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                                    : 'bg-[#4c7c9b] text-white hover:bg-[#3b6683] shadow-sm hover:shadow'
-                                                }`}
-                                        >
-                                            {borrowing === book._id ? '...' :
-                                                status === 'Pending' ? 'Requested' :
-                                                    status === 'Active' ? 'Issued' :
-                                                        book.availableQuantity <= 0 ? 'Out' : 'Request'}
-                                        </button>
-                                    )}
                                 </div>
 
                             )
@@ -250,7 +269,6 @@ const AllBooks = () => {
                     )}
                 </div>
             )}
-
             {/* Pagination Controls */}
             {
                 !isBrowsingAll && !loading && totalPages > 1 && (
@@ -262,9 +280,55 @@ const AllBooks = () => {
                         >
                             Previous
                         </button>
-                        <span className="text-sm font-medium text-gray-600">
-                            Page {page} of {totalPages}
-                        </span>
+
+                        <div className="relative">
+                            <button
+                                type="button"
+                                className="flex items-center gap-2 cursor-pointer px-3 py-2 hover:bg-gray-100 rounded-lg transition-colors focus:outline-none focus:bg-gray-100"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setShowPageMenu((prev) => !prev);
+                                }}
+                            >
+                                <span className="text-sm font-medium text-gray-600">
+                                    Page {page} of {totalPages}
+                                </span>
+                                <List size={16} className="text-gray-500" />
+                            </button>
+
+                            {/* Page Jump Menu */}
+                            {showPageMenu && (
+                                <>
+                                    <div
+                                        className="fixed inset-0 z-40"
+                                        onClick={() => setShowPageMenu(false)}
+                                    />
+                                    <div
+                                        className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 max-h-60 bg-white border border-gray-200 shadow-xl rounded-xl overflow-y-auto z-50 p-1"
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        <div className="grid grid-cols-4 gap-1">
+                                            {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                                                <button
+                                                    key={p}
+                                                    onClick={() => {
+                                                        setPage(p);
+                                                        setShowPageMenu(false);
+                                                    }}
+                                                    className={`py-2 rounded-lg text-xs font-bold transition-colors ${page === p
+                                                        ? 'bg-[#4c7c9b] text-white'
+                                                        : 'text-gray-600 hover:bg-gray-100'
+                                                        }`}
+                                                >
+                                                    {p}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+
                         <button
                             onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
                             disabled={page === totalPages}

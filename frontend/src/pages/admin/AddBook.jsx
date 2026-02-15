@@ -13,25 +13,13 @@ const AddBookObj = () => {
         isbn: '',
         category: '',
         description: '',
-        totalQuantity: 1,
-        imageUrl: '' // Will store Base64 string
+        totalQuantity: 1
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setFormData({ ...formData, imageUrl: reader.result });
-            };
-            reader.readAsDataURL(file);
-        }
     };
 
     const handleSubmit = async (e) => {
@@ -156,42 +144,8 @@ const AddBookObj = () => {
                             </div>
                         </div>
 
-                        {/* Right Column: Visuals & Desc */}
+                        {/* Right Column: Desc */}
                         <div className="space-y-5">
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Cover Image</label>
-                                <div className={`border-2 border-dashed border-gray-200 rounded-2xl p-6 flex flex-col items-center justify-center text-center hover:bg-gray-50 transition-colors ${formData.imageUrl ? 'bg-gray-50' : ''}`}>
-                                    {formData.imageUrl ? (
-                                        <div className="relative group w-full">
-                                            <img src={formData.imageUrl} alt="Cover Preview" className="h-48 w-auto mx-auto object-contain rounded-lg shadow-sm" />
-                                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
-                                                <span className="text-white text-sm font-medium">Change Image</span>
-                                            </div>
-                                            <input
-                                                type="file"
-                                                accept="image/*"
-                                                onChange={handleImageChange}
-                                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                            />
-                                        </div>
-                                    ) : (
-                                        <label className="cursor-pointer w-full h-full flex flex-col items-center justify-center">
-                                            <div className="w-12 h-12 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mb-3">
-                                                <Upload size={20} />
-                                            </div>
-                                            <span className="text-sm font-medium text-gray-700">Click to upload cover</span>
-                                            <span className="text-xs text-gray-400 mt-1">PNG, JPG, or WEBP</span>
-                                            <input
-                                                type="file"
-                                                accept="image/*"
-                                                onChange={handleImageChange}
-                                                className="hidden"
-                                            />
-                                        </label>
-                                    )}
-                                </div>
-                            </div>
-
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-1.5">Description</label>
                                 <textarea

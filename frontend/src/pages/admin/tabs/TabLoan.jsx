@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import { X } from 'lucide-react';
+import { X, Search } from 'lucide-react';
 import { useToast } from '../../../context/ToastContext';
 
-const TabLoan = ({ student, loading, setLoading }) => {
+const TabLoan = ({ student, loading, setLoading, refreshProfile }) => {
     const { success, error: toastError } = useToast();
     const [bookBarcode, setBookBarcode] = useState('');
     const [scannedBooks, setScannedBooks] = useState([]);
@@ -62,10 +62,39 @@ const TabLoan = ({ student, loading, setLoading }) => {
         }
     };
 
+    const handleReturnBook = async (isbn) => {
+        if (!window.confirm(`Return book with ISBN: ${isbn}?`)) return;
+        setLoading(true);
+        try {
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
+
+            const { data } = await axios.post(
+                'http://localhost:5000/api/admin/return-book',
+                { enrollmentNo: student.enrollmentNo, isbn: isbn },
+                config
+            );
+
+            const penaltyMsg = data.penalty > 0 ? ` (Penalty: Rs ${data.penalty})` : '';
+            success(`Returned: ${data.book}${penaltyMsg}`);
+
+            // Refresh profile to update list
+            if (refreshProfile) refreshProfile();
+
+        } catch (err) {
+            toastError(err.response?.data?.message || 'Return Failed');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const clearSession = () => {
         setScannedBooks([]);
         setBookBarcode('');
     };
+
+    // Filter active books from student profile (if populated)
+    const activeBooks = student?.borrowedBooks?.filter(b => b.status === 'Active') || [];
 
     return (
         <div className="flex flex-col h-full relative">
@@ -85,30 +114,54 @@ const TabLoan = ({ student, loading, setLoading }) => {
             </div>
 
             {/* List Header */}
-            <div className="grid grid-cols-[120px_100px_100px_40px_80px_1fr] bg-gray-100 border-b border-gray-300 p-1 font-bold text-gray-600 text-xs">
-                <div>Barcode</div>
+            <div className="grid grid-cols-[120px_100px_100px_40px_80px_1fr_80px] bg-gray-100 border-b border-gray-300 p-1 font-bold text-gray-600 text-xs">
+                <div>Barcode/ISBN</div>
                 <div>Date Due</div>
                 <div>Call No</div>
                 <div>#</div>
-                <div>R/I/C</div>
+                <div>Status</div>
                 <div>Title</div>
+                <div className="text-center">Action</div>
             </div>
 
-            {/* List Items */}
+            {/* List Items (Session + Active) */}
             <div className="flex-1 overflow-auto bg-white">
+                {/* Session Scans */}
                 {scannedBooks.map((book, idx) => (
-                    <div key={book.id} className="grid grid-cols-[120px_100px_100px_40px_80px_1fr] border-b border-gray-100 p-1 text-xs hover:bg-blue-50">
+                    <div key={book.id} className="grid grid-cols-[120px_100px_100px_40px_80px_1fr_80px] border-b border-gray-100 p-1 text-xs bg-green-50 hover:bg-green-100">
                         <div>{book.barcode}</div>
                         <div>{book.dueDate}</div>
                         <div>-</div>
                         <div>{idx + 1}</div>
-                        <div>{book.status}</div>
-                        <div className="font-medium text-gray-800">{book.title}</div>
+                        <div className="font-bold text-green-700">NEW</div>
+                        <div className="font-medium text-gray-800">{book.title} (Just Issued)</div>
+                        <div className="text-center">-</div>
                     </div>
                 ))}
-                {scannedBooks.length === 0 && (
+
+                {/* Database Active Loans */}
+                {activeBooks.map((book, idx) => (
+                    <div key={book._id} className="grid grid-cols-[120px_100px_100px_40px_80px_1fr_80px] border-b border-gray-100 p-1 text-xs hover:bg-blue-50 items-center">
+                        <div>{book.book?.isbn || '-'}</div>
+                        <div>{new Date(book.returnDate).toLocaleDateString()}</div>
+                        <div>-</div>
+                        <div>{scannedBooks.length + idx + 1}</div>
+                        <div className="text-blue-600 font-bold">Issued</div>
+                        <div className="font-medium text-gray-800">{book.book?.title || 'Unknown Title'}</div>
+                        <div className="text-center">
+                            <button
+                                onClick={() => handleReturnBook(book.book?.isbn)}
+                                className="bg-red-100 text-red-600 hover:bg-red-200 border border-red-200 px-2 py-0.5 rounded text-[10px] font-bold transition-colors"
+                            >
+                                Return
+                            </button>
+                        </div>
+                    </div>
+                ))}
+
+                {scannedBooks.length === 0 && activeBooks.length === 0 && (
                     <div className="p-8 text-center text-gray-400 italic">
-                        {student ? "Scan a book to issue" : "Waiting for student selection..."}
+                        {student ? "No books currently issued." : "Waiting for student selection..."}
                     </div>
                 )}
             </div>
@@ -116,14 +169,11 @@ const TabLoan = ({ student, loading, setLoading }) => {
             {/* Footer Status Bar */}
             <div className="bg-gray-100 border-t border-gray-300 p-1 text-xs text-gray-600 flex justify-between items-center mt-auto">
                 <div className="flex gap-4">
-                    <span>Remaining:</span>
-                    <span>Textbooks: {scannedBooks.length}</span>
-                    <span>Reference: 0</span>
-                    <span>Periodical: 0</span>
+                    <span>Active Loans: {activeBooks.length + scannedBooks.length}</span>
                 </div>
                 <div className="flex gap-2">
                     <button onClick={clearSession} className="flex items-center gap-1 bg-white border border-gray-300 px-2 hover:bg-red-50 text-red-600">
-                        <X size={12} /> Clear List
+                        <X size={12} /> Clear Session
                     </button>
                 </div>
             </div>

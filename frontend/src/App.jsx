@@ -11,7 +11,7 @@ import Profile from './pages/student/Profile';
 import AllBooks from './pages/student/AllBooks';
 import MyBooks from './pages/student/MyBooks';
 import BookDetails from './pages/student/BookDetails';
-import Payment from './pages/student/Payment';
+
 import UDCBrowse from './pages/student/UDCBrowse';
 import AdminLayout from './layouts/AdminLayout';
 import AdminProfile from './pages/admin/Profile';
@@ -56,7 +56,7 @@ function App() {
                             <Route path="browse-udc" element={<UDCBrowse />} />
                             <Route path="books/:id" element={<BookDetails />} />
                             <Route path="mybooks" element={<MyBooks />} />
-                            <Route path="payment" element={<Payment />} />
+
                         </Route>
 
                         <Route path="/admin" element={<AdminLayout />}>

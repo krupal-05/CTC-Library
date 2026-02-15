@@ -10,7 +10,8 @@ const ManageBooks = () => {
     const [statsData, setStatsData] = useState({
         totalBooks: 0,
         totalBorrowed: 0,
-        overdueBooks: 0
+        overdueBooks: 0,
+        totalIssued: 0
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -40,17 +41,15 @@ const ManageBooks = () => {
         { title: 'Total Books', value: statsData.totalBooks, sub: 'In Library Catalog', icon: <BookOpen size={32} /> },
         { title: 'Books Borrowed', value: statsData.totalBorrowed, sub: 'Currently issued', icon: <Book size={32} /> },
         { title: 'Overdue Books', value: statsData.overdueBooks, sub: 'Needs attention', icon: <AlertCircle size={32} /> },
+        { title: 'Total Issued', value: statsData.totalIssued, sub: 'All time history', icon: <RotateCcw size={32} /> },
     ];
 
     const actions = [
         { title: 'Add New Book', desc: 'Add a New Book to the Library catalog', label: 'Add books', icon: <Plus size={32} />, path: '/admin/add-book' },
-        { title: 'Borrow Requests', desc: 'Approve or reject book requests', label: 'Requests', icon: <BookOpen size={32} />, path: '/admin/requests' },
-        { title: 'Return Book', desc: 'Process a book return', label: 'Return', icon: <RotateCcw size={32} />, path: '/admin/return-book' },
         { title: 'Issue Book', desc: 'Issue a book to a member', label: 'Issue', icon: <Book size={32} />, path: '/admin/issue-book' },
         { title: 'Remove Book', desc: 'Remove a book from the catalog', label: 'Remove', icon: <Trash2 size={32} />, path: '/admin/remove-book' },
         { title: 'Register Admin', desc: 'Register a new library member', label: 'Register', icon: <UserPlus size={32} />, path: '/register' },
         { title: 'Manage Students', desc: 'View and manage registered students', label: 'Students', icon: <UserPlus size={32} />, path: '/admin/students' },
-        { title: 'Using Reports', desc: 'Create library activity reports', label: 'Generate', icon: <FileText size={32} />, path: '/admin/reports' },
     ];
 
     const handleActionClick = (path) => {
@@ -76,7 +75,7 @@ const ManageBooks = () => {
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
                 {stats.map((stat, index) => (
                     <div key={index} className="bg-green-50 rounded-2xl p-6 border border-green-100 flex items-start justify-between relative overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                         <div className="relative z-10">

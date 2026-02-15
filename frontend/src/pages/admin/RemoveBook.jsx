@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Search, Trash2, Book, AlertCircle, ArrowLeft } from 'lucide-react';
+import { Search, Trash2, Book, AlertCircle, ArrowLeft, List } from 'lucide-react';
 import { useToast } from '../../context/ToastContext';
 
 const RemoveBook = () => {
@@ -12,15 +12,28 @@ const RemoveBook = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [error, setError] = useState(null);
 
+    // Pagination State
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [showPageMenu, setShowPageMenu] = useState(false);
+
     const fetchBooks = async () => {
+        setLoading(true);
         try {
             // Assuming localhost:5000
-            const url = searchTerm
-                ? `http://localhost:5000/api/books?keyword=${searchTerm}`
-                : 'http://localhost:5000/api/books';
+            let url = searchTerm
+                ? `http://localhost:5000/api/books?keyword=${searchTerm}&page=${page}&limit=15`
+                : `http://localhost:5000/api/books?page=${page}&limit=15`;
 
             const { data } = await axios.get(url);
-            setBooks(data);
+            if (data.books) {
+                setBooks(data.books);
+                setTotalPages(data.pages);
+            } else {
+                setBooks(data);
+                // If backend doesn't return pages in fallback format, assume 1 page
+                setTotalPages(1);
+            }
             setLoading(false);
         } catch (err) {
             setError('Failed to fetch books');
@@ -29,8 +42,18 @@ const RemoveBook = () => {
     };
 
     useEffect(() => {
-        fetchBooks();
+        // Debounce search to avoid rapid API calls
+        const delayDebounceFn = setTimeout(() => {
+            fetchBooks();
+        }, 500);
+
+        return () => clearTimeout(delayDebounceFn);
         // eslint-disable-next-line
+    }, [searchTerm, page]);
+
+    // Reset page to 1 when search term changes
+    useEffect(() => {
+        setPage(1);
     }, [searchTerm]);
 
     const handleDelete = async (id) => {
@@ -102,9 +125,6 @@ const RemoveBook = () => {
                                     <tr key={book._id} className="hover:bg-gray-50">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center">
-                                                <div className="h-12 w-10 flex-shrink-0 bg-gray-200 rounded overflow-hidden">
-                                                    {book.imageUrl && <img src={book.imageUrl} alt="" className="h-full w-full object-cover" />}
-                                                </div>
                                                 <div className="ml-4">
                                                     <div className="text-sm font-medium text-gray-900">{book.title}</div>
                                                     <div className="text-sm text-gray-500">{book.author}</div>
@@ -139,6 +159,79 @@ const RemoveBook = () => {
                     </table>
                 </div>
             </div>
+
+            {/* Pagination Controls */}
+            {!loading && totalPages > 1 && (
+                <div className="flex justify-center items-center gap-4 mt-8">
+                    <button
+                        onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                        disabled={page === 1}
+                        className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                        Previous
+                    </button>
+
+                    <div className="relative">
+                        <button
+                            type="button"
+                            className="flex items-center gap-2 cursor-pointer px-3 py-2 hover:bg-gray-100 rounded-lg transition-colors focus:outline-none focus:bg-gray-100"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setShowPageMenu((prev) => !prev);
+                            }}
+                        >
+                            <span className="text-sm font-medium text-gray-600">
+                                Page {page} of {totalPages}
+                            </span>
+                            {/* Assuming the icon is imported or available in scope. 
+                                Since it was asked to act like AllBooks, we need to ensure icons are imported. 
+                                Will update imports separately if needed, assuming Lucide icons are used.
+                             */}
+                            {/* Note: In the previous step I didn't verify List icon import. I should check imports. */}
+                        </button>
+
+                        {/* Page Jump Menu */}
+                        {showPageMenu && (
+                            <>
+                                <div
+                                    className="fixed inset-0 z-40"
+                                    onClick={() => setShowPageMenu(false)}
+                                />
+                                <div
+                                    className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 max-h-60 bg-white border border-gray-200 shadow-xl rounded-xl overflow-y-auto z-50 p-1"
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    <div className="grid grid-cols-4 gap-1">
+                                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                                            <button
+                                                key={p}
+                                                onClick={() => {
+                                                    setPage(p);
+                                                    setShowPageMenu(false);
+                                                }}
+                                                className={`py-2 rounded-lg text-xs font-bold transition-colors ${page === p
+                                                    ? 'bg-red-600 text-white'
+                                                    : 'text-gray-600 hover:bg-gray-100'
+                                                    }`}
+                                            >
+                                                {p}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            </>
+                        )}
+                    </div>
+
+                    <button
+                        onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+                        disabled={page === totalPages}
+                        className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
         </div>
     );
 };

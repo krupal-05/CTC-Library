@@ -1,14 +1,12 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
-import { User, BookOpen, Search, X, Check, Printer, Save, RefreshCw } from 'lucide-react';
+import { User, Search } from 'lucide-react';
 import { useToast } from '../../context/ToastContext';
 
 // Import Tabs
 import TabLoan from './tabs/TabLoan';
-import TabReturn from './tabs/TabReturn';
-import TabBooking from './tabs/TabBooking';
-import TabReserve from './tabs/TabReserve';
-import TabFine from './tabs/TabFine';
+import TabRequested from './tabs/TabRequested';
+import TabHistory from './tabs/TabHistory';
 
 const IssueBook = () => {
     const { success, error: toastError } = useToast();
@@ -22,52 +20,69 @@ const IssueBook = () => {
 
     // UI State
     const [loading, setLoading] = useState(false);
-    const [activeTab, setActiveTab] = useState('Issue');
+    const [activeTab, setActiveTab] = useState('Issued');
 
-    const bookInputRef = useRef(null);
+    // 1. Fetch Student & their full profile (with books)
+    const fetchStudentProfile = async (enrollmentOrId, type = 'enrollment') => {
+        setLoading(true);
+        try {
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
 
-    // 1. Fetch Student
-    const handleStudentSearch = async (e) => {
-        if (e.key === 'Enter') {
-            if (!studentBarcode) return;
-            setLoading(true);
-            try {
-                const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-                const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
+            let targetId = enrollmentOrId;
 
-                // Search users API
-                const { data } = await axios.get(`http://localhost:5000/api/users?keyword=${studentBarcode}`, config);
-
-                if (data && data.length > 0) {
-                    // Exact match or first result
-                    const found = data.find(u => u.enrollmentNo === studentBarcode) || data[0];
-                    setStudent(found);
+            if (type === 'enrollment') {
+                // 1. Search users API (to get ID)
+                const { data: searchData } = await axios.get(`http://localhost:5000/api/users?keyword=${enrollmentOrId}`, config);
+                if (searchData && searchData.length > 0) {
+                    const foundBasic = searchData.find(u => u.enrollmentNo === enrollmentOrId) || searchData[0];
+                    targetId = foundBasic._id;
                 } else {
                     toastError('Student not found');
                     setStudent(null);
+                    setLoading(false);
+                    return;
                 }
-            } catch (err) {
-                toastError('Error fetching student');
-            } finally {
-                setLoading(false);
             }
+
+            // 2. Fetch FULL Profile (with populated books)
+            const { data: fullProfile } = await axios.get(`http://localhost:5000/api/users/${targetId}/full-profile`, config);
+            setStudent(fullProfile);
+            setStudentBarcode(fullProfile.enrollmentNo);
+            setShowDropdown(null);
+
+        } catch (err) {
+            console.error(err);
+            toastError('Error fetching student details');
+            // Don't clear student on simple refresh failure to avoid UI flicker, but maybe safer to leave as is
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleStudentSearch = (e) => {
+        if (e.key === 'Enter') {
+            if (!studentBarcode) return;
+            fetchStudentProfile(studentBarcode, 'enrollment');
+        }
+    };
+
+    const refreshProfile = () => {
+        if (student?._id) {
+            fetchStudentProfile(student._id, 'id');
         }
     };
 
     const renderActiveTab = () => {
         switch (activeTab) {
-            case 'Issue':
-                return <TabLoan student={student} loading={loading} setLoading={setLoading} />;
-            case 'Return':
-                return <TabReturn student={student} loading={loading} setLoading={setLoading} />;
-            case 'Booking':
-                return <TabBooking />;
-            case 'Reserve':
-                return <TabReserve />;
-            case 'Fine':
-                return <TabFine />;
+            case 'Requested':
+                return <TabRequested student={student} />;
+            case 'Issued':
+                return <TabLoan student={student} loading={loading} setLoading={setLoading} refreshProfile={refreshProfile} />;
+            case 'Read History':
+                return <TabHistory student={student} />;
             default:
-                return <TabLoan student={student} loading={loading} setLoading={setLoading} />;
+                return <TabLoan student={student} loading={loading} setLoading={setLoading} refreshProfile={refreshProfile} />;
         }
     };
 
@@ -90,9 +105,6 @@ const IssueBook = () => {
                                 onChange={e => {
                                     setStudentBarcode(e.target.value);
                                     if (e.target.value.length > 2) {
-                                        // Simple debounce could be added, but for now direct call or wait for Enter
-                                        // Let's rely on Enter for "Scan" and a separate effect/button for "Search"
-                                        // actually user wants "manually", so let's trigger search on typing
                                         const timer = setTimeout(() => {
                                             const userInfo = JSON.parse(localStorage.getItem('userInfo'));
                                             const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
@@ -108,7 +120,12 @@ const IssueBook = () => {
                                 onKeyDown={handleStudentSearch}
                                 className="border border-gray-400 px-2 py-1 w-64 bg-white focus:bg-yellow-50 outline-none"
                             />
-                            <button className="bg-gray-100 border border-gray-300 p-1 hover:bg-gray-200"><Search size={16} /></button>
+                            <button
+                                onClick={() => handleStudentSearch({ key: 'Enter' })}
+                                className="bg-gray-100 border border-gray-300 p-1 hover:bg-gray-200"
+                            >
+                                <Search size={16} />
+                            </button>
 
                             {/* Dropdown Results */}
                             {showDropdown && (
@@ -118,9 +135,24 @@ const IssueBook = () => {
                                             key={u._id}
                                             className="p-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100"
                                             onClick={() => {
-                                                setStudent(u);
+                                                // Trigger full fetch implicitly by setting barcode and firing enter logic
                                                 setStudentBarcode(u.enrollmentNo);
                                                 setShowDropdown(null);
+                                                // Can't easily simulate Enter, so we might need a direct call.
+                                                // Best to just set barcode and let user hit Enter or handle manual trigger.
+                                                // Or trigger immediately:
+                                                const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+                                                const config = { headers: { Authorization: `Bearer ${userInfo.token}` } };
+                                                setLoading(true);
+                                                axios.get(`http://localhost:5000/api/users/${u._id}/full-profile`, config)
+                                                    .then(({ data }) => {
+                                                        setStudent(data);
+                                                        setLoading(false);
+                                                    })
+                                                    .catch(() => {
+                                                        setLoading(false);
+                                                        toastError("Failed to load profile");
+                                                    });
                                             }}
                                         >
                                             <div className="font-bold text-xs">{u.name}</div>
@@ -158,7 +190,7 @@ const IssueBook = () => {
 
             {/* MIDDLE: TABS */}
             <div className="flex gap-1 mb-2 border-b border-gray-300">
-                {['Issue', 'Booking', 'Reserve', 'Fine', 'Return'].map(tab => (
+                {['Requested', 'Issued', 'Read History'].map(tab => (
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}

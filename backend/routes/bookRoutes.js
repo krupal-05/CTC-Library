@@ -117,16 +117,35 @@ router.post('/', async (req, res) => {
 // @route   DELETE /api/books/:id
 // @access  Private/Admin
 router.delete('/:id', protect, admin, async (req, res) => {
+    console.log(`[DELETE BOOK] Request received for ID: ${req.params.id}`);
     try {
         const book = await Book.findById(req.params.id);
 
         if (book) {
+            console.log(`[DELETE BOOK] Book found: ${book.title}`);
             await book.deleteOne();
+            console.log(`[DELETE BOOK] Book deleted from DB`);
+
+            // Log Activity
+            try {
+                console.log(`[DELETE BOOK] Logging activity for user: ${req.user ? req.user.name : 'Unknown'}`);
+                await Activity.create({
+                    action: 'REMOVE_BOOK',
+                    user: req.user.name || 'Admin',
+                    details: `Removed book: ${book.title}`
+                });
+                console.log(`[DELETE BOOK] Activity logged`);
+            } catch (err) {
+                console.error("Failed to log REMOVE_BOOK activity", err);
+            }
+
             res.json({ message: 'Book removed' });
         } else {
+            console.log(`[DELETE BOOK] Book not found`);
             res.status(404).json({ message: 'Book not found' });
         }
     } catch (error) {
+        console.error("[DELETE BOOK] Error:", error);
         res.status(500).json({ message: 'Server Error' });
     }
 });

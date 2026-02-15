@@ -58,10 +58,16 @@ router.get('/stats', protect, admin, async (req, res) => {
 
         const stats = borrowedStats[0] || { totalBorrowed: 0, overdue: 0 };
 
+        // 4. Total Cumulative Issued (History)
+        const totalIssued = await Activity.countDocuments({
+            action: { $in: ['BORROW', 'ISSUE_BOOK'] }
+        });
+
         res.json({
             totalBooks,
             totalBorrowed: stats.totalBorrowed,
             overdueBooks: stats.overdue,
+            totalIssued: totalIssued,
             categoryDistribution: categoryStats,
             monthlyBorrows: monthlyStats
         });
@@ -92,7 +98,7 @@ router.get('/activities', protect, admin, async (req, res) => {
 router.get('/transactions', protect, admin, async (req, res) => {
     try {
         const transactions = await Activity.find({
-            action: { $in: ['BORROW', 'RETURN', 'ISSUE_BOOK', 'RETURN_BOOK'] }
+            action: { $in: ['BORROW', 'RETURN', 'ISSUE_BOOK', 'RETURN_BOOK', 'ADD_BOOK', 'REMOVE_BOOK'] }
         })
             .sort({ timestamp: -1 })
             .limit(100);

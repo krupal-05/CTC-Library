@@ -121,24 +121,8 @@ const BookDetails = () => {
             </button>
 
             <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 flex flex-col md:flex-row">
-                {/* Image Section */}
-                <div className="w-full md:w-1/3 bg-gray-50 p-8 flex items-center justify-center border-r border-gray-100">
-                    <div className="relative shadow-2xl rounded-lg overflow-hidden max-w-[250px] w-full aspect-[2/3]">
-                        {book.imageUrl ? (
-                            <img src={book.imageUrl} alt={book.title} className="w-full h-full object-cover" />
-                        ) : (
-                            <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
-                                No Cover
-                            </div>
-                        )}
-                        <div className={`absolute top-0 right-0 px-3 py-1 text-xs font-bold text-white ${isAvailable ? 'bg-green-500' : 'bg-red-500'}`}>
-                            {isAvailable ? `${book.availableQuantity} Available` : 'Out of Stock'}
-                        </div>
-                    </div>
-                </div>
-
                 {/* Details Section */}
-                <div className="w-full md:w-2/3 p-8 flex flex-col">
+                <div className="w-full p-8 flex flex-col">
                     <div className="flex-grow">
                         <h1 className="text-3xl font-bold text-gray-900 mb-2 leading-tight">{book.title}</h1>
                         <div className="flex items-center text-gray-600 font-medium text-lg mb-6">

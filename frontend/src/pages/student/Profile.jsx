@@ -15,7 +15,7 @@ const Profile = () => {
     const [formData, setFormData] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [reservations, setReservations] = useState([]); // Add state for reservations
+
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -33,9 +33,7 @@ const Profile = () => {
                 setUser(data);
                 setFormData(data);
 
-                // Fetch Reservations
-                const resData = await axios.get('http://localhost:5000/api/users/reservations', config);
-                setReservations(resData.data);
+
 
                 setLoading(false);
             } catch (err) {
@@ -152,35 +150,7 @@ const Profile = () => {
                     </div>
                 </div>
 
-                {/* Reservations Section */}
-                <div className="p-8 border-t border-gray-100">
-                    <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                        <Calendar size={20} className="text-[#4c7c9b]" /> My Reservations (Waitlist)
-                    </h2>
-                    {reservations.length === 0 ? (
-                        <p className="text-gray-500 italic">You are not in the waitlist for any books.</p>
-                    ) : (
-                        <div className="space-y-4">
-                            {reservations.map((res) => (
-                                <div key={res._id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100">
-                                    <div>
-                                        <h3 className="font-bold text-gray-900">{res.title}</h3>
-                                        <p className="text-sm text-gray-500">{res.author}</p>
-                                        <p className="text-xs text-blue-500 font-semibold mt-1">
-                                            Requested: {new Date(res.requestedAt).toLocaleDateString()}
-                                        </p>
-                                    </div>
-                                    <div className="text-right">
-                                        <div className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-bold inline-block mb-1">
-                                            Position: {res.position} / {res.queueLength}
-                                        </div>
-                                        <p className="text-xs text-gray-400">Waitlist</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
+
 
                 {/* Footer / Actions */}
                 <div className="bg-gray-50 px-8 py-4 border-t border-gray-100 flex justify-end gap-3">

@@ -35,11 +35,6 @@ const Sidebar = () => {
                     >
                         All Books
                     </NavLink>
-                    <NavLink to="/student/payment"
-                        className={({ isActive }) => `px-6 py-4 text-center font-bold border-b border-white/20 hover:bg-white/10 ${isActive ? 'bg-white/20 text-white' : 'text-white/80'}`}
-                    >
-                        Payment
-                    </NavLink>
                     <NavLink to="/student/mybooks"
                         className={({ isActive }) => `px-6 py-4 text-center font-bold border-b border-white/20 hover:bg-white/10 ${isActive ? 'bg-white/20 text-white' : 'text-white/80'}`}
                     >
