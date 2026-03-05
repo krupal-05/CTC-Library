@@ -1,6 +1,6 @@
-# Library Management System
+# LDCE Central Library Portal
 
-A comprehensive MERN stack application designed to streamline library operations, from book management and student tracking to detailed reporting and transaction history.
+A comprehensive, modern MERN stack web application for the Central Library at L.D. College of Engineering (LDCE). This portal is designed to streamline library operations, provide access to digital resources (E-Journals, E-Books, Thesis, Digital Archives), facilitate book searches (OPAC), and offer a seamless experience for both students and library administrators.
 
 ## Table of Contents
 
@@ -36,17 +36,19 @@ This project is a robust library management system that provides tailored interf
 
 ## Features
 
-### Public Access
-- **Home**: Landing page with library overview.
-- **About Us**: Information about the library.
-- **Events & News**: Updates on library happenings.
-- **Feedback**: Submit feedback to administrators.
+### Public & Digital Access
+- **Modern Navigation & UX**: A stunning, responsive red-themed navigation layout, providing quick access to all library services, Quick Links, and Auth.
+- **Digital Resources**: Consolidated access to E-Journals, E-Books Database, E-Magazines, Open Access Resources, Audiobooks, and Pamphlets.
+- **Institutional Repository**: Integrated access to the LDCE-Repository, Thesis, Faculty Profiles, and Digital Archive.
+- **Library Services**: Circulation rules, Reference Services, and Plagiarism Checking.
+- **Search & Discovery**: Integrated Search Books (OPAC) functionality for streamlined physical book searching.
+- **Library Information**: Comprehensive sub-menus for About Us, History, Event Updates, Policies, FAQ, and Download Forms.
 
 ### Student Portal
-- **Profile**: View and manage personal information.
-- **Browse Books**: Explore the library catalog (filterable by UDC).
-- **My Books**: Track issued books and due dates.
-- **Book Details**: View comprehensive information about specific books.
+- **Dashboard/Profile**: View and manage personal information securely.
+- **Browse & Reserve Books**: Explore the library catalog and manage interactions.
+- **Notifications**: Real-time notification system with a dedicated alerts dropdown in the header to inform users about dues, library news, or approvals.
+- **My Books**: Track issued books, circulation history, and due dates.
 
 ### Admin Dashboard
 - **Dashboard**: Overview of key metrics and recent activities.
