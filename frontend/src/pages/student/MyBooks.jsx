@@ -80,7 +80,7 @@ const MyBooks = () => {
 
     return (
         <div className="max-w-5xl mx-auto min-h-[80vh]">
-            <h2 className="text-3xl font-bold mb-8 text-gray-800">My Library</h2>
+            <h2 className="text-3xl font-black mb-8 text-primary tracking-tight">My Library</h2>
 
             {/* Tabs */}
             <div className="flex space-x-2 mb-6 border-b border-gray-200">
@@ -94,7 +94,7 @@ const MyBooks = () => {
                         onClick={() => setActiveTab(tab.id)}
                         className={`pb-3 px-4 flex items-center gap-2 font-bold text-sm transition-all border-b-2 
                             ${activeTab === tab.id
-                                ? 'border-[#4c7c9b] text-[#4c7c9b]'
+                                ? 'border-secondary text-secondary shadow-sm'
                                 : 'border-transparent text-gray-400 hover:text-gray-600'
                             }`}
                     >
@@ -106,11 +106,11 @@ const MyBooks = () => {
 
             <div className="bg-white shadow-sm rounded-2xl border border-gray-100 overflow-hidden">
                 <table className="min-w-full divide-y divide-gray-100">
-                    <thead className="bg-gray-50">
+                    <thead className="bg-secondary/5">
                         <tr>
-                            <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Book Details</th>
-                            <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Dates</th>
-                            <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                            <th className="px-6 py-4 text-left text-xs font-black text-primary uppercase tracking-widest">Book Details</th>
+                            <th className="px-6 py-4 text-left text-xs font-black text-primary uppercase tracking-widest">Dates</th>
+                            <th className="px-6 py-4 text-left text-xs font-black text-primary uppercase tracking-widest">Status</th>
                             {activeTab === 'Issued' && (
                                 <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Action</th>
                             )}
@@ -144,10 +144,10 @@ const MyBooks = () => {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className={`px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full 
-                                            ${entry.status === 'Active' ? 'bg-green-100 text-green-800' :
-                                                entry.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                                                    'bg-gray-100 text-gray-800'}`}>
+                                        <span className={`px-3 py-1 inline-flex text-[10px] leading-5 font-black uppercase tracking-widest rounded-full border
+                                            ${entry.status === 'Active' ? 'bg-accent/20 text-primary border-accent/20' :
+                                                entry.status === 'Pending' ? 'bg-secondary/10 text-primary border-secondary/20' :
+                                                    'bg-gray-100 text-gray-500 border-gray-200'}`}>
                                             {entry.status === 'Active' ? 'Issued' : entry.status}
                                         </span>
                                     </td>
@@ -176,7 +176,7 @@ const MyBooks = () => {
                                             <button
                                                 onClick={() => handleReturn(entry.book?._id)}
                                                 disabled={returning === entry.book?._id}
-                                                className="text-gray-400 hover:text-red-600 font-medium text-xs transition-colors"
+                                                className="text-secondary/60 hover:text-secondary font-bold text-xs transition-all uppercase tracking-tighter"
                                                 title="Return Book"
                                             >
                                                 {returning === entry.book?._id ? 'Processing...' : 'Return'}

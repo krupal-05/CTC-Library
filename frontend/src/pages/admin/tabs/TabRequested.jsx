@@ -7,14 +7,14 @@ const TabRequested = ({ student }) => {
 
     return (
         <div className="flex flex-col h-full bg-white">
-            <div className="p-3 border-b border-gray-200 bg-gray-50 font-bold text-gray-700">
+            <div className="p-3 border-b border-secondary/20 bg-secondary/5 font-bold text-primary">
                 Requested Books (Pending Approval)
             </div>
 
             <div className="flex-1 overflow-auto">
                 {requestedBooks.length > 0 ? (
                     <table className="min-w-full text-xs text-left">
-                        <thead className="bg-gray-100 font-medium text-gray-600 border-b border-gray-200">
+                        <thead className="bg-secondary/5 font-bold text-primary border-b border-secondary/10">
                             <tr>
                                 <th className="px-4 py-2">Book Title</th>
                                 <th className="px-4 py-2">Requested Date</th>
@@ -24,7 +24,7 @@ const TabRequested = ({ student }) => {
                         </thead>
                         <tbody className="divide-y divide-gray-100">
                             {requestedBooks.map((item) => (
-                                <tr key={item._id} className="hover:bg-blue-50">
+                                <tr key={item._id} className="hover:bg-secondary/5 transition-colors">
                                     <td className="px-4 py-2 font-medium text-gray-800">
                                         {item.book ? item.book.title : 'Unknown Book'}
                                     </td>
@@ -35,7 +35,7 @@ const TabRequested = ({ student }) => {
                                         {item.requestedDays} Days
                                     </td>
                                     <td className="px-4 py-2">
-                                        <span className="px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700 font-bold text-[10px]">
+                                        <span className="px-2 py-0.5 rounded-full bg-accent/20 text-primary/70 font-bold text-[10px] tracking-tight border border-accent/20">
                                             Pending
                                         </span>
                                     </td>

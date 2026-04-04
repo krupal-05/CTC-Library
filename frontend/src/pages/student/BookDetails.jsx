@@ -115,41 +115,41 @@ const BookDetails = () => {
         <div className="max-w-5xl mx-auto p-6">
             <button
                 onClick={() => navigate(-1)}
-                className="flex items-center text-gray-600 hover:text-gray-900 mb-6 transition-colors"
+                className="flex items-center text-primary/60 hover:text-primary mb-6 transition-all font-medium group"
             >
-                <ArrowLeft size={20} className="mr-2" /> Back to Books
+                <ArrowLeft size={20} className="mr-2 transform group-hover:-translate-x-1 transition-transform" /> Back to Books
             </button>
 
             <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 flex flex-col md:flex-row">
                 {/* Details Section */}
                 <div className="w-full p-8 flex flex-col">
                     <div className="flex-grow">
-                        <h1 className="text-3xl font-bold text-gray-900 mb-2 leading-tight">{book.title}</h1>
-                        <div className="flex items-center text-gray-600 font-medium text-lg mb-6">
-                            <User size={20} className="mr-2 text-[#4c7c9b]" />
+                        <h1 className="text-4xl font-black text-primary mb-2 leading-tight tracking-tight">{book.title}</h1>
+                        <div className="flex items-center text-secondary font-bold text-lg mb-6">
+                            <User size={20} className="mr-2" />
                             {book.author}
                         </div>
 
                         <div className="grid grid-cols-2 gap-4 mb-8">
-                            <div className="bg-gray-50 p-4 rounded-xl">
+                            <div className="bg-secondary/5 p-4 rounded-2xl border border-secondary/10 shadow-sm transition-hover hover:shadow-md">
                                 <span className="flex items-center text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">
                                     <Hash size={14} className="mr-1.5" /> ISBN
                                 </span>
                                 <span className="text-gray-900 font-semibold">{book.isbn || 'N/A'}</span>
                             </div>
-                            <div className="bg-gray-50 p-4 rounded-xl">
+                            <div className="bg-secondary/5 p-4 rounded-2xl border border-secondary/10 shadow-sm transition-hover hover:shadow-md">
                                 <span className="flex items-center text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">
                                     <Tag size={14} className="mr-1.5" /> Category
                                 </span>
                                 <span className="text-gray-900 font-semibold">{book.category || 'General'}</span>
                             </div>
-                            <div className="bg-gray-50 p-4 rounded-xl">
+                            <div className="bg-secondary/5 p-4 rounded-2xl border border-secondary/10 shadow-sm transition-hover hover:shadow-md">
                                 <span className="flex items-center text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">
                                     <BookOpen size={14} className="mr-1.5" /> Total Copies
                                 </span>
                                 <span className="text-gray-900 font-semibold">{book.totalQuantity}</span>
                             </div>
-                            <div className="bg-gray-50 p-4 rounded-xl">
+                            <div className="bg-secondary/5 p-4 rounded-2xl border border-secondary/10 shadow-sm transition-hover hover:shadow-md">
                                 <span className="flex items-center text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">
                                     <Clock size={14} className="mr-1.5" /> Added On
                                 </span>
@@ -158,8 +158,8 @@ const BookDetails = () => {
                         </div>
 
                         <div className="mb-8">
-                            <h3 className="text-lg font-bold text-gray-900 mb-2">Description</h3>
-                            <p className="text-gray-600 leading-relaxed">
+                            <h3 className="text-xl font-bold text-primary mb-3">About this book</h3>
+                            <p className="text-gray-600 leading-relaxed font-medium">
                                 {book.description || 'No description available for this book.'}
                             </p>
                         </div>
@@ -172,7 +172,7 @@ const BookDetails = () => {
                                     <button
                                         onClick={handleBorrowClick}
                                         disabled={borrowing}
-                                        className="w-full py-4 rounded-xl font-bold text-lg shadow-lg transition-all transform active:scale-[0.98] bg-[#4c7c9b] text-white hover:bg-[#3b6683] hover:shadow-xl"
+                                        className="w-full py-4 rounded-xl font-bold text-lg shadow-lg transition-all transform active:scale-[0.98] bg-primary text-white hover:bg-secondary hover:shadow-2xl"
                                     >
                                         {borrowing ? 'Processing...' : 'Request Book'}
                                     </button>
@@ -180,7 +180,7 @@ const BookDetails = () => {
                                     <button
                                         onClick={handleJoinWaitlist}
                                         disabled={joiningWaitlist}
-                                        className="w-full py-4 rounded-xl font-bold text-lg shadow-lg transition-all transform active:scale-[0.98] bg-orange-500 text-white hover:bg-orange-600 hover:shadow-xl"
+                                        className="w-full py-4 rounded-xl font-bold text-lg shadow-lg transition-all transform active:scale-[0.98] bg-accent text-white hover:bg-cyan-600 hover:shadow-2xl"
                                     >
                                         {joiningWaitlist ? 'Joining...' : 'Join Waitlist'}
                                     </button>
@@ -209,8 +209,8 @@ const BookDetails = () => {
                         />
                     </div>
                     <div className="flex gap-3 pt-2">
-                        <button onClick={() => setIsModalOpen(false)} className="flex-1 py-3 text-gray-600 font-bold hover:bg-gray-100 rounded-xl">Cancel</button>
-                        <button onClick={confirmBorrow} className="flex-1 py-3 bg-[#4c7c9b] text-white font-bold rounded-xl hover:bg-[#3b6683]">Confirm Request</button>
+                        <button onClick={() => setIsModalOpen(false)} className="flex-1 py-3 text-gray-500 font-bold hover:bg-gray-100 rounded-xl transition-colors">Cancel</button>
+                        <button onClick={confirmBorrow} className="flex-1 py-3 bg-primary text-white font-bold rounded-xl hover:bg-secondary shadow-lg active:scale-95 transition-all">Confirm Request</button>
                     </div>
                 </div>
             </Modal>

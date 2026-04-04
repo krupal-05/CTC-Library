@@ -47,11 +47,11 @@ const Register = () => {
 
     return (
         <div className="min-h-[calc(100vh-140px)] flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="bg-[#4c7c9b] rounded-3xl shadow-xl w-full max-w-4xl p-8 md:p-12 text-white flex flex-col md:flex-row gap-8">
+            <div className="bg-primary rounded-3xl shadow-xl w-full max-w-4xl p-8 md:p-12 text-white flex flex-col md:flex-row gap-8">
 
                 {/* Left Side: Form */}
                 <div className="flex-1">
-                    <h2 className="text-3xl font-bold mb-8 underline underline-offset-8 decoration-2 text-center md:text-left">Register Student</h2>
+                    <h2 className="text-3xl font-bold mb-8 underline underline-offset-8 decoration-accent decoration-2 text-center md:text-left">Register Student</h2>
 
                     {error && <div className="bg-red-500 text-white p-3 rounded mb-4 text-sm font-semibold animate-pulse">{error}</div>}
 
@@ -73,14 +73,14 @@ const Register = () => {
 
                         <button
                             type="submit"
-                            className="w-full bg-white text-gray-800 font-bold py-3 px-10 rounded-full shadow-lg hover:bg-gray-100 transition-transform hover:scale-105 mt-6"
+                            className="w-full bg-accent text-white font-bold py-3 px-10 rounded-full shadow-lg hover:bg-cyan-500 transition-all hover:scale-105 active:scale-95 mt-6"
                         >
-                            Register
+                            Register Now
                         </button>
                     </form>
 
-                    <div className="mt-6 text-xs text-gray-200 text-center md:text-left">
-                        Already have an account? <a href="/login" className="font-bold hover:underline">Login</a>
+                    <div className="mt-6 text-xs text-white/70 text-center md:text-left">
+                        Already have an account? <a href="/login" className="font-bold text-white hover:text-accent hover:underline">Login</a>
                     </div>
                 </div>
 
@@ -99,12 +99,12 @@ const Register = () => {
 
 const InputGroup = ({ icon, type = "text", ...props }) => (
     <div className="relative">
-        <div className="absolute left-3 top-3.5 text-gray-500">
+        <div className="absolute left-3 top-3.5 text-white/60">
             {icon}
         </div>
         <input
             type={type}
-            className="w-full bg-gray-200/90 text-gray-800 rounded-full py-3 pl-10 pr-6 focus:outline-none focus:ring-2 focus:ring-blue-300 placeholder-gray-500 text-sm"
+            className="w-full bg-white/10 border border-white/20 text-white rounded-full py-3 pl-10 pr-6 focus:outline-none focus:ring-2 focus:ring-accent placeholder-white/40 text-sm"
             {...props}
         />
     </div>
@@ -112,16 +112,16 @@ const InputGroup = ({ icon, type = "text", ...props }) => (
 
 const SelectGroup = ({ icon, options, ...props }) => (
     <div className="relative">
-        <div className="absolute left-3 top-3.5 text-gray-500">
+        <div className="absolute left-3 top-3.5 text-white/60">
             {icon}
         </div>
         <select
-            className="w-full bg-gray-200/90 text-gray-800 rounded-full py-3 pl-10 pr-6 focus:outline-none focus:ring-2 focus:ring-blue-300 appearance-none text-sm cursor-pointer"
+            className="w-full bg-white/10 border border-white/20 text-white rounded-full py-3 pl-10 pr-6 focus:outline-none focus:ring-2 focus:ring-accent appearance-none text-sm cursor-pointer"
             {...props}
         >
             {options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
         </select>
-        <div className="absolute right-4 top-4 text-gray-500 pointer-events-none">
+        <div className="absolute right-4 top-4 text-white/60 pointer-events-none">
             <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" /></svg>
         </div>
     </div>

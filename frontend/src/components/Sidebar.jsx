@@ -13,30 +13,31 @@ const Sidebar = () => {
     };
 
     return (
-        <aside className="w-64 bg-[#4c7c9b] text-white flex-shrink-0 min-h-full flex flex-col">
+        <aside className="w-64 bg-primary text-white flex-shrink-0 min-h-full flex flex-col shadow-xl">
             {/* User Profile Summary in Sidebar */}
-            <div className="p-8 flex flex-col items-center border-b border-white/20">
-                <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center mb-4 overflow-hidden">
-                    <User className="w-12 h-12 text-gray-400" />
+            <div className="p-8 flex flex-col items-center border-b border-white/10 bg-black/10">
+                <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center mb-4 overflow-hidden shadow-lg border-4 border-secondary/30">
+                    <User className="w-12 h-12 text-primary/40" />
                 </div>
-                <h3 className="font-bold text-lg text-center">{userInfo.name || 'Student'}</h3>
+                <h3 className="font-bold text-lg text-center tracking-wide">{userInfo.name || 'Student'}</h3>
+                <p className="text-xs text-white/60 mt-1">Student Portal</p>
             </div>
 
             <nav className="flex-1">
                 <div className="flex flex-col text-white">
                     <NavLink to="/student/profile"
-                        className={({ isActive }) => `px-6 py-4 text-center font-bold border-b border-white/20 hover:bg-white/10 ${isActive ? 'bg-white/20 text-white' : 'text-white/80'}`}
+                        className={({ isActive }) => `px-6 py-4 text-left font-bold border-b border-white/5 transition-all hover:bg-white/5 ${isActive ? 'bg-secondary text-white border-white/20 shadow-inner' : 'text-white/70'}`}
                     >
                         Profile
                     </NavLink>
 
                     <NavLink to="/student/browse-udc"
-                        className={({ isActive }) => `px-6 py-4 text-center font-bold border-b border-white/20 hover:bg-white/10 ${isActive ? 'bg-white/20 text-white' : 'text-white/80'}`}
+                        className={({ isActive }) => `px-6 py-4 text-left font-bold border-b border-white/5 transition-all hover:bg-white/5 ${isActive ? 'bg-secondary text-white border-white/20 shadow-inner' : 'text-white/70'}`}
                     >
                         All Books
                     </NavLink>
                     <NavLink to="/student/mybooks"
-                        className={({ isActive }) => `px-6 py-4 text-center font-bold border-b border-white/20 hover:bg-white/10 ${isActive ? 'bg-white/20 text-white' : 'text-white/80'}`}
+                        className={({ isActive }) => `px-6 py-4 text-left font-bold border-b border-white/5 transition-all hover:bg-white/5 ${isActive ? 'bg-secondary text-white border-white/20 shadow-inner' : 'text-white/70'}`}
                     >
                         My Books
                     </NavLink>

@@ -87,7 +87,7 @@ const Reports = () => {
                 >
                     <ArrowLeft size={24} />
                 </button>
-                <h1 className="text-3xl font-bold text-gray-800">Library Analytics</h1>
+                <h1 className="text-3xl font-bold text-primary">Library Analytics</h1>
             </div>
             <p className="text-gray-500 mb-8">Performance reports and inventory insights</p>
 
@@ -101,7 +101,7 @@ const Reports = () => {
                                 {stats?.totalBooks ? Math.round((stats.totalBorrowed / stats.totalBooks) * 100) : 0}%
                             </h3>
                         </div>
-                        <div className="p-2 bg-blue-50 rounded-lg text-blue-600">
+                        <div className="p-2 bg-secondary/10 rounded-lg text-primary shadow-sm">
                             <Activity size={20} />
                         </div>
                     </div>
@@ -116,12 +116,12 @@ const Reports = () => {
                             <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Inventory</p>
                             <h3 className="text-2xl font-bold text-gray-800">{stats?.totalBooks || 0}</h3>
                         </div>
-                        <div className="p-2 bg-purple-50 rounded-lg text-purple-600">
+                        <div className="p-2 bg-secondary/10 rounded-lg text-primary shadow-sm">
                             <BookOpen size={20} />
                         </div>
                     </div>
                     <div className="w-full bg-gray-100 rounded-full h-1.5 mt-2">
-                        <div className="bg-purple-500 h-1.5 rounded-full" style={{ width: '100%' }}></div>
+                        <div className="bg-secondary h-1.5 rounded-full shadow-sm" style={{ width: '100%' }}></div>
                     </div>
                 </div>
 
@@ -131,7 +131,7 @@ const Reports = () => {
                             <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Active Loans</p>
                             <h3 className="text-2xl font-bold text-gray-800">{stats?.totalBorrowed || 0}</h3>
                         </div>
-                        <div className="p-2 bg-orange-50 rounded-lg text-orange-600">
+                        <div className="p-2 bg-secondary/10 rounded-lg text-primary shadow-sm">
                             <Users size={20} />
                         </div>
                     </div>
@@ -144,7 +144,7 @@ const Reports = () => {
                             <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Overdue</p>
                             <h3 className="text-2xl font-bold text-gray-800">{stats?.overdueBooks || 0}</h3>
                         </div>
-                        <div className="p-2 bg-red-50 rounded-lg text-red-600">
+                        <div className="p-2 bg-accent/20 rounded-lg text-primary shadow-sm">
                             <AlertCircleIcon size={20} />
                         </div>
                     </div>
@@ -187,8 +187,8 @@ const Reports = () => {
                                 const max = Math.max(...monthlyTraffic);
                                 const height = max > 0 ? (value / max) * 100 : 0;
                                 return (
-                                    <div key={idx} className="w-full bg-blue-100 rounded-t-lg relative group transition-all hover:bg-blue-200" style={{ height: `${height}%` }}>
-                                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div key={idx} className="w-full bg-secondary/40 rounded-t-lg relative group transition-all hover:bg-secondary shadow-inner" style={{ height: `${height}%` }}>
+                                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity font-bold shadow-md z-20">
                                             {value}
                                         </div>
                                     </div>

@@ -3,8 +3,8 @@ import UDCGrid from '../../components/UDCGrid';
 
 const UDCBrowse = () => {
     return (
-        <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-6 text-gray-800">Browse by Universal Decimal Classification (UDC)</h2>
+        <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm transition-all duration-300">
+            <h2 className="text-3xl font-black mb-8 text-primary tracking-tight">Browse by Classification (UDC)</h2>
             <UDCGrid />
         </div>
     );

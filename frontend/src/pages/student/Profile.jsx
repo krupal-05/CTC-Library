@@ -84,9 +84,9 @@ const Profile = () => {
         <div className="max-w-4xl mx-auto p-4">
             <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
                 {/* Header Section */}
-                <div className="bg-gradient-to-r from-[#4c7c9b] to-[#86a8e7] p-8 text-center text-white relative">
-                    <div className="mx-auto w-32 h-32 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border-4 border-white/50 mb-4 shadow-lg">
-                        <User size={64} className="text-white" />
+                <div className="bg-gradient-to-r from-primary to-secondary p-8 text-center text-white relative shadow-inner">
+                    <div className="mx-auto w-32 h-32 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border-4 border-white/30 mb-4 shadow-xl">
+                        <User size={64} className="text-white drop-shadow-md" />
                     </div>
                     {isEditing ? (
                         <input
@@ -94,12 +94,12 @@ const Profile = () => {
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
-                            className="text-2xl font-bold tracking-wide text-center text-gray-800 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-blue-300 w-full max-w-xs mx-auto block"
+                            className="text-2xl font-bold tracking-wide text-center text-gray-800 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-accent w-full max-w-xs mx-auto block"
                         />
                     ) : (
                         <h1 className="text-3xl font-bold tracking-wide">{user.name}</h1>
                     )}
-                    <p className="text-blue-100 font-medium mt-1 uppercase">{user.role || 'Student'}</p>
+                    <p className="text-accent font-bold mt-1 uppercase tracking-widest text-xs">{user.role || 'Student'}</p>
 
                     {error && <div className="absolute top-4 right-4 bg-red-500 px-3 py-1 rounded text-sm animate-pulse">{error}</div>}
                 </div>
@@ -159,12 +159,12 @@ const Profile = () => {
                             <button onClick={handleCancel} className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-200 transition-colors">
                                 <X size={18} /> Cancel
                             </button>
-                            <button onClick={handleSave} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#4c7c9b] text-white hover:bg-[#3b6683] transition-colors shadow-md">
+                            <button onClick={handleSave} className="flex items-center gap-2 px-6 py-2 rounded-lg bg-primary text-white hover:bg-secondary transition-all shadow-lg active:scale-95 font-bold">
                                 <Save size={18} /> Save Changes
                             </button>
                         </>
                     ) : (
-                        <button onClick={() => setIsEditing(true)} className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#4c7c9b] hover:bg-blue-50 font-medium transition-colors border border-transparent hover:border-blue-100">
+                        <button onClick={() => setIsEditing(true)} className="flex items-center gap-2 px-6 py-2 rounded-lg text-primary hover:bg-secondary/10 font-bold transition-all border border-primary/20 hover:border-primary shadow-sm active:scale-95">
                             <Edit2 size={18} /> Edit Profile
                         </button>
                     )}
@@ -176,7 +176,7 @@ const Profile = () => {
 
 const ProfileItem = ({ icon, label, name, value, isEditing, onChange }) => (
     <div className="flex items-center gap-4 p-4 rounded-xl hover:bg-gray-50 transition-colors border border-gray-100/50 hover:border-gray-200">
-        <div className="w-10 h-10 rounded-full bg-blue-50 text-[#4c7c9b] flex items-center justify-center shrink-0">
+        <div className="w-10 h-10 rounded-full bg-secondary/10 text-primary flex items-center justify-center shrink-0 shadow-sm border border-secondary/20">
             {icon}
         </div>
         <div className="flex-1">
@@ -187,7 +187,7 @@ const ProfileItem = ({ icon, label, name, value, isEditing, onChange }) => (
                     name={name}
                     value={value}
                     onChange={onChange}
-                    className="w-full text-gray-800 font-medium text-lg border-b border-gray-300 focus:border-[#4c7c9b] outline-none bg-transparent"
+                    className="w-full text-gray-800 font-medium text-lg border-b border-gray-300 focus:border-primary outline-none bg-transparent"
                 />
             ) : (
                 <p className="text-gray-800 font-medium text-lg min-h-[1.75rem]">{value || '-'}</p>

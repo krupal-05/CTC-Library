@@ -118,7 +118,7 @@ const IssueBook = () => {
                                     }
                                 }}
                                 onKeyDown={handleStudentSearch}
-                                className="border border-gray-400 px-2 py-1 w-64 bg-white focus:bg-yellow-50 outline-none"
+                                className="border border-gray-400 px-2 py-1 w-64 bg-white focus:bg-accent/10 focus:ring-1 focus:ring-accent outline-none transition-colors"
                             />
                             <button
                                 onClick={() => handleStudentSearch({ key: 'Enter' })}
@@ -183,7 +183,7 @@ const IssueBook = () => {
                 </div>
 
                 {/* Right: Photo Placeholder */}
-                <div className="bg-gray-200 border border-gray-400 flex items-center justify-center text-gray-400">
+                <div className="bg-secondary/5 border border-secondary/20 flex items-center justify-center text-secondary/30 rounded-lg shadow-inner">
                     <User size={80} />
                 </div>
             </div>
@@ -194,10 +194,10 @@ const IssueBook = () => {
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
-                        className={`px-6 py-1 border-t border-l border-r rounded-t-lg font-bold text-sm 
+                        className={`px-6 py-1 border-t border-l border-r rounded-t-lg font-bold text-sm transition-all
                             ${activeTab === tab
-                                ? 'bg-green-500 text-white border-green-600'
-                                : 'bg-gray-100 text-gray-600 border-gray-300 hover:bg-gray-200'}`}
+                                ? 'bg-primary text-white border-primary shadow-md transform -translate-y-[1px]'
+                                : 'bg-gray-200/50 text-gray-500 border-gray-300 hover:bg-gray-200 hover:text-gray-700'}`}
                     >
                         {tab}
                     </button>

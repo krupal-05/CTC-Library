@@ -126,7 +126,9 @@ const AllBooks = () => {
 
     return (
         <div>
-            <h2 className="text-2xl font-bold mb-6 text-gray-800">{udcParam ? 'Books in Category' : 'All Book'}</h2>
+            <h2 className="text-2xl font-bold mb-6 text-primary tracking-tight">
+                {udcParam ? 'Books in Category' : 'Browse Library'}
+            </h2>
 
             {/* Search and Filter Section */}
             <div className="bg-white rounded-xl shadow-sm p-4 mb-6 flex flex-col lg:flex-row gap-4 items-center justify-between border border-gray-100">
@@ -136,7 +138,7 @@ const AllBooks = () => {
                     <input
                         type="text"
                         placeholder="Search by title or author..."
-                        className="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#4c7c9b]/20 focus:border-[#4c7c9b] transition-all"
+                        className="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 pl-9 pr-4 text-sm focus:outline-none focus:ring-4 focus:ring-accent/10 focus:border-accent transition-all shadow-sm"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -149,7 +151,7 @@ const AllBooks = () => {
                         <select
                             value={sortOption}
                             onChange={(e) => setSortOption(e.target.value)}
-                            className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-[#4c7c9b] focus:border-[#4c7c9b] p-2"
+                            className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-secondary focus:border-secondary p-2 transition-all outline-none"
                         >
                             <option value="newest">Newest Arrivals</option>
                             <option value="oldest">Oldest First</option>
@@ -166,9 +168,9 @@ const AllBooks = () => {
                                 <button
                                     key={status}
                                     onClick={() => { setFilterStatus(status); setPage(1); }}
-                                    className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors border ${filterStatus === status
-                                        ? 'bg-[#4c7c9b] text-white border-[#4c7c9b]'
-                                        : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+                                    className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all border ${filterStatus === status
+                                        ? 'bg-primary text-white border-primary shadow-md transform -translate-y-[1px]'
+                                        : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50 hover:text-gray-700'
                                         }`}
                                 >
                                     {status === 'Borrowed' ? 'Out of Stock' : status}
@@ -195,15 +197,11 @@ const AllBooks = () => {
                                     <div
                                         className={`cursor-pointer rounded-2xl p-4 flex items-center justify-between transition-all duration-300 hover:shadow-lg border border-transparent hover:border-gray-200 gap-4
                                             ${[
-                                                'bg-blue-50 text-blue-900',
-                                                'bg-green-50 text-green-900',
-                                                'bg-purple-50 text-purple-900',
-                                                'bg-orange-50 text-orange-900',
-                                                'bg-pink-50 text-pink-900',
-                                                'bg-teal-50 text-teal-900',
-                                                'bg-indigo-50 text-indigo-900',
-                                                'bg-cyan-50 text-cyan-900'
-                                            ][index % 8]}`}
+                                                'bg-primary/5 text-primary border-primary/10',
+                                                'bg-secondary/5 text-secondary border-secondary/10',
+                                                'bg-accent/5 text-primary border-accent/10',
+                                                'bg-slate-50 text-gray-800 border-gray-100'
+                                            ][index % 4]}`}
                                     >
                                         {/* Left Side: Info & Badge */}
                                         <div
@@ -247,7 +245,7 @@ const AllBooks = () => {
                                                             ? 'bg-gray-100/50 text-gray-500 cursor-default'
                                                             : book.availableQuantity <= 0
                                                                 ? 'bg-gray-100/50 text-gray-400 cursor-not-allowed'
-                                                                : 'bg-white text-gray-800 hover:bg-black hover:text-white shadow-sm'
+                                                                : 'bg-white text-primary hover:bg-primary hover:text-white shadow-sm hover:shadow-md'
                                                         }`}
                                                 >
                                                     {borrowing === book._id ? '...' :
@@ -316,7 +314,7 @@ const AllBooks = () => {
                                                         setShowPageMenu(false);
                                                     }}
                                                     className={`py-2 rounded-lg text-xs font-bold transition-colors ${page === p
-                                                        ? 'bg-[#4c7c9b] text-white'
+                                                        ? 'bg-primary text-white shadow-lg'
                                                         : 'text-gray-600 hover:bg-gray-100'
                                                         }`}
                                                 >
@@ -373,7 +371,7 @@ const AllBooks = () => {
                         </button>
                         <button
                             onClick={confirmBorrow}
-                            className="flex-1 py-3 bg-[#4c7c9b] text-white font-bold rounded-xl hover:bg-[#3b6683] shadow-md hover:shadow-lg transition-all"
+                            className="flex-1 py-3 bg-primary text-white font-bold rounded-xl hover:bg-secondary shadow-md hover:shadow-xl transition-all active:scale-95"
                         >
                             Confirm Request
                         </button>

@@ -85,8 +85,8 @@ const RemoveBook = () => {
                 >
                     <ArrowLeft size={24} />
                 </button>
-                <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                    <Book className="text-red-600" /> Remove Book
+                <h1 className="text-2xl font-bold text-primary flex items-center gap-2">
+                    <Book className="text-secondary" /> Remove Book
                 </h1>
             </div>
 
@@ -96,7 +96,7 @@ const RemoveBook = () => {
                 <input
                     type="text"
                     placeholder="Search by title or author..."
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent transition-all"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -112,11 +112,11 @@ const RemoveBook = () => {
             <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                        <thead className="bg-secondary/5">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Book Details</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Inventory</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th className="px-6 py-3 text-left text-xs font-bold text-primary uppercase tracking-wider">Book Details</th>
+                                <th className="px-6 py-3 text-left text-xs font-bold text-primary uppercase tracking-wider">Inventory</th>
+                                <th className="px-6 py-3 text-left text-xs font-bold text-primary uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
@@ -210,7 +210,7 @@ const RemoveBook = () => {
                                                     setShowPageMenu(false);
                                                 }}
                                                 className={`py-2 rounded-lg text-xs font-bold transition-colors ${page === p
-                                                    ? 'bg-red-600 text-white'
+                                                    ? 'bg-primary text-white shadow-md'
                                                     : 'text-gray-600 hover:bg-gray-100'
                                                     }`}
                                             >

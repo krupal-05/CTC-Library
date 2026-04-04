@@ -76,8 +76,8 @@ const ReturnBook = () => {
                 >
                     <ArrowLeft size={24} />
                 </button>
-                <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
-                    <RotateCcw className="text-blue-600" /> Return Book
+                <h1 className="text-3xl font-bold text-primary flex items-center gap-2">
+                    <RotateCcw className="text-secondary" /> Return Book
                 </h1>
             </div>
 
@@ -98,7 +98,7 @@ const ReturnBook = () => {
                                     type="text"
                                     value={enrollmentNo}
                                     onChange={(e) => setEnrollmentNo(e.target.value)}
-                                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-accent focus:border-accent/30"
                                     placeholder="e.g. 123456"
                                     required
                                 />
@@ -109,14 +109,14 @@ const ReturnBook = () => {
                                     type="text"
                                     value={isbn}
                                     onChange={(e) => setIsbn(e.target.value)}
-                                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-accent focus:border-accent/30"
                                     placeholder="e.g. 978-3-16-148410-0"
                                     required
                                 />
                             </div>
                             <button
                                 type="submit"
-                                className="w-full bg-gray-800 text-white font-bold py-3 rounded-xl hover:bg-gray-900 transition-colors flex items-center justify-center gap-2"
+                                className="w-full bg-primary text-white font-bold py-3 rounded-xl hover:bg-secondary transition-all flex items-center justify-center gap-2 shadow-lg active:scale-95"
                             >
                                 <RotateCcw size={18} /> Return Book
                             </button>
@@ -136,7 +136,7 @@ const ReturnBook = () => {
 
                         <div className="overflow-x-auto">
                             <table className="w-full text-left">
-                                <thead className="bg-gray-50 text-xs uppercase text-gray-500 font-semibold">
+                                <thead className="bg-secondary/5 text-xs uppercase text-primary font-bold">
                                     <tr>
                                         <th className="px-6 py-4">Student</th>
                                         <th className="px-6 py-4">Book</th>
@@ -171,7 +171,7 @@ const ReturnBook = () => {
                                                 <td className="px-6 py-4 text-right">
                                                     <button
                                                         onClick={() => processReturn(issue.enrollmentNo, issue.isbn)}
-                                                        className="px-4 py-2 bg-blue-100 text-blue-700 text-sm font-bold rounded-lg hover:bg-blue-200 transition-colors shadow-sm active:scale-95"
+                                                        className="px-4 py-2 bg-accent/10 text-primary text-sm font-bold rounded-lg hover:bg-accent hover:text-white transition-all shadow-sm active:scale-95"
                                                     >
                                                         Return
                                                     </button>

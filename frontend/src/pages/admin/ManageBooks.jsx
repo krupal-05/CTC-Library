@@ -77,17 +77,17 @@ const ManageBooks = () => {
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
                 {stats.map((stat, index) => (
-                    <div key={index} className="bg-green-50 rounded-2xl p-6 border border-green-100 flex items-start justify-between relative overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    <div key={index} className="bg-secondary/5 rounded-2xl p-6 border border-secondary/10 flex items-start justify-between relative overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                         <div className="relative z-10">
                             <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">{stat.title}</h3>
                             <p className="text-4xl font-bold text-gray-800 mb-1">{stat.value}</p>
-                            <span className="text-xs font-medium text-green-700 bg-green-200/50 px-2 py-1 rounded">{stat.sub}</span>
+                            <span className="text-xs font-bold text-primary bg-accent/20 px-2 py-1 rounded tracking-wide">{stat.sub}</span>
                         </div>
-                        <div className="bg-black text-white p-3 rounded-xl z-10">
+                        <div className="bg-primary text-white p-3 rounded-xl z-10 shadow-lg">
                             {stat.icon}
                         </div>
                         {/* Decorative background circle */}
-                        <div className="absolute -right-6 -bottom-6 w-24 h-24 bg-green-200/30 rounded-full blur-2xl"></div>
+                        <div className="absolute -right-6 -bottom-6 w-24 h-24 bg-secondary/10 rounded-full blur-2xl"></div>
                     </div>
                 ))}
             </div>
@@ -97,7 +97,7 @@ const ManageBooks = () => {
                 <h2 className="text-2xl font-bold text-gray-800 mb-6">Quick Actions</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     {actions.map((action, index) => (
-                        <div key={index} className="bg-[#5da8d6] hover:bg-[#4c96c2] transition-colors rounded-2xl p-6 text-white flex flex-col items-center text-center shadow-md border-b-4 border-[#3a7ca3]">
+                        <div key={index} className="bg-primary hover:bg-secondary transition-all rounded-2xl p-6 text-white flex flex-col items-center text-center shadow-lg border-b-4 border-black/20 hover:-translate-y-1">
                             <div className="bg-white/20 p-4 rounded-full mb-4">
                                 {action.icon}
                             </div>
@@ -105,7 +105,7 @@ const ManageBooks = () => {
                             <p className="text-white/80 text-xs mb-6 flex-grow">{action.desc}</p>
                             <button
                                 onClick={() => handleActionClick(action.path)}
-                                className="bg-gray-200 text-gray-800 px-6 py-1.5 rounded-full font-bold text-sm hover:bg-white transition-colors w-full uppercase tracking-wide"
+                                className="bg-accent text-white px-6 py-2 rounded-full font-bold text-sm hover:bg-cyan-500 transition-colors w-full uppercase tracking-widest shadow-md"
                             >
                                 {action.label}
                             </button>

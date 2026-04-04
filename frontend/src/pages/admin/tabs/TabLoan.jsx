@@ -108,13 +108,13 @@ const TabLoan = ({ student, loading, setLoading, refreshProfile }) => {
                     onKeyDown={handleBookIssue}
                     disabled={!student}
                     placeholder={student ? "Scan Book..." : "Select Student First"}
-                    className="border border-gray-400 px-2 py-1 w-64 focus:bg-yellow-50 outline-none disabled:bg-gray-200"
+                    className="border border-gray-400 px-2 py-1 w-64 focus:bg-accent/10 focus:ring-1 focus:ring-accent outline-none disabled:bg-gray-200 transition-colors"
                 />
-                {loading && <span className="text-blue-600 text-xs font-bold animate-pulse">Processing...</span>}
+                {loading && <span className="text-secondary text-xs font-bold animate-pulse">Processing...</span>}
             </div>
 
             {/* List Header */}
-            <div className="grid grid-cols-[120px_100px_100px_40px_80px_1fr_80px] bg-gray-100 border-b border-gray-300 p-1 font-bold text-gray-600 text-xs">
+            <div className="grid grid-cols-[120px_100px_100px_40px_80px_1fr_80px] bg-secondary/10 border-b border-secondary/20 p-1 font-bold text-primary text-xs">
                 <div>Barcode/ISBN</div>
                 <div>Date Due</div>
                 <div>Call No</div>
@@ -128,12 +128,12 @@ const TabLoan = ({ student, loading, setLoading, refreshProfile }) => {
             <div className="flex-1 overflow-auto bg-white">
                 {/* Session Scans */}
                 {scannedBooks.map((book, idx) => (
-                    <div key={book.id} className="grid grid-cols-[120px_100px_100px_40px_80px_1fr_80px] border-b border-gray-100 p-1 text-xs bg-green-50 hover:bg-green-100">
+                    <div key={book.id} className="grid grid-cols-[120px_100px_100px_40px_80px_1fr_80px] border-b border-gray-100 p-1 text-xs bg-accent/5 hover:bg-accent/10">
                         <div>{book.barcode}</div>
                         <div>{book.dueDate}</div>
                         <div>-</div>
                         <div>{idx + 1}</div>
-                        <div className="font-bold text-green-700">NEW</div>
+                        <div className="font-bold text-primary">NEW</div>
                         <div className="font-medium text-gray-800">{book.title} (Just Issued)</div>
                         <div className="text-center">-</div>
                     </div>
@@ -141,12 +141,12 @@ const TabLoan = ({ student, loading, setLoading, refreshProfile }) => {
 
                 {/* Database Active Loans */}
                 {activeBooks.map((book, idx) => (
-                    <div key={book._id} className="grid grid-cols-[120px_100px_100px_40px_80px_1fr_80px] border-b border-gray-100 p-1 text-xs hover:bg-blue-50 items-center">
+                    <div key={book._id} className="grid grid-cols-[120px_100px_100px_40px_80px_1fr_80px] border-b border-gray-100 p-1 text-xs hover:bg-secondary/5 items-center">
                         <div>{book.book?.isbn || '-'}</div>
                         <div>{new Date(book.returnDate).toLocaleDateString()}</div>
                         <div>-</div>
                         <div>{scannedBooks.length + idx + 1}</div>
-                        <div className="text-blue-600 font-bold">Issued</div>
+                        <div className="text-secondary font-bold">Issued</div>
                         <div className="font-medium text-gray-800">{book.book?.title || 'Unknown Title'}</div>
                         <div className="text-center">
                             <button

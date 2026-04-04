@@ -43,15 +43,15 @@ const TransactionHistory = () => {
 
     const getBadgeStyle = (action) => {
         if (action === 'BORROW' || action === 'ISSUE_BOOK') {
-            return 'bg-orange-100 text-orange-700 border-orange-200';
+            return 'bg-secondary/10 text-primary border-secondary/20 shadow-sm';
         }
         if (action === 'ADD_BOOK') {
-            return 'bg-blue-100 text-blue-700 border-blue-200';
+            return 'bg-accent/10 text-primary border-accent/20 shadow-sm';
         }
         if (action === 'REMOVE_BOOK') {
-            return 'bg-red-100 text-red-700 border-red-200';
+            return 'bg-red-50 text-red-700 border-red-100 shadow-sm';
         }
-        return 'bg-green-100 text-green-700 border-green-200';
+        return 'bg-secondary/5 text-secondary border-secondary/10 shadow-sm';
     };
 
     const getIcon = (action) => {
@@ -71,10 +71,10 @@ const TransactionHistory = () => {
         <div className="max-w-6xl mx-auto p-4 md:p-8">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
-                        <History className="text-gray-400" /> Transaction History
+                    <h1 className="text-3xl font-bold text-primary flex items-center gap-2">
+                        <History className="text-secondary/50" /> Transaction History
                     </h1>
-                    <p className="text-gray-500">Log of all book issues and returns</p>
+                    <p className="text-gray-500 font-medium">Log of all book issues and returns</p>
                 </div>
 
                 {/* Search & Filter */}
@@ -86,7 +86,7 @@ const TransactionHistory = () => {
                             placeholder="Search student or book..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-sm"
+                            className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent/30 text-sm transition-all"
                         />
                     </div>
                     <select
@@ -106,7 +106,7 @@ const TransactionHistory = () => {
                 <div className="overflow-x-auto max-h-[500px] overflow-y-auto custom-scrollbar">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="bg-gray-50 border-b border-gray-100 text-xs uppercase text-gray-500 font-semibold tracking-wider">
+                            <tr className="bg-secondary/10 border-b border-secondary/20 text-xs uppercase text-primary font-bold tracking-wider">
                                 <th className="px-6 py-4">Date & Time</th>
                                 <th className="px-6 py-4">Action</th>
                                 <th className="px-6 py-4">Performed By</th>

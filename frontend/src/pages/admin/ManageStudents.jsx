@@ -69,8 +69,8 @@ const ManageStudents = () => {
                 >
                     <ArrowLeft size={24} />
                 </button>
-                <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                    <User className="text-indigo-600" /> Manage Students
+                <h1 className="text-2xl font-bold text-primary flex items-center gap-2">
+                    <User className="text-secondary" /> Manage Students
                 </h1>
             </div>
 
@@ -80,7 +80,7 @@ const ManageStudents = () => {
                 <input
                     type="text"
                     placeholder="Search by name or enrollment no..."
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -96,7 +96,7 @@ const ManageStudents = () => {
             <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                        <thead className="bg-secondary/5">
                             <tr>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name / ID</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
@@ -110,7 +110,7 @@ const ManageStudents = () => {
                                     <tr key={student._id} className="hover:bg-gray-50">
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
-                                                <div className="h-10 w-10 flex-shrink-0 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold">
+                                                <div className="h-10 w-10 flex-shrink-0 bg-secondary/10 rounded-full flex items-center justify-center text-primary font-bold border border-secondary/20">
                                                     {student.name.charAt(0)}
                                                 </div>
                                                 <div className="ml-4">

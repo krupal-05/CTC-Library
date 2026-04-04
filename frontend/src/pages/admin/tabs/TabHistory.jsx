@@ -10,14 +10,14 @@ const TabHistory = ({ student }) => {
 
     return (
         <div className="flex flex-col h-full bg-white">
-            <div className="p-3 border-b border-gray-200 bg-gray-50 font-bold text-gray-700">
+            <div className="p-3 border-b border-secondary/20 bg-secondary/5 font-bold text-primary">
                 Reading History (Returned Books)
             </div>
 
             <div className="flex-1 overflow-auto">
                 {historyBooks.length > 0 ? (
                     <table className="min-w-full text-xs text-left">
-                        <thead className="bg-gray-100 font-medium text-gray-600 border-b border-gray-200">
+                        <thead className="bg-secondary/5 font-bold text-primary border-b border-secondary/10">
                             <tr>
                                 <th className="px-4 py-2">Book Title</th>
                                 <th className="px-4 py-2">Issue Date</th>
@@ -27,7 +27,7 @@ const TabHistory = ({ student }) => {
                         </thead>
                         <tbody className="divide-y divide-gray-100">
                             {historyBooks.map((item) => (
-                                <tr key={item._id} className="hover:bg-gray-50">
+                                <tr key={item._id} className="hover:bg-secondary/5 transition-colors">
                                     <td className="px-4 py-2 font-medium text-gray-800">
                                         {item.book ? item.book.title : 'Deleted Book'}
                                     </td>
