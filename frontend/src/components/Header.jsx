@@ -182,7 +182,7 @@ const Header = () => {
                                         <div className="flex-1 space-y-2">
                                             <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-2">Contact Info</h4>
                                             <Link to="/contact/details" className="flex items-center gap-2 px-2 py-1.5 hover:bg-blue-50 rounded-lg font-bold text-[12px]"><Phone size={12} /> Email/Tel</Link>
-                                            <Link to="/volunteer" className="flex items-center gap-2 px-2 py-1.5 hover:bg-blue-50 rounded-lg font-bold text-[12px]"><HeartHandshake size={12} /> Volunteer</Link>
+                                          
                                             <Link to="/librarian" className="flex items-center gap-2 px-2 py-1.5 hover:bg-blue-50 rounded-lg font-bold text-[12px]"><Users size={12} /> Librarian</Link>
                                         </div>
                                     </div>

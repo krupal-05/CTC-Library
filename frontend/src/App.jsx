@@ -79,7 +79,7 @@ function App() {
                             <Route path="contact/details" element={<ContactPage />} />
                             <Route path="faq" element={<FAQ />} />
                             <Route path="policies" element={<Policies />} />
-                            <Route path="volunteer" element={<Volunteer />} />
+                            
                             <Route path="librarian" element={<Librarian />} />
 
                             {/* Committee */}
