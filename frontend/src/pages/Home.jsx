@@ -7,6 +7,7 @@ import libraryImg3 from '../assets/library-3.jpg';
 import libraryImg4 from '../assets/library-4.jpg';
 
 import { events } from '../data/eventsData';
+import BookSearch from '../components/BookSearch';
 
 const Home = () => {
     const [currentSlide, setCurrentSlide] = React.useState(0);
@@ -31,8 +32,11 @@ const Home = () => {
                     alt="Library Reading Hall"
                     className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-r to-transparent flex items-center justify-center px-12">
-                    <h1 className="text-4xl md:text-5xl font-bold text-white shadow-lg drop-shadow-md ">Welcome to Central Library</h1>
+                <div className="absolute inset-0 bg-gradient-to-r to-transparent bg-black/30 flex flex-col items-center justify-center px-12 gap-6">
+                    <h1 className="text-3xl md:text-5xl font-bold text-white shadow-lg drop-shadow-md text-center">Welcome to Central Library</h1>
+                    <div className="w-full">
+                        <BookSearch />
+                    </div>
                 </div>
             </div>
             <div className="container mx-auto px-4 py-8">
@@ -68,7 +72,7 @@ const Home = () => {
                         <div className="mb-8">
                             <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
                                 <Clock className="w-6 h-6 text-accent" />
-                                Library Timings
+                                Servies Timings
                             </h3>
                             <ul className="space-y-3">
                                 <li className="flex items-center gap-3">

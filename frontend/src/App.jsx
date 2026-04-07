@@ -12,6 +12,20 @@ import AllBooks from './pages/student/AllBooks';
 import MyBooks from './pages/student/MyBooks';
 import BookDetails from './pages/student/BookDetails';
 
+// New Public Pages
+import DigitalResources from './pages/DigitalResources';
+import EventsPage from './pages/EventsPage';
+import Programs from './pages/Programs';
+import ContactPage from './pages/ContactPage';
+import FAQ from './pages/FAQ';
+import Policies from './pages/Policies';
+import Volunteer from './pages/Volunteer';
+import Librarian from './pages/Librarian';
+import Committee from './pages/Committee';
+import CourseNptl from './pages/CourseNptl';
+import CourseOnos from './pages/CourseOnos';
+import MapPage from './pages/MapPage';
+
 import UDCBrowse from './pages/student/UDCBrowse';
 import AdminLayout from './layouts/AdminLayout';
 import AdminProfile from './pages/admin/Profile';
@@ -47,6 +61,36 @@ function App() {
                             <Route path="events/:id" element={<EventDetails />} />
                             <Route path="news/:id" element={<NewsDetails />} />
                             <Route path="feedback" element={<Feedback />} />
+                            
+                            {/* Digital Resources */}
+                            <Route path="digital" element={<DigitalResources />} />
+                            <Route path="digital/newspapers" element={<DigitalResources />} />
+                            <Route path="digital/books" element={<DigitalResources />} />
+                            <Route path="digital/magazines" element={<DigitalResources />} />
+                            <Route path="digital/pamphlets" element={<DigitalResources />} />
+                            <Route path="digital/audiobooks" element={<DigitalResources />} />
+
+                            {/* Events & Programs */}
+                            <Route path="events" element={<EventsPage />} />
+                            <Route path="programs" element={<Programs />} />
+
+                            {/* Contact & Support */}
+                            <Route path="contact" element={<ContactPage />} />
+                            <Route path="contact/details" element={<ContactPage />} />
+                            <Route path="faq" element={<FAQ />} />
+                            <Route path="policies" element={<Policies />} />
+                            <Route path="volunteer" element={<Volunteer />} />
+                            <Route path="librarian" element={<Librarian />} />
+
+                            {/* Committee */}
+                            <Route path="committee" element={<Committee />} />
+
+                            {/* Courses */}
+                            <Route path="learning/nptl" element={<CourseNptl />} />
+                            <Route path="learning/onos" element={<CourseOnos />} />
+
+                            {/* Map */}
+                            <Route path="map" element={<MapPage />} />
                         </Route>
 
                         <Route path="/student" element={<StudentLayout />}>
