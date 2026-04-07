@@ -13,17 +13,17 @@ import MyBooks from './pages/student/MyBooks';
 import BookDetails from './pages/student/BookDetails';
 
 // New Public Pages
-import DigitalResources from './pages/DigitalResources';
-import EventsPage from './pages/EventsPage';
-import Programs from './pages/Programs';
-import ContactPage from './pages/ContactPage';
-import FAQ from './pages/FAQ';
-import Policies from './pages/Policies';
+import DigitalResources from './pages/digital/DigitalResources';
+import EventsPage from './pages/events/EventsPage';
+import Programs from './pages/events/Programs';
+import ContactPage from './pages/contact/ContactPage';
+import FAQ from './pages/contact/FAQ';
+import Policies from './pages/contact/Policies';
 import Volunteer from './pages/Volunteer';
-import Librarian from './pages/Librarian';
-import Committee from './pages/Committee';
-import CourseNptl from './pages/CourseNptl';
-import CourseOnos from './pages/CourseOnos';
+import Librarian from './pages/contact/Librarian';
+import Committee from './pages/committee/Committee';
+import CourseNptl from './pages/courses/CourseNptl';
+import CourseOnos from './pages/courses/CourseOnos';
 import MapPage from './pages/MapPage';
 
 import UDCBrowse from './pages/student/UDCBrowse';
