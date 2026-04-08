@@ -7,6 +7,7 @@ import libraryImg3 from '../assets/library-3.jpg';
 import libraryImg4 from '../assets/library-4.jpg';
 import { events } from '../data/eventsData';
 import BookSearch from '../components/BookSearch';
+import NewArrivals from '../components/NewArrivals';
 
 const Home = () => {
     const [currentSlide, setCurrentSlide] = React.useState(0);
@@ -41,21 +42,19 @@ const Home = () => {
             <div className="container mx-auto px-4 py-8">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* What is new*/}
-
                     <div className="bg-primary rounded-lg shadow-lg text-white p-8 border-b-4 border-secondary">
                         <div className="bg-primary text-white px-6 py-4 font-bold text-lg flex items-center gap-2 relative z-10">
-                            <div className="w-1.5 h-6 bg-accent rounded-full"></div>
+                            <div className="w-2 h-10 bg-accent rounded-full"></div>
                             What is New ?
                         </div>
                        <div>
                                         {[
                                             { label: 'Newspapers', link: 'https://epaper.gujaratsamachar.com/ ' },
                                             { label: 'Pamphlets', link: '/digital/pamphlets'},
-                                            { label: 'New Arrivals', link: ''},
                                             { label: 'NPTEL', link: '/learning/nptel'}
                                              
                                         ].map(item => (
-                                            <Link key={item.label} to={item.link} className="flex flex-row items-start gap-3 cursor-pointer hover:bg-white/10 p-2 -ml-2 rounded transition-colors">
+                                            <Link key={item.label} to={item.link} className="flex flex-row items-start gap-3 cursor-pointer hover:bg-white/10 p-5 -ml-2 rounded transition-colors">
                                                 <circle className="w-4 h-4 mt-1 flex-shrink-0 bg-accent rounded-full" />
                                                 <span className="text-m leading-relaxed opacity-90">{item.label}</span>
                                             </Link>
@@ -98,13 +97,37 @@ const Home = () => {
                                 ))}
                             </div>
                             
-        {/* Optional: Gradient fade at bottom for a smoother look */}
-        <div className="absolute bottom-0 left-0 w-full h-10 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
-    </div>
-</div>
+                            {/* Optional: Gradient fade at bottom for a smoother look */}
+                            <div className="absolute bottom-0 left-0 w-full h-10 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
+                        </div>
+                    </div>
 
-                    {/* Timings & Location */}
+                    {/* Library Rules
+24x7 Reading Hall Usage  guideline*/}
                     <div className="bg-primary rounded-lg shadow-lg text-white p-8 border-b-4 border-secondary">
+                        <div className="mb-8">
+                            <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                                 Library Rules & Regulations
+                            </h3>
+                        </div>
+                        <div>
+                                        {[
+                                            { label: 'Library Rules', link: 'https://epaper.gujaratsamachar.com/ ' },
+                                            { label: '24x7 Reading Hall Usage  guideline', link: '/digital/pamphlets'}                                             
+                                        ].map(item => (
+                                            <Link key={item.label} to={item.link} className="flex flex-row items-start gap-3 cursor-pointer hover:bg-white/10 p-5 -ml-2 rounded transition-colors">
+                                                <circle className="w-4 h-4 mt-1 flex-shrink-0 bg-accent rounded-full" />
+                                                <span className="text-m leading-relaxed opacity-90">{item.label}</span>
+                                            </Link>
+                                        ))}
+                        </div>
+                    </div>
+
+                </div>
+
+                {/*Timings & Location */}
+
+                    <div className="bg-white rounded-lg shadow-lg text-primary p-8 border-b-4 border-secondary mt-8 flex flex-row justify-around">
                         <div className="mb-8">
                             <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
                                 <Clock className="w-6 h-6 text-accent" />
@@ -138,7 +161,8 @@ const Home = () => {
                         </div>
                     </div>
 
-                </div>
+                {/* New Arrivals */}
+                <NewArrivals />
 
                 {/* Latest Events Grid */}
                 <div className="mt-12 mb-8">
