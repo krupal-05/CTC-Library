@@ -182,7 +182,7 @@ const Header = () => {
                                         <div className="flex-1 space-y-2">
                                             <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-2">Contact Info</h4>
                                             <Link to="/contact/details" className="flex items-center gap-2 px-2 py-1.5 hover:bg-blue-50 rounded-lg font-bold text-[12px]"><Phone size={12} /> Email/Tel</Link>
-                                          
+
                                             <Link to="/librarian" className="flex items-center gap-2 px-2 py-1.5 hover:bg-blue-50 rounded-lg font-bold text-[12px]"><Users size={12} /> Librarian</Link>
                                         </div>
                                     </div>
@@ -198,9 +198,9 @@ const Header = () => {
                                 </button>
                                 {activeDropdown === 'courses' && (
                                     <div className="absolute top-full left-0 w-48 bg-white shadow-2xl rounded-2xl border border-gray-100 py-3 text-primary animate-in fade-in slide-in-from-top-2 overflow-hidden">
-                                        <Link to="/learning/nptl" className="flex items-center gap-3 px-5 py-2.5 hover:bg-blue-50 transition-colors group">
+                                        <Link to="/learning/nptel" className="flex items-center gap-3 px-5 py-2.5 hover:bg-blue-50 transition-colors group">
                                             <GraduationCap size={16} className="text-secondary/50 group-hover:text-secondary" />
-                                            <span className="font-bold text-[13px]">NPTL</span>
+                                            <span className="font-bold text-[13px]">nptel</span>
                                         </Link>
                                         <Link to="/learning/onos" className="flex items-center gap-3 px-5 py-2.5 hover:bg-blue-50 transition-colors group">
                                             <BookOpen size={16} className="text-secondary/50 group-hover:text-secondary" />
@@ -264,7 +264,7 @@ const Header = () => {
                             { label: 'Digital Resources', link: '/digital' },
                             { label: 'Events & Programs', link: '/events' },
                             { label: 'Contact & FAQ', link: '/contact' },
-                            { label: 'NPTL Courses', link: '/learning/nptl' },
+                            { label: 'nptel Courses', link: '/learning/nptel' },
                             { label: 'ONOS Courses', link: '/learning/onos' },
                             { label: 'Library Map', link: '/map' }
                         ].map((item) => (

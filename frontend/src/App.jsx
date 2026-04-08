@@ -22,7 +22,7 @@ import Policies from './pages/contact/Policies';
 import Volunteer from './pages/Volunteer';
 import Librarian from './pages/contact/Librarian';
 import Committee from './pages/committee/Committee';
-import CourseNptl from './pages/courses/CourseNptl';
+import Coursenptel from './pages/courses/CourseNptel';
 import CourseOnos from './pages/courses/CourseOnos';
 import MapPage from './pages/MapPage';
 
@@ -61,7 +61,7 @@ function App() {
                             <Route path="events/:id" element={<EventDetails />} />
                             <Route path="news/:id" element={<NewsDetails />} />
                             <Route path="feedback" element={<Feedback />} />
-                            
+
                             {/* Digital Resources */}
                             <Route path="digital" element={<DigitalResources />} />
                             <Route path="digital/newspapers" element={<DigitalResources />} />
@@ -79,14 +79,14 @@ function App() {
                             <Route path="contact/details" element={<ContactPage />} />
                             <Route path="faq" element={<FAQ />} />
                             <Route path="policies" element={<Policies />} />
-                            
+
                             <Route path="librarian" element={<Librarian />} />
 
                             {/* Committee */}
                             <Route path="committee" element={<Committee />} />
 
                             {/* Courses */}
-                            <Route path="learning/nptl" element={<CourseNptl />} />
+                            <Route path="learning/nptel" element={<Coursenptel />} />
                             <Route path="learning/onos" element={<CourseOnos />} />
 
                             {/* Map */}
