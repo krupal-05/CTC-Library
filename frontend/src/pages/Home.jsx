@@ -102,21 +102,19 @@ const Home = () => {
                         </div>
                     </div>
 
-                    {/* Library Rules
-24x7 Reading Hall Usage  guideline*/}
+                    {/* Library Rules */}
                     <div className="bg-primary rounded-lg shadow-lg text-white p-8 border-b-4 border-secondary">
                         <div className="mb-8">
                             <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
                                  Library Rules & Regulations
                             </h3>
                         </div>
-                        <div>
-                                        {[
-                                            { label: 'Library Rules', link: 'https://epaper.gujaratsamachar.com/ ' },
+                        <div>            
+                            {[
+                                            { label: 'Library Rules', link: 'frontend/src/assets/PDF/Library Rules.pdf ' },
                                             { label: '24x7 Reading Hall Usage  guideline', link: '/digital/pamphlets'}                                             
                                         ].map(item => (
-                                            <Link key={item.label} to={item.link} className="flex flex-row items-start gap-3 cursor-pointer hover:bg-white/10 p-5 -ml-2 rounded transition-colors">
-                                                <circle className="w-4 h-4 mt-1 flex-shrink-0 bg-accent rounded-full" />
+                                            <Link key={item.label} to={item.link} className="flex flex-row items-start gap-3  cursor-pointer hover:bg-white/10 p-5 -ml-2 rounded transition-colors">
                                                 <span className="text-m leading-relaxed opacity-90">{item.label}</span>
                                             </Link>
                                         ))}
@@ -125,6 +123,10 @@ const Home = () => {
 
                 </div>
 
+
+
+                {/* New Arrivals */}
+                <NewArrivals />
                 {/*Timings & Location */}
 
                     <div className="bg-white rounded-lg shadow-lg text-primary p-8 border-b-4 border-secondary mt-8 flex flex-row justify-around">
@@ -161,9 +163,7 @@ const Home = () => {
                         </div>
                     </div>
 
-                {/* New Arrivals */}
-                <NewArrivals />
-
+                    
                 {/* Latest Events Grid */}
                 <div className="mt-12 mb-8">
                     <div className="text-center mb-8">
