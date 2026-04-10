@@ -10,7 +10,7 @@ const ContactPage = () => {
                     <div className="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center">
                         <span className="text-4xl text-accent">🚧</span>
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-800">Under Construction</h2>
+                    <h2 className="text-2xl font-bold text-gray-800"> Construction</h2>
                     <p className="max-w-md">
                         We are currently working on this page. Please check back later for updates and new content regarding Contact Information.
                     </p>
@@ -19,5 +19,7 @@ const ContactPage = () => {
         </div>
     );
 };
+
+
 
 export default ContactPage;
