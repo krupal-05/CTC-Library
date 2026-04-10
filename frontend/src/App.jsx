@@ -1,3 +1,10 @@
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/autoplay";
+
+
+
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import PublicLayout from './layouts/PublicLayout';
 import Home from './pages/Home';
@@ -13,17 +20,17 @@ import MyBooks from './pages/student/MyBooks';
 import BookDetails from './pages/student/BookDetails';
 
 // New Public Pages
-import DigitalResources from './pages/DigitalResources';
-import EventsPage from './pages/EventsPage';
-import Programs from './pages/Programs';
-import ContactPage from './pages/ContactPage';
-import FAQ from './pages/FAQ';
-import Policies from './pages/Policies';
+import DigitalResources from './pages/digital/DigitalResources';
+import EventsPage from './pages/events/EventsPage';
+import Programs from './pages/events/Programs';
+import ContactPage from './pages/contact/ContactPage';
+import FAQ from './pages/contact/FAQ';
+import Policies from './pages/contact/Policies';
 import Volunteer from './pages/Volunteer';
-import Librarian from './pages/Librarian';
-import Committee from './pages/Committee';
-import CourseNptl from './pages/CourseNptl';
-import CourseOnos from './pages/CourseOnos';
+import Librarian from './pages/contact/Librarian';
+import Committee from './pages/committee/Committee';
+import Coursenptel from './pages/courses/CourseNptel';
+import CourseOnos from './pages/courses/CourseOnos';
 import MapPage from './pages/MapPage';
 
 import UDCBrowse from './pages/student/UDCBrowse';
@@ -46,6 +53,11 @@ import ScrollToTop from './components/ScrollToTop';
 
 import { NotificationProvider } from './context/NotificationContext';
 
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Navigation } from "swiper/modules";
+
+
+
 function App() {
     return (
         <ToastProvider>
@@ -61,7 +73,7 @@ function App() {
                             <Route path="events/:id" element={<EventDetails />} />
                             <Route path="news/:id" element={<NewsDetails />} />
                             <Route path="feedback" element={<Feedback />} />
-                            
+
                             {/* Digital Resources */}
                             <Route path="digital" element={<DigitalResources />} />
                             <Route path="digital/newspapers" element={<DigitalResources />} />
@@ -79,14 +91,14 @@ function App() {
                             <Route path="contact/details" element={<ContactPage />} />
                             <Route path="faq" element={<FAQ />} />
                             <Route path="policies" element={<Policies />} />
-                            
+
                             <Route path="librarian" element={<Librarian />} />
 
                             {/* Committee */}
                             <Route path="committee" element={<Committee />} />
 
                             {/* Courses */}
-                            <Route path="learning/nptl" element={<CourseNptl />} />
+                            <Route path="learning/nptel" element={<Coursenptel />} />
                             <Route path="learning/onos" element={<CourseOnos />} />
 
                             {/* Map */}
