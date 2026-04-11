@@ -5,9 +5,9 @@ import libraryImg1 from '../assets/library-1.jpg';
 import libraryImg2 from '../assets/library-2.jpg';
 import libraryImg3 from '../assets/library-3.jpg';
 import libraryImg4 from '../assets/library-4.jpg';
-
 import { events } from '../data/eventsData';
 import BookSearch from '../components/BookSearch';
+import NewArrivals from '../components/NewArrivals';
 
 const Home = () => {
     const [currentSlide, setCurrentSlide] = React.useState(0);
@@ -40,35 +40,96 @@ const Home = () => {
                 </div>
             </div>
             <div className="container mx-auto px-4 py-8">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    {/* What is new*/}
+                    <div className="bg-primary rounded-lg shadow-lg text-white p-8 border-b-4 border-secondary">
+                        <div className="bg-primary text-white px-6 py-4 font-bold text-lg flex items-center gap-2 relative z-10">
+                            <div className="w-2 h-10 bg-accent rounded-full"></div>
+                            What is New ?
+                        </div>
+                       <div>
+                                        {[
+                                            { label: 'Newspapers', link: 'https://epaper.gujaratsamachar.com/ ' },
+                                            { label: 'Pamphlets', link: '/digital/pamphlets'},
+                                            { label: 'NPTEL', link: '/learning/nptel'}
+                                             
+                                        ].map(item => (
+                                            <Link key={item.label} to={item.link} className="flex flex-row items-start gap-3 cursor-pointer hover:bg-white/10 p-5 -ml-2 rounded transition-colors">
+                                                <circle className="w-4 h-4 mt-1 flex-shrink-0 bg-accent rounded-full" />
+                                                <span className="text-m leading-relaxed opacity-90">{item.label}</span>
+                                            </Link>
+                                        ))}
+                        </div>
+                    
+                    </div>
+
+                
 
                     {/* Library News */}
                     <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
-                        <div className="bg-primary text-white px-6 py-4 font-bold text-lg flex items-center gap-2">
+                        <div className="bg-primary text-white px-6 py-4 font-bold text-lg flex items-center gap-2 relative z-10">
                             <div className="w-1.5 h-6 bg-accent rounded-full"></div>
-                            Library NEWS
+                            Recent Updates
                         </div>
-                        <div className="divide-y divide-gray-100">
-                            {[1, 2, 3].map((item) => (
-                                <div key={item} className="p-4 hover:bg-gray-50">
-                                    <div className="flex items-start gap-3">
-                                        <ArrowRight className="w-5 h-5 text-gray-400 mt-1" />
-                                        <div>
-                                            <h3 className="font-semibold text-gray-800">News Headline</h3>
-                                            <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
-                                                <Calendar className="w-3 h-3" />
-                                                <span>10/10/2023</span>
+
+                        {/* Scroll Container Box */}
+                        <div className="relative h-80 overflow-hidden bg-white group">
+                            <div className="absolute w-full animate-scroll-vertical group-hover:[animation-play-state:paused]">
+                                {/* We duplicate the list [...data, ...data] to ensure the 
+                                scroll is seamless and never shows a blank space.
+                                */}
+                                {[1, 2, 3, 1, 2, 3].map((item, index) => (
+                                    <div key={index} className="p-4 border-b border-gray-100 hover:bg-gray-50">
+                                        <div className="flex items-start gap-3">
+                                            <ArrowRight className="w-5 h-5 text-gray-400 mt-1" />
+                                            <div>
+                                                <h3 className="font-semibold text-gray-800 line-clamp-1">News Headline {item}</h3>
+                                                <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                                                    <Calendar className="w-3 h-3" />
+                                                    <span>10/10/2023</span>
+                                                </div>
+                                                <Link to={`/news/${item}`} className="text-blue-600 text-sm mt-2 hover:underline inline-block">
+                                                    View Details
+                                                </Link>
                                             </div>
-                                            <Link to={`/news/${item}`} className="text-blue-600 text-sm mt-2 hover:underline inline-block">View Details</Link>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
+                            
+                            {/* Optional: Gradient fade at bottom for a smoother look */}
+                            <div className="absolute bottom-0 left-0 w-full h-10 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
                         </div>
                     </div>
 
-                    {/* Timings & Location */}
+                    {/* Library Rules */}
                     <div className="bg-primary rounded-lg shadow-lg text-white p-8 border-b-4 border-secondary">
+                        <div className="mb-8">
+                            <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                                 Library Rules & Regulations
+                            </h3>
+                        </div>
+                        <div>            
+                            {[
+                                            { label: 'Library Rules', link: 'frontend/src/assets/PDF/Library Rules.pdf ' },
+                                            { label: '24x7 Reading Hall Usage  guideline', link: '/digital/pamphlets'}                                             
+                                        ].map(item => (
+                                            <Link key={item.label} to={item.link} className="flex flex-row items-start gap-3  cursor-pointer hover:bg-white/10 p-5 -ml-2 rounded transition-colors">
+                                                <span className="text-m leading-relaxed opacity-90">{item.label}</span>
+                                            </Link>
+                                        ))}
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+                {/* New Arrivals */}
+                <NewArrivals />
+                {/*Timings & Location */}
+
+                    <div className="bg-white rounded-lg shadow-lg text-primary p-8 border-b-4 border-secondary mt-8 flex flex-row justify-around">
                         <div className="mb-8">
                             <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
                                 <Clock className="w-6 h-6 text-accent" />
@@ -102,8 +163,7 @@ const Home = () => {
                         </div>
                     </div>
 
-                </div>
-
+                    
                 {/* Latest Events Grid */}
                 <div className="mt-12 mb-8">
                     <div className="text-center mb-8">
