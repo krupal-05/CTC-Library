@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { IoMdArrowDropdown } from "react-icons/io";
 
 const faqs = [
   {
@@ -37,37 +38,51 @@ const FAQ = () => {
 
   return (
     <div className="container mx-auto px-4 py-12 lg:py-20 min-h-[60vh]">
-      <h1 className="text-4xl lg:text-4xl font-black text-primary uppercase tracking-widest mb-6 lg:mb-10 text-center">
+      <h1 className="text-4xl lg:text-4xl font-black text-primary uppercase tracking-widest mb-10 text-center">
         Frequently Asked Questions
       </h1>
 
       <div className="max-w-4xl mx-auto space-y-4">
-        {faqs.map((faq, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-xl shadow-md border border-gray-200"
-          >
-            {/* Question */}
-            <button
-              onClick={() => toggleFAQ(index)}
-              className="w-full flex justify-between items-center p-5 text-left"
-            >
-              <span className="font-semibold text-gray-800">
-                {faq.question}
-              </span>
-              <span className="text-xl">
-                {activeIndex === index ? "−" : "+"}
-              </span>
-            </button>
+        {faqs.map((faq, index) => {
+          const isOpen = activeIndex === index;
 
-            {/* Answer */}
-            {activeIndex === index && (
-              <div className="px-5 pb-5 text-gray-600">
-                {faq.answer}
+          return (
+            <div
+              key={index}
+              className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden"
+            >
+              {/* Question */}
+              <button
+                onClick={() => toggleFAQ(index)}
+                className="w-full flex justify-between items-center p-5 text-left hover:bg-gray-50 transition"
+              >
+                <span className="font-semibold text-gray-800">
+                  {faq.question}
+                </span>
+
+                {/* Animated Icon */}
+                <span
+                  className={`text-xl transform transition-transform duration-300  ${
+                    isOpen ? "rotate-180" : "rotate-0"
+                  }`}
+                >
+                 <IoMdArrowDropdown />
+                </span>
+              </button>
+
+              {/* Answer with animation */}
+              <div
+                className={`transition-all duration-500 ease-in-out overflow-hidden ${
+                  isOpen ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+                }`}
+              >
+                <div className="px-5 pb-5 text-gray-600">
+                  {faq.answer}
+                </div>
               </div>
-            )}
-          </div>
-        ))}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
