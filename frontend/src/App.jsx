@@ -14,6 +14,10 @@ import BookDetails from './pages/student/BookDetails';
 
 // New Public Pages
 import DigitalResources from './pages/digital/DigitalResources';
+import Ebooks from './pages/digital/EBooks'
+import AudioBooks from './pages/digital/AudioBooks'
+import Enews_magazines from './pages/digital/Enews_magazines'
+
 import EventsPage from './pages/events/EventsPage';
 import Programs from './pages/events/Programs';
 import ContactPage from './pages/contact/ContactPage';
@@ -64,11 +68,9 @@ function App() {
 
                             {/* Digital Resources */}
                             <Route path="digital" element={<DigitalResources />} />
-                            <Route path="digital/newspapers" element={<DigitalResources />} />
-                            <Route path="digital/books" element={<DigitalResources />} />
-                            <Route path="digital/magazines" element={<DigitalResources />} />
-                            <Route path="digital/pamphlets" element={<DigitalResources />} />
-                            <Route path="digital/audiobooks" element={<DigitalResources />} />
+                            <Route path="digital/newspapers" element={<Enews_magazines />} />
+                            <Route path="digital/books" element={<Ebooks/>} />
+                            <Route path="digital/audiobooks" element={<AudioBooks />} />
 
                             {/* Events & Programs */}
                             <Route path="events" element={<EventsPage />} />

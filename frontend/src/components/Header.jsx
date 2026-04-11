@@ -140,8 +140,6 @@ const Header = () => {
                                         {[
                                             { label: 'E-Newspapers', icon: Newspaper, link: '/digital/newspapers' },
                                             { label: 'E-Books', icon: BookOpen, link: '/digital/books' },
-                                            { label: 'E-Magazines', icon: FileText, link: '/digital/magazines' },
-                                            { label: 'Pamphlets', icon: Info, link: '/digital/pamphlets' },
                                             { label: 'Audiobooks', icon: Headphones, link: '/digital/audiobooks' }
                                         ].map(item => (
                                             <Link key={item.label} to={item.link} className="flex items-center gap-3 px-5 py-2.5 hover:bg-blue-50 transition-colors group">
