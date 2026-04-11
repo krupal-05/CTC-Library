@@ -7,14 +7,8 @@ const Coursenptel = () => {
         NPTEL Courses
       </h1>
 
-      <div className="bg-white rounded-3xl shadow-2xl p-8 lg:p-12 border border-gray-100 max-w-4xl mx-auto">
+      <div className="bg-white rounded-3xl shadow-2xl p-8 lg:p-12 border border-gray-100 max-full mx-auto">
         <div className="flex flex-col items-center justify-center text-center space-y-6 text-gray-500">
-
-          <div className="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center">
-            <span className="text-4xl text-accent">🚧</span>
-          </div>
-
-          <h1 className="text-4xl text-center mb-6">NPTEL Courses</h1>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto mb-10">
             {courses.map((course, index) => (
