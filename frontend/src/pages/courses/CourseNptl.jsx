@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { courses } from './coursesData';
 const CourseNptl = () => {
     return (
         <div className="container mx-auto px-4 py-12 lg:py-20 min-h-[60vh]">
@@ -10,12 +10,42 @@ const CourseNptl = () => {
                     <div className="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center">
                         <span className="text-4xl text-accent">🚧</span>
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-800">Under Construction</h2>
-                    <p className="max-w-md">
-                        We are currently working on this page. Please check back later for updates and new content regarding NPTL Courses.
-                    </p>
+                    <h1 className="text-4xl text-center mb-6">NPTEL Courses</h1>
+<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto mb-10">
+  {courses.map((course, index) => (
+    <div 
+      key={index} 
+      className="bg-white p-6 rounded-2xl shadow-md text-center hover:shadow-xl transition"
+    >
+      <h2 className="text-lg font-semibold mb-3">
+        {course.name}
+      </h2>
+<p className="text-gray-600 mb-4">{course.description}</p>
+      <a
+        href={course.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="bg-green-600 text-white px-5 py-2 rounded-full inline-block hover:bg-green-700"
+      >
+        🎓 Watch
+      </a>
+    </div>
+  ))}
+</div>
+
+<div className="text-center mb-10">
+  <a
+    href="https://onlinecourses.nptel.ac.in/"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="bg-green-600 text-white px-6 py-3 rounded-full"
+  >
+🌐 Explore All Courses
+</a>
+</div>
+</div>
+
                 </div>
-            </div>
         </div>
     );
 };
