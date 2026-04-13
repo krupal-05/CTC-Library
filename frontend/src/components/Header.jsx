@@ -13,13 +13,11 @@ import {
     Map as MapIcon,
     MessageSquare,
     Globe,
-    FileText,
+    BookOpen,
     Headphones,
     Newspaper,
-    Info,
     Phone,
-    HeartHandshake,
-    BookOpen
+    Search
 } from 'lucide-react';
 import { useNotification } from '../context/NotificationContext';
 
@@ -45,234 +43,236 @@ const Header = () => {
     };
 
     return (
-        <header className="z-50 font-sans">
-            {/* Line 1: FIXED Top Bar (Branding, Search, Auth) - This will STAY on top */}
-            <div className="fixed top-0 left-0 right-0 bg-primary text-white shadow-xl z-[60] h-[72px] lg:h-[84px] flex items-center">
-                <div className="container mx-auto px-4 flex items-center justify-between gap-4 md:gap-8">
-
-                    {/* Branding */}
-                    <Link to="/" className="flex items-center gap-3 shrink-0 group">
-                        <div className="bg-white rounded-full w-[45px] h-[45px] lg:w-[55px] lg:h-[55px] flex items-center justify-center shrink-0 shadow-inner group-hover:rotate-[10deg] transition-all duration-300">
-                            <img src={logo} alt="LDCE Logo" className="w-[38px] h-[38px] lg:w-[48px] lg:h-[48px] object-cover rounded-full p-0.5" />
-                        </div>
-                        <div className="hidden sm:flex flex-col">
-                            <h1 className="text-lg lg:text-2xl font-black tracking-tight leading-none">LDCE Library</h1>
-                            <p className="text-[9px] lg:text-[11px] opacity-70 font-bold uppercase tracking-widest mt-1">L.D. College of Engineering</p>
-                        </div>
-                    </Link>
-
-                    {/* Right: Auth & Notifications */}
-                    <div className="flex items-center gap-2 lg:gap-4 shrink-0">
-                        {user ? (
-                            <div className="flex items-center gap-2 md:gap-4">
-                                <div className="relative">
-                                    <button
-                                        onClick={() => setShowNotifications(!showNotifications)}
-                                        className="p-2 hover:bg-white/10 rounded-full transition-colors relative"
-                                    >
-                                        <Bell size={20} className={unreadCount > 0 ? "text-accent animate-pulse" : "text-white/80"} />
-                                        {unreadCount > 0 && <span className="absolute top-1 right-1 w-4 h-4 bg-accent text-primary text-[9px] font-black flex items-center justify-center rounded-full border-2 border-primary">{unreadCount}</span>}
-                                    </button>
-
-                                    {showNotifications && (
-                                        <div className="absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-[100] text-gray-800 animate-in fade-in slide-in-from-top-2">
-                                            <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-                                                <h3 className="font-black text-primary text-sm uppercase tracking-wider">Alerts</h3>
-                                                <span className="text-[10px] font-bold text-accent bg-primary px-2.5 py-1 rounded-full">{unreadCount} New</span>
-                                            </div>
-                                            <div className="max-h-80 overflow-y-auto">
-                                                {notifications.length === 0 ? (
-                                                    <div className="p-8 text-center text-gray-400 text-sm italic">No new signals</div>
-                                                ) : (
-                                                    notifications.map((notif) => (
-                                                        <div key={notif._id} className="p-4 border-b border-gray-50 text-sm hover:bg-gray-50 cursor-pointer" onClick={() => !notif.read && markAsRead(notif._id)}>
-                                                            <div className="flex items-start gap-3">
-                                                                <div className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${!notif.read ? 'bg-accent' : 'bg-transparent'}`} />
-                                                                <span className={!notif.read ? 'font-bold text-primary' : 'text-gray-600'}>{notif.message}</span>
-                                                            </div>
-                                                        </div>
-                                                    ))
-                                                )}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-
-                                <div className="hidden lg:flex items-center gap-3 pl-4 border-l border-white/10">
-                                    <Link to={user.role === 'admin' ? '/admin/profile' : '/student/profile'} className="text-xs font-black uppercase tracking-widest hover:text-accent transition-colors">
-                                        {user.name?.split(' ')[0] || 'User'}
-                                    </Link>
-                                    <button
-                                        onClick={handleLogout}
-                                        className="bg-white/10 hover:bg-white text-white hover:text-primary px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest transition-all border border-white/10"
-                                    >
-                                        Exit
-                                    </button>
-                                </div>
-                            </div>
-                        ) : (
-                            <Link to="/login" className="bg-white hover:bg-accent text-primary px-4 lg:px-6 py-1.5 lg:py-2 rounded-full text-xs lg:text-sm font-black uppercase tracking-widest transition-all shadow-lg active:scale-95">
-                                Login
-                            </Link>
-                        )}
-
-                        <button className="lg:hidden p-2 text-white hover:bg-white/10 rounded-lg" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-                            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                        </button>
-                    </div>
+        <header className="z-50 font-body sticky top-0 w-full shadow-sm bg-[#f8f9fb]">
+            {/* Top Ticker Bar */}
+            <div className="bg-[#293c47] text-[#e0e5eb] overflow-hidden whitespace-nowrap py-2 relative z-[60] text-[13px] font-sans font-medium tracking-wide">
+                <div className="flex animate-marquee-slower items-center w-max">
+                    {[
+                        { text: 'New Arrivals: "Deep Learning for Vision" by Andrew Ng now available in the CS Section!', icon: Bell },
+                        { text: 'Upcoming Event: SAHYOG-2025 International Symposium', icon: null },
+                        { text: 'Daily Update: Digital Repository now accessible via G...', icon: null },
+                        { text: 'Notice: Please return overdue books by Friday to avoid fines. Happy Reading!', icon: null }
+                    ].map((item, idx) => (
+                        <React.Fragment key={`set1-${idx}`}>
+                            <span className="flex items-center gap-2 px-8 opacity-90 hover:opacity-100 transition-opacity">
+                                {item.icon && <item.icon size={13} className="animate-pulse" />}
+                                {item.text}
+                            </span>
+                            <div className="w-1 h-1 rounded-full bg-white/30 shrink-0"></div>
+                        </React.Fragment>
+                    ))}
+                    {/* Duplicated for seamless scroll */}
+                    {[
+                        { text: 'New Arrivals: "Deep Learning for Vision" by Andrew Ng now available in the CS Section!', icon: Bell },
+                        { text: 'Upcoming Event: SAHYOG-2025 International Symposium', icon: null },
+                        { text: 'Daily Update: Digital Repository now accessible via G...', icon: null },
+                        { text: 'Notice: Please return overdue books by Friday to avoid fines. Happy Reading!', icon: null }
+                    ].map((item, idx) => (
+                        <React.Fragment key={`set2-${idx}`}>
+                            <span className="flex items-center gap-2 px-8 opacity-90 hover:opacity-100 transition-opacity">
+                                {item.icon && <item.icon size={13} className="animate-pulse" />}
+                                {item.text}
+                            </span>
+                            <div className="w-1 h-1 rounded-full bg-white/30 shrink-0"></div>
+                        </React.Fragment>
+                    ))}
                 </div>
             </div>
 
-            {/* Line 2: Navigation Categories (Scrolls away) */}
-            {/* Added margin-top to account for fixed height of Line 1 */}
-            <div className="mt-[72px] lg:mt-[84px]">
-                <nav className="bg-primary text-white border-b border-white/5 shadow-md hidden lg:block overflow-visible relative z-[40]">
-                    <div className="container mx-auto px-4">
-                        <div className="flex items-center justify-center gap-1">
+            {/* Main Navbar */}
+            <div className="container mx-auto px-6 py-3 flex items-center justify-between gap-6 relative z-[60]">
+                {/* Branding  - Left */}
+                <Link to="/" className="flex items-center gap-3 shrink-0 group py-1">
+                    <img src={logo} alt="Library Logo" className="h-[46px] w-auto object-contain" />
+                    <div className="flex flex-col">
+                        <h1 className="text-2xl font-serif font-extrabold text-[#1a5b51] leading-tight tracking-tight">LDCE Library</h1>
+                    </div>
+                </Link>
 
-                            {/* Digital Resources Dropdown */}
-                            <div className="relative group p-1" onMouseEnter={() => setActiveDropdown('digital')} onMouseLeave={() => setActiveDropdown(null)}>
-                                <button className="flex items-center gap-2 px-4 py-3 text-[13px] font-black uppercase tracking-widest hover:bg-white/10 transition-colors rounded-lg group">
-                                    <Globe size={16} className="text-accent" /> Digital Resources <ChevronDown size={14} className="opacity-50 group-hover:rotate-180 transition-transform duration-300" />
-                                </button>
-                                {activeDropdown === 'digital' && (
-                                    <div className="absolute top-full left-0 w-64 bg-white shadow-2xl rounded-2xl border border-gray-100 py-3 text-primary animate-in fade-in slide-in-from-top-2 overflow-hidden">
-                                        {[
-                                            { label: 'E-Newspapers', icon: Newspaper, link: '/digital/newspapers' },
-                                            { label: 'E-Books', icon: BookOpen, link: '/digital/books' },
-                                            { label: 'Audiobooks', icon: Headphones, link: '/digital/audiobooks' }
-                                        ].map(item => (
-                                            <Link key={item.label} to={item.link} className="flex items-center gap-3 px-5 py-2.5 hover:bg-blue-50 transition-colors group">
-                                                <item.icon size={16} className="text-secondary/50 group-hover:text-secondary" />
-                                                <span className="font-bold text-[13px]">{item.label}</span>
-                                            </Link>
-                                        ))}
-                                    </div>
-                                )}
+                {/* Desktop Nav Links - Center */}
+                <nav className="hidden lg:flex items-center gap-1 xl:gap-6 flex-1 justify-center">
+                    <div className="relative group px-1 py-2">
+                         <Link to="/" className="px-1 py-2 text-[15px] font-bold text-[#1a5b51] border-b-[3px] border-[#1a5b51] transition-colors">Home</Link>
+                    </div>
+                     
+                    {/* Digital Resources Dropdown */}
+                    <div className="relative group px-1 py-2" onMouseEnter={() => setActiveDropdown('digital')} onMouseLeave={() => setActiveDropdown(null)}>
+                        <button className="flex items-center gap-1.5 px-3 py-2 text-[15px] font-bold text-[#354955] hover:text-[#1a5b51] transition-colors rounded-lg">
+                            Resources
+                        </button>
+                        {activeDropdown === 'digital' && (
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 w-56 bg-surface_container_lowest shadow-[0_24px_48px_rgba(25,28,29,0.08)] rounded-xl py-3 animate-in fade-in slide-in-from-top-2 border border-outline_variant">
+                                {[
+                                    { label: 'E-Newspapers', icon: Newspaper, link: '/digital/newspapers' },
+                                    { label: 'E-Books', icon: BookOpen, link: '/digital/books' },
+                                    { label: 'Audiobooks', icon: Headphones, link: '/digital/audiobooks' }
+                                ].map(item => (
+                                    <Link key={item.label} to={item.link} className="flex items-center gap-3 px-5 py-2.5 hover:bg-surface_container_low transition-colors group/item">
+                                        <item.icon size={16} className="text-primary/60 group-hover/item:text-primary" />
+                                        <span className="text-[14px] font-medium text-on_surface/90 group-hover/item:text-on_surface">{item.label}</span>
+                                    </Link>
+                                ))}
                             </div>
+                        )}
+                    </div>
 
-                            {/* Events Dropdown */}
-                            <div className="relative group p-1" onMouseEnter={() => setActiveDropdown('events')} onMouseLeave={() => setActiveDropdown(null)}>
-                                <button className="flex items-center gap-2 px-4 py-3 text-[13px] font-black uppercase tracking-widest hover:bg-white/10 transition-colors rounded-lg group">
-                                    <Calendar size={16} className="text-accent" /> Events <ChevronDown size={14} className="opacity-50 group-hover:rotate-180 transition-transform duration-300" />
-                                </button>
-                                {activeDropdown === 'events' && (
-                                    <div className="absolute top-full left-0 w-48 bg-white shadow-2xl rounded-2xl border border-gray-100 py-3 text-primary animate-in fade-in slide-in-from-top-2 overflow-hidden">
-                                        <Link to="/events" className="flex items-center gap-3 px-5 py-2.5 hover:bg-blue-50 transition-colors group"><Calendar size={16} className="text-secondary/50 group-hover:text-secondary" /><span className="font-bold text-[13px]">Upcoming Events</span></Link>
-                                        <Link to="/programs" className="flex items-center gap-3 px-5 py-2.5 hover:bg-blue-50 transition-colors group"><Users size={16} className="text-secondary/50 group-hover:text-secondary" /><span className="font-bold text-[13px]">Library Programs</span></Link>
-                                    </div>
-                                )}
+
+
+                     {/* Courses Dropdown */}
+                    <div className="relative group px-1 py-2" onMouseEnter={() => setActiveDropdown('courses')} onMouseLeave={() => setActiveDropdown(null)}>
+                        <button className="flex items-center gap-1.5 px-3 py-2 text-[15px] font-bold text-[#354955] hover:text-[#1a5b51] transition-colors rounded-lg">
+                            Courses
+                        </button>
+                         {activeDropdown === 'courses' && (
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 w-48 bg-surface_container_lowest shadow-[0_24px_48px_rgba(25,28,29,0.08)] rounded-xl py-3 animate-in fade-in slide-in-from-top-2 border border-outline_variant">
+                                <Link to="/learning/nptel" className="flex items-center gap-3 px-5 py-2.5 hover:bg-surface_container_low transition-colors group/item">
+                                    <GraduationCap size={16} className="text-primary/60 group-hover/item:text-primary" />
+                                    <span className="text-[14px] font-medium text-on_surface/90 group-hover/item:text-on_surface">NPTEL</span>
+                                </Link>
+                                <Link to="/learning/onos" className="flex items-center gap-3 px-5 py-2.5 hover:bg-surface_container_low transition-colors group/item">
+                                    <BookOpen size={16} className="text-primary/60 group-hover/item:text-primary" />
+                                    <span className="text-[14px] font-medium text-on_surface/90 group-hover/item:text-on_surface">ONOS</span>
+                                </Link>
                             </div>
+                         )}
+                    </div>
 
-                            {/* Contact Dropdown */}
-                            <div className="relative group p-1" onMouseEnter={() => setActiveDropdown('contact')} onMouseLeave={() => setActiveDropdown(null)}>
-                                <button className="flex items-center gap-2 px-4 py-3 text-[13px] font-black uppercase tracking-widest hover:bg-white/10 transition-colors rounded-lg group">
-                                    <Mail size={16} className="text-accent" /> Contact <ChevronDown size={14} className="opacity-50 group-hover:rotate-180 transition-transform duration-300" />
-                                </button>
-                                {activeDropdown === 'contact' && (
-                                    <div className="absolute top-full left-0 w-80 bg-white shadow-2xl rounded-2xl border border-gray-100 p-4 text-primary animate-in fade-in slide-in-from-top-2 flex gap-4">
-                                        <div className="flex-1 space-y-2">
-                                            <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-2">About</h4>
-                                            <Link to="/faq" className="block px-2 py-1.5 hover:bg-blue-50 rounded-lg font-bold text-[12px]">FAQ</Link>
-                                            <Link to="/policies" className="block px-2 py-1.5 hover:bg-blue-50 rounded-lg font-bold text-[12px]">Policies</Link>
-                                        </div>
-                                        <div className="w-px bg-gray-100"></div>
-                                        <div className="flex-1 space-y-2">
-                                            <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-2">Contact Info</h4>
-                                            <Link to="/contact/details" className="flex items-center gap-2 px-2 py-1.5 hover:bg-blue-50 rounded-lg font-bold text-[12px]"><Phone size={12} /> Email/Tel</Link>
+                    <div className="relative group px-1 py-2">
+                        <Link to="/feedback" className="flex items-center gap-1.5 px-3 py-2 text-[15px] font-bold text-[#354955] hover:text-[#1a5b51] transition-colors rounded-lg">Feedback</Link>
+                    </div>
 
-                                            <Link to="/librarian" className="flex items-center gap-2 px-2 py-1.5 hover:bg-blue-50 rounded-lg font-bold text-[12px]"><Users size={12} /> Librarian</Link>
-                                        </div>
-                                    </div>
-                                )}
+                    {/* Contact Dropdown */}
+                    <div className="relative group px-1 py-2" onMouseEnter={() => setActiveDropdown('contact')} onMouseLeave={() => setActiveDropdown(null)}>
+                        <button className="flex items-center gap-1.5 px-3 py-2 text-[15px] font-bold text-[#354955] hover:text-[#1a5b51] transition-colors rounded-lg">
+                            Contact
+                        </button>
+                        {activeDropdown === 'contact' && (
+                            <div className="absolute top-full right-0 w-80 bg-surface_container_lowest shadow-[0_24px_48px_rgba(25,28,29,0.08)] rounded-xl p-4 animate-in fade-in slide-in-from-top-2 border border-outline_variant flex gap-4">
+                                <div className="flex-1 space-y-1">
+                                    <h4 className="text-[11px] font-bold text-on_surface/50 uppercase tracking-wider mb-2 px-2">About</h4>
+                                    <Link to="/faq" className="block px-2 py-1.5 hover:bg-surface_container_low rounded-md text-[13px] font-medium text-on_surface/90">FAQ</Link>
+                                    <Link to="/policies" className="block px-2 py-1.5 hover:bg-surface_container_low rounded-md text-[13px] font-medium text-on_surface/90">Policies</Link>
+                                </div>
+                                <div className="w-px bg-outline_variant"></div>
+                                <div className="flex-1 space-y-1">
+                                    <h4 className="text-[11px] font-bold text-on_surface/50 uppercase tracking-wider mb-2 px-2">Contact Info</h4>
+                                    <Link to="/contact/details" className="flex items-center gap-2 px-2 py-1.5 hover:bg-surface_container_low rounded-md text-[13px] font-medium text-on_surface/90"><Phone size={14} className="text-primary/60"/> Email/Tel</Link>
+                                    <Link to="/librarian" className="flex items-center gap-2 px-2 py-1.5 hover:bg-surface_container_low rounded-md text-[13px] font-medium text-on_surface/90"><Users size={14} className="text-primary/60"/> Librarian</Link>
+                                </div>
                             </div>
-
-                            <Link to="/feedback" className="flex items-center gap-2 px-4 py-3 text-[13px] font-black uppercase tracking-widest hover:bg-white/10 transition-colors rounded-lg"><MessageSquare size={16} className="text-accent" /> Feedback</Link>
-                            <Link to="/committee" className="flex items-center gap-2 px-4 py-3 text-[13px] font-black uppercase tracking-widest hover:bg-white/10 transition-colors rounded-lg"><Users size={16} className="text-accent" /> Committee</Link>
-                            {/* Courses Dropdown */}
-                            <div className="relative group p-1" onMouseEnter={() => setActiveDropdown('courses')} onMouseLeave={() => setActiveDropdown(null)}>
-                                <button className="flex items-center gap-2 px-4 py-3 text-[13px] font-black uppercase tracking-widest hover:bg-white/10 transition-colors rounded-lg group">
-                                    <GraduationCap size={16} className="text-accent" /> Courses <ChevronDown size={14} className="opacity-50 group-hover:rotate-180 transition-transform duration-300" />
-                                </button>
-                                {activeDropdown === 'courses' && (
-                                    <div className="absolute top-full left-0 w-48 bg-white shadow-2xl rounded-2xl border border-gray-100 py-3 text-primary animate-in fade-in slide-in-from-top-2 overflow-hidden">
-                                        <Link to="/learning/nptel" className="flex items-center gap-3 px-5 py-2.5 hover:bg-blue-50 transition-colors group">
-                                            <GraduationCap size={16} className="text-secondary/50 group-hover:text-secondary" />
-                                            <span className="font-bold text-[13px]">NPTEL</span>
-                                        </Link>
-                                        <Link to="/learning/onos" className="flex items-center gap-3 px-5 py-2.5 hover:bg-blue-50 transition-colors group">
-                                            <BookOpen size={16} className="text-secondary/50 group-hover:text-secondary" />
-                                            <span className="font-bold text-[13px]">ONOS</span>
-                                            </Link>
-                                    </div>
-                                )}
-                            </div>
-                            <Link to="/map" className="flex items-center gap-2 px-4 py-3 text-[13px] font-black uppercase tracking-widest hover:bg-white/10 transition-colors rounded-lg"><MapIcon size={16} className="text-accent" /> Map</Link>
-                        </div>
+                        )}
                     </div>
                 </nav>
 
-                {/* Scrolling News Bar */}
-                <div className="bg-accent overflow-hidden whitespace-nowrap py-2 border-b border-primary/10 shadow-inner relative z-[30]">
-                    <div className="flex animate-marquee-slower items-center w-max text-primary">
-                        {/* News Items Set 1 */}
-                        {[
-                            { text: 'New Arrivals: "Deep Learning for Vision" by Andrew Ng now available in the CS Section!', icon: Bell },
-                            { text: 'Upcoming Event: Library Orientation Program on March 15th at 11:00 AM.', icon: null },
-                            { text: 'Daily Update: LDCE Library now offers 24/7 access to IEEE Digital Library.', icon: null },
-                            { text: 'Notice: Please return overdue books by Friday to avoid fines. Happy Reading!', icon: null }
-                        ].map((item, idx) => (
-                            <React.Fragment key={`set1-${idx}`}>
-                                <span className="flex items-center gap-2 font-black text-[12px] uppercase tracking-wider px-12">
-                                    {item.icon && <item.icon size={14} className="animate-bounce" />}
-                                    {item.text}
-                                </span>
-                                <div className="w-1.5 h-1.5 rounded-full bg-primary/20 shrink-0"></div>
-                            </React.Fragment>
-                        ))}
-                        {/* Duplicated News Items Set 2 for Seamless Scroll */}
-                        {[
-                            { text: 'New Arrivals: "Deep Learning for Vision" by Andrew Ng now available in the CS Section!', icon: Bell },
-                            { text: 'Upcoming Event: Library Orientation Program on March 15th at 11:00 AM.', icon: null },
-                            { text: 'Daily Update: LDCE Library now offers 24/7 access to IEEE Digital Library.', icon: null },
-                            { text: 'Notice: Please return overdue books by Friday to avoid fines. Happy Reading!', icon: null }
-                        ].map((item, idx) => (
-                            <React.Fragment key={`set2-${idx}`}>
-                                <span className="flex items-center gap-2 font-black text-[12px] uppercase tracking-wider px-12">
-                                    {item.icon && <item.icon size={14} className="animate-bounce" />}
-                                    {item.text}
-                                </span>
-                                <div className="w-1.5 h-1.5 rounded-full bg-primary/20 shrink-0"></div>
-                            </React.Fragment>
-                        ))}
+                {/* Right Actions: Search Icon + Auth */}
+                <div className="flex items-center gap-4 shrink-0">
+                    
+                    {/* Search Field (Hidden on small, visible on desktop) */}
+                    <div className="hidden md:flex items-center relative group">
+                         <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#1a5b51] transition-colors" />
+                        <input 
+                            type="text" 
+                            placeholder="Search archives..." 
+                            className="w-56 pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-full text-[14px] outline-none transition-all focus:w-64 focus:border-[#1a5b51] placeholder:text-gray-400 text-gray-700"
+                        />
                     </div>
+
+                    {user ? (
+                        <div className="flex items-center gap-2 md:gap-4">
+                            <div className="relative">
+                                <button
+                                    onClick={() => setShowNotifications(!showNotifications)}
+                                    className="p-2 hover:bg-surface_container_low rounded-full transition-colors relative"
+                                >
+                                    <Bell size={20} className={unreadCount > 0 ? "text-primary animate-pulse" : "text-on_surface/60"} />
+                                    {unreadCount > 0 && <span className="absolute top-1 right-1 w-4 h-4 bg-primary text-on_primary text-[9px] font-bold flex items-center justify-center rounded-full border border-surface_container_lowest">{unreadCount}</span>}
+                                </button>
+
+                                {showNotifications && (
+                                    <div className="absolute right-0 mt-3 w-80 bg-surface_container_lowest rounded-xl shadow-[0_24px_48px_rgba(25,28,29,0.08)] border border-outline_variant overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2">
+                                        <div className="p-4 border-b border-outline_variant flex justify-between items-center bg-surface_container_low/50">
+                                            <h3 className="font-bold text-primary text-sm">Alerts</h3>
+                                            <span className="text-[10px] font-bold text-on_primary bg-primary px-2.5 py-1 rounded-full">{unreadCount} New</span>
+                                        </div>
+                                        <div className="max-h-80 overflow-y-auto">
+                                            {notifications.length === 0 ? (
+                                                <div className="p-8 text-center text-on_surface/40 text-sm">No new signals</div>
+                                            ) : (
+                                                notifications.map((notif) => (
+                                                    <div key={notif._id} className="p-4 border-b border-outline_variant/50 text-sm hover:bg-surface_container_low cursor-pointer transition-colors" onClick={() => !notif.read && markAsRead(notif._id)}>
+                                                        <div className="flex items-start gap-3">
+                                                            <div className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${!notif.read ? 'bg-primary' : 'bg-transparent'}`} />
+                                                            <span className={!notif.read ? 'font-semibold text-on_surface' : 'text-on_surface/60'}>{notif.message}</span>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="hidden lg:flex items-center gap-4 pl-4 border-l border-outline_variant">
+                                <Link to={user.role === 'admin' ? '/admin/profile' : '/student/profile'} className="text-sm font-semibold text-on_surface/80 hover:text-primary transition-colors">
+                                    {user.name?.split(' ')[0] || 'User'}
+                                </Link>
+                                <button
+                                    onClick={handleLogout}
+                                    className="px-4 py-2 border border-outline_variant text-on_surface hover:bg-surface_container_low hover:text-primary rounded-xl text-sm font-medium transition-all"
+                                >
+                                    Logout
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        <Link to="/login" className="bg-[#1a5b51] text-white px-7 py-2.5 rounded-full text-[14px] font-medium transition-all hover:bg-[#134840]">
+                            Login
+                        </Link>
+                    )}
+
+                    <button className="lg:hidden p-2 text-on_surface hover:bg-surface_container_low rounded-lg transition-colors" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+                        {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                    </button>
                 </div>
             </div>
 
             {/* Mobile Navigation Menu */}
-            <div className={`lg:hidden fixed inset-0 z-[100] bg-primary transition-all duration-300 ${mobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
-                <div className="p-6 space-y-8">
-                    <div className="flex justify-between items-center">
-                        <h2 className="text-2xl font-black uppercase tracking-widest">Library Menu</h2>
-                        <button onClick={() => setMobileMenuOpen(false)}><X size={32} /></button>
+            <div className={`lg:hidden fixed inset-0 z-[100] bg-surface_container_lowest transition-all duration-300 ${mobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+                <div className="p-6 space-y-8 flex flex-col h-full">
+                    <div className="flex justify-between items-center pb-4 border-b border-outline_variant">
+                        <Link to="/" className="flex items-center gap-3 shrink-0" onClick={() => setMobileMenuOpen(false)}>
+                            <img src={logo} alt="LDCE Logo" className="w-[36px] h-[36px] object-cover rounded-full" />
+                            <h1 className="text-lg font-display font-bold text-primary">LDCE Library</h1>
+                        </Link>
+                        <button onClick={() => setMobileMenuOpen(false)} className="p-2 text-on_surface hover:bg-surface_container_low rounded-full transition-colors"><X size={24} /></button>
                     </div>
 
-                    <nav className="flex flex-col gap-2">
-                        {[
-                            { label: 'Digital Resources', link: '/digital' },
-                            { label: 'Events & Programs', link: '/events' },
-                            { label: 'Contact & FAQ', link: '/contact' },
-                            { label: 'nptel Courses', link: '/learning/nptel' },
-                            { label: 'ONOS Courses', link: '/learning/onos' },
-                            { label: 'Library Map', link: '/map' }
-                        ].map((item) => (
-                            <Link key={item.label} to={item.link} className="p-5 bg-white/5 rounded-3xl font-black text-sm uppercase tracking-widest hover:bg-accent hover:text-primary transition-all" onClick={() => setMobileMenuOpen(false)}>{item.label}</Link>
-                        ))}
-                    </nav>
+                    <div className="flex-1 overflow-y-auto">
+                        <nav className="flex flex-col gap-2">
+                            {[
+                                { label: 'Home', link: '/' },
+                                { label: 'Digital Resources', link: '/digital' },
+                                { label: 'Events & Programs', link: '/events' },
+                                { label: 'Contact & FAQ', link: '/contact' },
+                                { label: 'NPTEL Courses', link: '/learning/nptel' },
+                                { label: 'ONOS Courses', link: '/learning/onos' },
+                                { label: 'Feedback', link: '/feedback' },
+                                { label: 'Library Map', link: '/map' }
+                            ].map((item) => (
+                                <Link key={item.label} to={item.link} className="px-4 py-3 bg-surface_container_low/50 rounded-xl font-medium text-[15px] text-on_surface/80 hover:bg-surface_container_low hover:text-primary transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                                    {item.label}
+                                </Link>
+                            ))}
+                        </nav>
+                    </div>
 
-                    {!user && (
-                        <Link to="/login" className="block text-center bg-white text-primary p-5 rounded-3xl font-black uppercase tracking-widest shadow-2xl">Login / Register</Link>
-                    )}
+                    <div className="pt-4 border-t border-outline_variant">
+                        {user ? (
+                           <button onClick={handleLogout} className="w-full text-center bg-surface_container_low text-on_surface py-3.5 rounded-xl font-semibold border border-outline_variant">Logout</button>
+                        ) : (
+                            <Link to="/login" className="block text-center bg-gradient-to-r from-primary to-primary_container text-on_primary py-3.5 rounded-xl font-semibold shadow-[0_8px_16px_rgba(0,32,89,0.15)]" onClick={() => setMobileMenuOpen(false)}>Login</Link>
+                        )}
+                    </div>
                 </div>
             </div>
         </header>
