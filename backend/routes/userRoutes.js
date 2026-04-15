@@ -79,16 +79,29 @@ router.post('/', async (req, res) => {
     const { name, email, password, role, enrollmentNo, gender, year, department } = req.body;
 
     try {
+        if (!name || !email || !password || !enrollmentNo) {
+            return res.status(400).json({ message: 'Name, email, password, and enrollment number are required' });
+        }
+
         const userExists = await User.findOne({ email });
         if (userExists) {
-            return res.status(400).json({ message: 'User already exists' });
+            return res.status(400).json({ message: 'An account with this email already exists' });
+        }
+
+        const enrollmentExists = await User.findOne({ enrollmentNo });
+        if (enrollmentExists) {
+            return res.status(400).json({ message: 'This enrollment number is already registered' });
+        }
+
+        if (password.trim().length < 6) {
+            return res.status(400).json({ message: 'Password must be at least 6 characters long' });
         }
 
         const user = await User.create({
             name,
             email,
             password,
-            role, // 'student' or 'admin'
+            role: role || 'student', // default to student when missing
             enrollmentNo,
             gender,
             year,

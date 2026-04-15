@@ -52,49 +52,52 @@ const Home = () => {
                 </div>
             </div>
             {/* Recent Updates Full-Width Section */}
-            <div className="pt-16 pb-12">
+            <div className="pt-16 pb-16 bg-[#fcfdfd]">
                 <div className="container mx-auto px-6 md:px-12 max-w-7xl">
                     <div className="flex items-center justify-between mb-10 w-full gap-8">
                         <div className="flex-1">
-                            <h4 className="text-[10px] font-bold text-[#1a5b51] uppercase tracking-wider mb-2">News & Announcements</h4>
-                            <div className="flex items-center gap-6 w-full">
-                                <h2 className="text-3xl md:text-[40px] font-serif text-[#2c3e50] whitespace-nowrap">Recent Updates</h2>
-                                <div className="h-[1px] bg-[#e4e9ec] flex-1 min-w-0 md:mt-1"></div>
+                            <h4 className="text-[10px] font-bold text-[#5fa6a1] uppercase tracking-[0.2em] mb-3 font-label">News & Announcements</h4>
+                            <div className="flex items-center gap-5 w-full">
+                                <h2 className="text-[34px] md:text-[46px] font-display text-[#3f3f48] whitespace-nowrap leading-none">Recent Updates</h2>
+                                <div className="h-[1px] bg-[#e6eaed] flex-1 min-w-0 md:mt-1"></div>
                             </div>
                         </div>
-                        <Link to="/news" className="text-[#1a5b51] font-bold text-[13px] hover:underline whitespace-nowrap mt-4 md:mt-3">
+                        <Link to="/news" className="text-[#5fa6a1] font-semibold text-[13px] hover:underline whitespace-nowrap mt-4 md:mt-3 font-label">
                             View All News
                         </Link>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         {[1, 2, 3, 4].map((item) => (
-                            <div key={item} className="bg-white rounded-[16px] p-6 lg:p-8 flex gap-5 lg:gap-8 items-start hover:shadow-[0_6px_24px_rgba(0,0,0,0.03)] shadow-sm transition-all border border-[#f0f2f4]">
-                                {/* Icon */}
-                                <div className="bg-[#edf2f1] p-3.5 rounded-lg shrink-0 mt-1">
-                                    <ArrowRight className="w-5 h-5 text-[#1a5b51]" strokeWidth={2.5} />
-                                </div>
-                                
-                                {/* Content */}
-                                <div className="space-y-2 lg:space-y-3">
-                                    <h3 className="text-[18px] lg:text-[20px] font-serif text-[#3f5161] leading-normal font-medium">News Headline {item}</h3>
-                                    <div className="flex items-center gap-2 text-[12px] text-gray-500 font-sans">
-                                        <Calendar className="w-3.5 h-3.5" />
-                                        <span>10/10/2023</span>
+                            <div key={item} className="group bg-white rounded-[14px] px-5 py-5 md:px-6 md:py-6 min-h-[188px] border-[2.5px] border-[#425775] shadow-[0_8px_20px_rgba(37,53,84,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_26px_rgba(37,53,84,0.12)] flex flex-col justify-between">
+                                <div>
+                                    <div className="flex items-center justify-between gap-3 mb-5">
+                                        <div className="flex items-center gap-2">
+                                            <span className="w-2 h-2 rounded-full bg-[#ff9499]"></span>
+                                            <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-[#7f8690] font-label">Live Update</span>
+                                        </div>
+                                        <div className="flex items-center gap-1.5 text-[11px] text-[#c1c8cf] font-label">
+                                            <Calendar className="w-3 h-3" />
+                                            <span>10/10/2023</span>
+                                        </div>
                                     </div>
-                                    <Link to={`/news/${item}`} className="text-[#1a5b51] text-[12px] font-bold flex items-center gap-1 hover:underline pt-2 inline-flex tracking-wide">
-                                        View Details <span className="text-[11px] ml-0.5">›</span>
+
+                                    <h3 className="text-[20px] md:text-[22px] font-display text-[#4a4950] leading-[1.2] mb-4 max-w-[14ch]">News Headline {item}</h3>
+                                </div>
+
+                                <div className="pt-5 flex items-center justify-between">
+                                    <Link to={`/news/${item}`} className="text-[#5fa6a1] text-[12px] font-bold flex items-center gap-1 tracking-wide font-label">
+                                        View Details <span className="text-[11px]">+</span>
                                     </Link>
+                                    <span className="w-7 h-7 rounded-full bg-[#eef7f5] border border-[#d8e9e6] flex items-center justify-center text-[#5fa6a1] transition-colors group-hover:bg-[#dff1ee]">
+                                        <ArrowRight className="w-3.5 h-3.5" strokeWidth={2.5} />
+                                    </span>
                                 </div>
                             </div>
                         ))}
                     </div>
                 </div>
             </div>
-
-
-
-
 
                 {/* New Arrivals */}
                 {/* New Arrivals */}
