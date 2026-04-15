@@ -98,11 +98,15 @@ const Home = () => {
 
                 {/* New Arrivals */}
                 {/* New Arrivals */}
-                <div className="bg-[#f8f9fa]">
+                <div
+                    className="relative overflow-hidden"
+                    style={{ background: 'var(--library-section-gradient)' }}
+                >
                     <NewArrivals />
-                    
+                </div>
+
                     {/* Latest Events Grid (Moved right under New Arrivals) */}
-                    <div className="pt-6 pb-20">
+                    <div className="pt-10 pb-20 bg-[#f8f9fa]">
                     <div className="container mx-auto px-6 md:px-12 max-w-7xl">
                         <div className="mb-10">
                             <h4 className="text-[10px] font-bold text-[#1a5b51] uppercase tracking-wider mb-2">Engagement</h4>
@@ -147,9 +151,12 @@ const Home = () => {
                 </div>
 
                 {/* Information Hub Section */}
-                <div className="pb-20">
+                <div className="pt-10 pb-20" style={{ background: 'var(--library-section-gradient)' }}>
                     <div className="container mx-auto px-6 md:px-12 max-w-7xl">
-                        <div className="bg-white rounded-[32px] p-8 lg:p-14 shadow-[0_2px_24px_rgba(0,0,0,0.03)] border border-[#eef2f0] grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-12 lg:gap-20 items-center">
+                        <div
+                            className="rounded-[32px] p-8 lg:p-14 shadow-[0_2px_24px_rgba(0,0,0,0.03)] border border-[#d8e9e6] grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-12 lg:gap-20 items-center"
+                            style={{ background: 'var(--library-panel-gradient)' }}
+                        >
                             
                             {/* Left Side: Information */}
                             <div>
@@ -231,7 +238,6 @@ const Home = () => {
 
                         </div>
                     </div>
-                </div>
                 </div>
 
             {/* Gallery Section */}

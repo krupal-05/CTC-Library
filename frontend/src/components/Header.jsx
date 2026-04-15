@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import {
     Bell,
@@ -23,6 +23,7 @@ import { useNotification } from '../context/NotificationContext';
 
 const Header = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [user, setUser] = useState(null);
     const { notifications, unreadCount, markAsRead } = useNotification();
     const [showNotifications, setShowNotifications] = useState(false);
@@ -42,10 +43,13 @@ const Header = () => {
         navigate('/');
     };
 
+    const isActivePath = (path) => location.pathname === path;
+    const isActiveGroup = (paths) => paths.some((path) => location.pathname.startsWith(path));
+
     return (
         <header className="z-50 font-body sticky top-0 w-full shadow-sm bg-[#f8f9fb]">
             {/* Top Ticker Bar */}
-            <div className="bg-[#293c47] text-[#e0e5eb] overflow-hidden whitespace-nowrap py-2 relative z-[60] text-[13px] font-sans font-medium tracking-wide">
+            <div className="bg-[#293c47] text-[#e0e5eb] overflow-hidden whitespace-nowrap py-2 relative z-[60] text-[13px] font-label font-medium tracking-wide">
                 <div className="flex animate-marquee-slower items-center w-max">
                     {[
                         { text: 'New Arrivals: "Deep Learning for Vision" by Andrew Ng now available in the CS Section!', icon: Bell },
@@ -90,14 +94,25 @@ const Header = () => {
                 </Link>
 
                 {/* Desktop Nav Links - Center */}
-                <nav className="hidden lg:flex items-center gap-1 xl:gap-6 flex-1 justify-center">
+                <nav className="hidden lg:flex items-center gap-1 xl:gap-6 flex-1 justify-center font-label">
                     <div className="relative group px-1 py-2">
-                         <Link to="/" className="px-1 py-2 text-[15px] font-bold text-[#1a5b51] border-b-[3px] border-[#1a5b51] transition-colors">Home</Link>
+                         <Link
+                            to="/"
+                            className={`px-1 py-2 text-[15px] font-bold border-b-[3px] transition-colors ${
+                                isActivePath('/')
+                                    ? 'text-[#1a5b51] border-[#1a5b51]'
+                                    : 'text-[#354955] border-transparent hover:text-[#354955] hover:border-[#1a5b51]'
+                            }`}
+                        >
+                            Home
+                        </Link>
                     </div>
                      
                     {/* Digital Resources Dropdown */}
                     <div className="relative group px-1 py-2" onMouseEnter={() => setActiveDropdown('digital')} onMouseLeave={() => setActiveDropdown(null)}>
-                        <button className="flex items-center gap-1.5 px-3 py-2 text-[15px] font-bold text-[#354955] hover:text-[#1a5b51] transition-colors rounded-lg">
+                        <button className={`flex items-center gap-1.5 px-3 py-2 text-[15px] font-bold transition-colors border-b-[3px] rounded-none ${
+                            isActiveGroup(['/digital']) ? 'text-[#1a5b51] border-[#1a5b51]' : 'text-[#354955] border-transparent hover:text-[#354955] hover:border-[#1a5b51]'
+                        }`}>
                             Resources
                         </button>
                         {activeDropdown === 'digital' && (
@@ -107,7 +122,7 @@ const Header = () => {
                                     { label: 'E-Books', icon: BookOpen, link: '/digital/books' },
                                     { label: 'Audiobooks', icon: Headphones, link: '/digital/audiobooks' }
                                 ].map(item => (
-                                    <Link key={item.label} to={item.link} className="flex items-center gap-3 px-5 py-2.5 hover:bg-surface_container_low transition-colors group/item">
+                                    <Link key={item.label} to={item.link} className="flex items-center gap-3 px-5 py-2.5 hover:bg-surface_container_low transition-colors group/item font-label">
                                         <item.icon size={16} className="text-primary/60 group-hover/item:text-primary" />
                                         <span className="text-[14px] font-medium text-on_surface/90 group-hover/item:text-on_surface">{item.label}</span>
                                     </Link>
@@ -120,16 +135,18 @@ const Header = () => {
 
                      {/* Courses Dropdown */}
                     <div className="relative group px-1 py-2" onMouseEnter={() => setActiveDropdown('courses')} onMouseLeave={() => setActiveDropdown(null)}>
-                        <button className="flex items-center gap-1.5 px-3 py-2 text-[15px] font-bold text-[#354955] hover:text-[#1a5b51] transition-colors rounded-lg">
+                        <button className={`flex items-center gap-1.5 px-3 py-2 text-[15px] font-bold transition-colors border-b-[3px] rounded-none ${
+                            isActiveGroup(['/learning']) ? 'text-[#1a5b51] border-[#1a5b51]' : 'text-[#354955] border-transparent hover:text-[#354955] hover:border-[#1a5b51]'
+                        }`}>
                             Courses
                         </button>
                          {activeDropdown === 'courses' && (
                             <div className="absolute top-full left-1/2 -translate-x-1/2 w-48 bg-surface_container_lowest shadow-[0_24px_48px_rgba(25,28,29,0.08)] rounded-xl py-3 animate-in fade-in slide-in-from-top-2 border border-outline_variant">
-                                <Link to="/learning/nptel" className="flex items-center gap-3 px-5 py-2.5 hover:bg-surface_container_low transition-colors group/item">
+                                <Link to="/learning/nptel" className="flex items-center gap-3 px-5 py-2.5 hover:bg-surface_container_low transition-colors group/item font-label">
                                     <GraduationCap size={16} className="text-primary/60 group-hover/item:text-primary" />
                                     <span className="text-[14px] font-medium text-on_surface/90 group-hover/item:text-on_surface">NPTEL</span>
                                 </Link>
-                                <Link to="/learning/onos" className="flex items-center gap-3 px-5 py-2.5 hover:bg-surface_container_low transition-colors group/item">
+                                <Link to="/learning/onos" className="flex items-center gap-3 px-5 py-2.5 hover:bg-surface_container_low transition-colors group/item font-label">
                                     <BookOpen size={16} className="text-primary/60 group-hover/item:text-primary" />
                                     <span className="text-[14px] font-medium text-on_surface/90 group-hover/item:text-on_surface">ONOS</span>
                                 </Link>
@@ -138,26 +155,46 @@ const Header = () => {
                     </div>
 
                     <div className="relative group px-1 py-2">
-                        <Link to="/feedback" className="flex items-center gap-1.5 px-3 py-2 text-[15px] font-bold text-[#354955] hover:text-[#1a5b51] transition-colors rounded-lg">Feedback</Link>
+                        <Link
+                            to="/feedback"
+                            className={`flex items-center gap-1.5 px-3 py-2 text-[15px] font-bold transition-colors border-b-[3px] rounded-none ${
+                                isActivePath('/feedback') ? 'text-[#1a5b51] border-[#1a5b51]' : 'text-[#354955] border-transparent hover:text-[#354955] hover:border-[#1a5b51]'
+                            }`}
+                        >
+                            Feedback
+                        </Link>
+                    </div>
+
+                    <div className="relative group px-1 py-2">
+                        <Link
+                            to="/committee"
+                            className={`flex items-center gap-1.5 px-3 py-2 text-[15px] font-bold transition-colors border-b-[3px] rounded-none ${
+                                isActivePath('/committee') ? 'text-[#1a5b51] border-[#1a5b51]' : 'text-[#354955] border-transparent hover:text-[#354955] hover:border-[#1a5b51]'
+                            }`}
+                        >
+                            Committee
+                        </Link>
                     </div>
 
                     {/* Contact Dropdown */}
                     <div className="relative group px-1 py-2" onMouseEnter={() => setActiveDropdown('contact')} onMouseLeave={() => setActiveDropdown(null)}>
-                        <button className="flex items-center gap-1.5 px-3 py-2 text-[15px] font-bold text-[#354955] hover:text-[#1a5b51] transition-colors rounded-lg">
+                        <button className={`flex items-center gap-1.5 px-3 py-2 text-[15px] font-bold transition-colors border-b-[3px] rounded-none ${
+                            isActiveGroup(['/contact', '/faq', '/policies', '/librarian']) ? 'text-[#1a5b51] border-[#1a5b51]' : 'text-[#354955] border-transparent hover:text-[#354955] hover:border-[#1a5b51]'
+                        }`}>
                             Contact
                         </button>
                         {activeDropdown === 'contact' && (
                             <div className="absolute top-full right-0 w-80 bg-surface_container_lowest shadow-[0_24px_48px_rgba(25,28,29,0.08)] rounded-xl p-4 animate-in fade-in slide-in-from-top-2 border border-outline_variant flex gap-4">
                                 <div className="flex-1 space-y-1">
                                     <h4 className="text-[11px] font-bold text-on_surface/50 uppercase tracking-wider mb-2 px-2">About</h4>
-                                    <Link to="/faq" className="block px-2 py-1.5 hover:bg-surface_container_low rounded-md text-[13px] font-medium text-on_surface/90">FAQ</Link>
-                                    <Link to="/policies" className="block px-2 py-1.5 hover:bg-surface_container_low rounded-md text-[13px] font-medium text-on_surface/90">Policies</Link>
+                                    <Link to="/faq" className="block px-2 py-1.5 hover:bg-surface_container_low rounded-md text-[13px] font-medium text-on_surface/90 font-label">FAQ</Link>
+                                    <Link to="/policies" className="block px-2 py-1.5 hover:bg-surface_container_low rounded-md text-[13px] font-medium text-on_surface/90 font-label">Policies</Link>
                                 </div>
                                 <div className="w-px bg-outline_variant"></div>
                                 <div className="flex-1 space-y-1">
                                     <h4 className="text-[11px] font-bold text-on_surface/50 uppercase tracking-wider mb-2 px-2">Contact Info</h4>
-                                    <Link to="/contact/details" className="flex items-center gap-2 px-2 py-1.5 hover:bg-surface_container_low rounded-md text-[13px] font-medium text-on_surface/90"><Phone size={14} className="text-primary/60"/> Email/Tel</Link>
-                                    <Link to="/librarian" className="flex items-center gap-2 px-2 py-1.5 hover:bg-surface_container_low rounded-md text-[13px] font-medium text-on_surface/90"><Users size={14} className="text-primary/60"/> Librarian</Link>
+                                    <Link to="/contact/details" className="flex items-center gap-2 px-2 py-1.5 hover:bg-surface_container_low rounded-md text-[13px] font-medium text-on_surface/90 font-label"><Phone size={14} className="text-primary/60"/> Email/Tel</Link>
+                                    <Link to="/librarian" className="flex items-center gap-2 px-2 py-1.5 hover:bg-surface_container_low rounded-md text-[13px] font-medium text-on_surface/90 font-label"><Users size={14} className="text-primary/60"/> Librarian</Link>
                                 </div>
                             </div>
                         )}
@@ -165,7 +202,7 @@ const Header = () => {
                 </nav>
 
                 {/* Right Actions: Search Icon + Auth */}
-                <div className="flex items-center gap-4 shrink-0">
+                <div className="flex items-center gap-4 shrink-0 font-label">
                     
                     {/* Search Field (Hidden on small, visible on desktop) */}
                     <div className="hidden md:flex items-center relative group">
@@ -213,7 +250,7 @@ const Header = () => {
                             </div>
 
                             <div className="hidden lg:flex items-center gap-4 pl-4 border-l border-outline_variant">
-                                <Link to={user.role === 'admin' ? '/admin/profile' : '/student/profile'} className="text-sm font-semibold text-on_surface/80 hover:text-primary transition-colors">
+                                <Link to={user.role === 'admin' ? '/admin/profile' : '/student/profile'} className="text-sm font-semibold text-on_surface/80 hover:text-primary transition-colors font-label">
                                     {user.name?.split(' ')[0] || 'User'}
                                 </Link>
                                 <button
@@ -225,7 +262,7 @@ const Header = () => {
                             </div>
                         </div>
                     ) : (
-                        <Link to="/login" className="bg-[#1a5b51] text-white px-7 py-2.5 rounded-full text-[14px] font-medium transition-all hover:bg-[#134840]">
+                        <Link to="/login" className="bg-[#1a5b51] text-white px-7 py-2.5 rounded-full text-[14px] font-medium transition-all hover:bg-[#134840] font-label">
                             Login
                         </Link>
                     )}
@@ -248,7 +285,7 @@ const Header = () => {
                     </div>
 
                     <div className="flex-1 overflow-y-auto">
-                        <nav className="flex flex-col gap-2">
+                        <nav className="flex flex-col gap-2 font-label">
                             {[
                                 { label: 'Home', link: '/' },
                                 { label: 'Digital Resources', link: '/digital' },
@@ -257,9 +294,19 @@ const Header = () => {
                                 { label: 'NPTEL Courses', link: '/learning/nptel' },
                                 { label: 'ONOS Courses', link: '/learning/onos' },
                                 { label: 'Feedback', link: '/feedback' },
+                                { label: 'Committee', link: '/committee' },
                                 { label: 'Library Map', link: '/map' }
                             ].map((item) => (
-                                <Link key={item.label} to={item.link} className="px-4 py-3 bg-surface_container_low/50 rounded-xl font-medium text-[15px] text-on_surface/80 hover:bg-surface_container_low hover:text-primary transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                                <Link
+                                    key={item.label}
+                                    to={item.link}
+                                    className={`px-4 py-3 rounded-xl font-medium text-[15px] transition-colors ${
+                                        location.pathname === item.link || (item.link !== '/' && location.pathname.startsWith(item.link))
+                                            ? 'bg-surface_container_low text-primary'
+                                            : 'bg-surface_container_low/50 text-on_surface/80 hover:bg-surface_container_low hover:text-primary'
+                                    }`}
+                                    onClick={() => setMobileMenuOpen(false)}
+                                >
                                     {item.label}
                                 </Link>
                             ))}

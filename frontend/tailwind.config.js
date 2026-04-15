@@ -23,12 +23,12 @@ export default {
         'on_error_container': '#410002',
       },
       fontFamily: {
-        'serif': ['"Noto Serif"', 'serif'],
-        'sans': ['"Public Sans"', 'sans-serif'],
-        'mono': ['"Inter"', 'monospace'],
-        display: ['"Noto Serif"', 'serif'],
-        body: ['"Public Sans"', 'sans-serif'],
-        label: ['"Inter"', 'sans-serif'],
+        serif: ['"Gabarito"', 'sans-serif'],
+        sans: ['system-ui', '-apple-system', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', '"Noto Sans"', '"Liberation Sans"', 'sans-serif'],
+        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'],
+        display: ['"Gabarito"', 'sans-serif'],
+        body: ['system-ui', '-apple-system', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', '"Noto Sans"', '"Liberation Sans"', 'sans-serif'],
+        label: ['system-ui', '-apple-system', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', '"Noto Sans"', '"Liberation Sans"', 'sans-serif'],
       },
       animation: {
         'marquee-slower': 'marquee 25s linear infinite',
