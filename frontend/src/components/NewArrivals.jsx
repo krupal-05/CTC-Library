@@ -23,62 +23,61 @@ const dummyBooks = [
 
 const NewArrivals = () => {
     return (
-        <div className="bg-white py-10 w-full mt-8 shadow-sm">
-            <div className="container mx-auto px-4 flex items-center">
-                {/* Title Section */}
-                <div className="flex flex-col gap-2 w-48 shrink-0 pr-6 mr-4 border-r border-gray-200">
-                    <h2 className="text-3xl font-light text-gray-800 tracking-wide">
-                        New Arrivals
-                    </h2>
-                    <div className="w-full h-1 bg-accent mt-1 mb-4"></div>
-                    <button className="new-arrivals-prev text-gray-400 hover:text-primary transition-colors flex items-center justify-center p-2 rounded-full hover:bg-gray-100 w-10 h-10 w-fit">
-                        <ChevronLeft className="w-6 h-6" />
-                    </button>
+        <div className="pt-8 pb-6 w-full mt-0">
+            <div className="container mx-auto px-6 md:px-12 max-w-7xl">
+                {/* Header Section */}
+                <div className="flex items-center justify-between mb-8 w-full gap-8">
+                    <h2 className="text-[32px] md:text-[40px] font-serif text-[#1c2e3d]">New Arrivals</h2>
                 </div>
 
                 {/* Swiper Slider */}
-                <div className="flex-1 w-full overflow-hidden">
+                <div className="w-full relative group">
                     <Swiper
                         modules={[Autoplay, Navigation]}
-                        spaceBetween={20}
+                        spaceBetween={24}
                         slidesPerView={5}
-                        slidesPerGroup={5}
+                        slidesPerGroup={1}
                         autoplay={{ delay: 5000, disableOnInteraction: false }}
                         navigation={{
                             nextEl: '.new-arrivals-next',
                             prevEl: '.new-arrivals-prev',
                         }}
                         breakpoints={{
-                            320: { slidesPerView: 2, slidesPerGroup: 2, spaceBetween: 10 },
-                            768: { slidesPerView: 3, slidesPerGroup: 3, spaceBetween: 15 },
-                            1024: { slidesPerView: 4, slidesPerGroup: 4, spaceBetween: 20 },
-                            1280: { slidesPerView: 5, slidesPerGroup: 5, spaceBetween: 20 },
+                            320: { slidesPerView: 2, spaceBetween: 12 },
+                            768: { slidesPerView: 3, spaceBetween: 16 },
+                            1024: { slidesPerView: 4, spaceBetween: 24 },
+                            1280: { slidesPerView: 5, spaceBetween: 24 },
                         }}
-                        className="w-full !px-2 !py-4"
+                        className="w-full !py-6"
                     >
-                        {dummyBooks.map((book) => (
+                        {dummyBooks.map((book, idx) => (
                             <SwiperSlide key={book.id}>
-                                <div className="group relative overflow-hidden rounded border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 bg-white flex flex-col h-full cursor-pointer">
-                                    <div className="aspect-[3/4] w-full overflow-hidden relative bg-gray-50 flex items-center justify-center p-2">
+                                <div className="group/card cursor-pointer">
+                                    <div className="aspect-[3/4] w-full rounded-[12px] overflow-hidden relative shadow-[0_8px_20px_rgba(0,0,0,0.12)] group-hover/card:shadow-[0_12px_24px_rgba(0,0,0,0.2)] transition-all duration-300 transform group-hover/card:-translate-y-1">
                                         <img 
                                             src={book.url} 
                                             alt={book.title} 
-                                            className="w-full h-full object-cover shadow-sm"
+                                            className="w-full h-full object-cover"
                                         />
+                                        <div className="absolute top-3 right-3 bg-[#1c2e3d]/85 backdrop-blur-sm text-white px-2.5 py-1 rounded-full text-[9px] font-bold tracking-widest uppercase">
+                                            {idx % 3 === 1 ? 'On Loan' : 'In-Library'}
+                                        </div>
                                     </div>
-                                    <div className="p-3 text-center border-t border-gray-100 mt-auto bg-gray-50/50 group-hover:bg-gray-100 transition-colors">
-                                        <h3 className="text-sm font-medium text-gray-800 line-clamp-1" title={book.title}>{book.title}</h3>
+                                    <div className="mt-4 px-1">
+                                        <h3 className="text-[14px] font-bold text-[#1c2e3d] line-clamp-1 group-hover/card:text-[#1a5b51] transition-colors" title={book.title}>{book.title}</h3>
+                                        <p className="text-[12px] text-gray-500 mt-0.5">QA 76.73 .P98</p>
                                     </div>
                                 </div>
                             </SwiperSlide>
                         ))}
                     </Swiper>
-                </div>
-
-                {/* Right Arrow */}
-                <div className="shrink-0 pl-6 ml-2">
-                    <button className="new-arrivals-next text-gray-400 hover:text-primary transition-colors flex items-center justify-center p-2 rounded-full hover:bg-gray-100 w-10 h-10">
-                        <ChevronRight className="w-6 h-6" />
+                    
+                    {/* Navigation Arrows */}
+                    <button className="new-arrivals-prev absolute left-0 top-[40%] -translate-y-1/2 -ml-5 z-10 bg-white/90 text-[#1c2e3d] flex items-center justify-center rounded-full w-10 h-10 shadow-lg border border-gray-100 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white hover:text-[#1a5b51]">
+                        <ChevronLeft className="w-5 h-5" />
+                    </button>
+                    <button className="new-arrivals-next absolute right-0 top-[40%] -translate-y-1/2 -mr-5 z-10 bg-white/90 text-[#1c2e3d] flex items-center justify-center rounded-full w-10 h-10 shadow-lg border border-gray-100 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white hover:text-[#1a5b51]">
+                        <ChevronRight className="w-5 h-5" />
                     </button>
                 </div>
             </div>
