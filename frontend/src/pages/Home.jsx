@@ -1,4 +1,4 @@
-import React from 'react';
+        import React from 'react';
 import { Clock, MapPin, ArrowRight, Calendar, ChevronLeft, ChevronRight, BookOpen, Monitor, Wifi, Cpu } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import libraryImg1 from '../assets/library-1.jpg';
