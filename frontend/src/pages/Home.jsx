@@ -22,6 +22,14 @@ const Home = () => {
 
     const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % images.length);
     const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
+
+    const scrollToUpdates = () => {
+        const target = document.getElementById('recent-updates');
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    };
+
     return (
         <div className="bg-white">
 
@@ -42,17 +50,17 @@ const Home = () => {
                         generation of innovators.
                     </p>
                     <div className="flex gap-4">
-                        <button className="bg-[#1a5b51] hover:bg-[#134840] text-white px-8 py-3.5 rounded-lg font-medium transition-colors">
+                        <button onClick={scrollToUpdates} className="bg-[#1a5b51] hover:bg-[#134840] text-white px-8 py-3.5 rounded-lg font-medium transition-colors">
                             Explore More
                         </button>
-                        <button className="bg-white/10 backdrop-blur-sm border border-white/30 hover:bg-white/20 text-white px-8 py-3.5 rounded-lg font-medium transition-colors">
+                        <Link to="/digital/books" className="bg-white/10 backdrop-blur-sm border border-white/30 hover:bg-white/20 text-white px-8 py-3.5 rounded-lg font-medium transition-colors">
                             View Collections
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>
             {/* Recent Updates Full-Width Section */}
-            <div className="pt-16 pb-16 bg-[#fcfdfd]">
+            <div id="recent-updates" className="pt-16 pb-16 bg-[#fcfdfd]">
                 <div className="container mx-auto px-6 md:px-12 max-w-7xl">
                     <div className="flex items-center justify-between mb-10 w-full gap-8">
                         <div className="flex-1">
