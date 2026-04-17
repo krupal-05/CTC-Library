@@ -15,6 +15,7 @@ const Register = () => {
         role: 'student'
     });
     const [error, setError] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -25,7 +26,18 @@ const Register = () => {
         e.preventDefault();
         setError('');
 
+        if (!formData.name.trim() || !formData.email.trim() || !formData.password.trim() || !formData.enrollmentNo.trim()) {
+            setError('Please fill in all required fields');
+            return;
+        }
+
+        if (formData.password.trim().length < 6) {
+            setError('Password must be at least 6 characters long');
+            return;
+        }
+
         try {
+            setIsSubmitting(true);
             const config = {
                 headers: {
                     'Content-Type': 'application/json',
@@ -42,6 +54,8 @@ const Register = () => {
             navigate('/student'); // Redirect to student dashboard
         } catch (err) {
             setError(err.response?.data?.message || 'Registration failed');
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -73,9 +87,10 @@ const Register = () => {
 
                         <button
                             type="submit"
-                            className="w-full bg-accent text-white font-bold py-3 px-10 rounded-full shadow-lg hover:bg-cyan-500 transition-all hover:scale-105 active:scale-95 mt-6"
+                            disabled={isSubmitting}
+                            className="w-full bg-accent text-white font-bold py-3 px-10 rounded-full shadow-lg hover:bg-cyan-500 transition-all hover:scale-105 active:scale-95 mt-6 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
                         >
-                            Register Now
+                            {isSubmitting ? 'Registering...' : 'Register Now'}
                         </button>
                     </form>
 
@@ -116,10 +131,14 @@ const SelectGroup = ({ icon, options, ...props }) => (
             {icon}
         </div>
         <select
-            className="w-full bg-white/10 border border-white/20 text-white rounded-full py-3 pl-10 pr-6 focus:outline-none focus:ring-2 focus:ring-accent appearance-none text-sm cursor-pointer"
+            className="w-full bg-white/10 border border-white/20 text-white rounded-full py-3 pl-10 pr-10 focus:outline-none focus:ring-2 focus:ring-accent appearance-none text-sm cursor-pointer"
             {...props}
         >
-            {options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+            {options.map(opt => (
+                <option key={opt} value={opt} className="bg-white text-slate-800">
+                    {opt}
+                </option>
+            ))}
         </select>
         <div className="absolute right-4 top-4 text-white/60 pointer-events-none">
             <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" /></svg>
