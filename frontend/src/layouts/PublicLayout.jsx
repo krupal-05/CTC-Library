@@ -6,7 +6,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 const PublicLayout = () => {
     const location = useLocation();
     const path = location.pathname.replace(/\/+$/, '') || '/';
-    const showFooter = ['/', '/about'].includes(path.toLowerCase());
+    const showFooter = !['/login', '/register'].includes(path.toLowerCase());
 
     return (
         <div className="min-h-screen flex flex-col">
